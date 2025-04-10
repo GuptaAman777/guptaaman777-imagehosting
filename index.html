@@ -1383,6 +1383,512 @@
 
         // Initialize the app when the page loads
         window.addEventListener('DOMContentLoaded', initializeApp);
+        
+        // Favorites functionality
+        let favorites = JSON.parse(localStorage.getItem('imageGalleryFavorites')) || [];
+        
+        // Add to favorites
+        function toggleFavorite(image) {
+            const imagePath = image.path;
+            const isFavorite = favorites.some(fav => fav.path === imagePath);
+            
+            if (isFavorite) {
+                // Remove from favorites
+                favorites = favorites.filter(fav => fav.path !== imagePath);
+                showToast('Removed from favorites');
+            } else {
+                // Add to favorites
+                favorites.push(image);
+                showToast('Added to favorites');
+            }
+            
+            // Update localStorage
+            localStorage.setItem('imageGalleryFavorites', JSON.stringify(favorites));
+            
+            // Update UI
+            updateFavoriteButtons();
+        }
+        
+        // Update favorite buttons
+        function updateFavoriteButtons() {
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                const imagePath = btn.getAttribute('data-path');
+                const isFavorite = favorites.some(fav => fav.path === imagePath);
+                
+                if (isFavorite) {
+                    btn.innerHTML = '<i class="fas fa-star"></i>';
+                    btn.classList.add('favorited');
+                } else {
+                    btn.innerHTML = '<i class="far fa-star"></i>';
+                    btn.classList.remove('favorited');
+                }
+            });
+            
+            // Also update in modal if open
+            if (currentImages.length > 0 && currentImageIndex >= 0) {
+                const modalFavBtn = document.getElementById('favoriteBtn');
+                if (modalFavBtn) {
+                    const currentImage = currentImages[currentImageIndex];
+                    const isFavorite = favorites.some(fav => fav.path === currentImage.path);
+                    
+                    if (isFavorite) {
+                        modalFavBtn.innerHTML = '<i class="fas fa-star"></i> Favorited';
+                        modalFavBtn.classList.add('favorited');
+                    } else {
+                        modalFavBtn.innerHTML = '<i class="far fa-star"></i> Favorite';
+                        modalFavBtn.classList.remove('favorited');
+                    }
+                }
+            }
+        }
+        
+        // Show favorites
+        function showFavorites() {
+            if (favorites.length === 0) {
+                showToast('No favorites yet');
+                return;
+            }
+            
+            // Update current channel name
+            document.getElementById('currentChannel').textContent = 'favorites';
+            
+            // Remove active class from all channels
+            document.querySelectorAll('.channel').forEach(ch => {
+                ch.classList.remove('active');
+            });
+            
+            // Set current images to favorites and render
+            currentImages = favorites;
+            renderImages(favorites);
+        }
+        
+        // Get image dimensions
+        function getImageDimensions(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = function() {
+                    resolve({
+                        width: this.width,
+                        height: this.height
+                    });
+                };
+                img.onerror = function() {
+                    resolve({ width: 0, height: 0 });
+                };
+                img.src = url;
+            });
+        }
+        
+        // Show image info page
+        function showImageInfo(image) {
+            const modal = document.getElementById('infoModal');
+            const infoContent = document.getElementById('infoContent');
+            
+            // Get image details
+            const rawUrl = createRawUrl(image.path);
+            const extension = image.name.split('.').pop().toLowerCase();
+            const fileSize = formatFileSize(image.size);
+            const dateCreated = new Date(image.created_at || Date.now()).toLocaleString();
+            const dateModified = new Date(image.updated_at || Date.now()).toLocaleString();
+            
+            // Get image dimensions
+            getImageDimensions(rawUrl).then(dimensions => {
+                infoContent.innerHTML = `
+                    <div class="info-image">
+                        <img src="${rawUrl}" alt="${image.name}">
+                    </div>
+                    <div class="info-details">
+                        <h2>${image.name}</h2>
+                        <table class="info-table">
+                            <tr>
+                                <td>Dimensions:</td>
+                                <td>${dimensions.width} × ${dimensions.height} px</td>
+                            </tr>
+                            <tr>
+                                <td>File size:</td>
+                                <td>${fileSize}</td>
+                            </tr>
+                            <tr>
+                                <td>File type:</td>
+                                <td>${extension.toUpperCase()}</td>
+                            </tr>
+                            <tr>
+                                <td>Path:</td>
+                                <td>${image.path}</td>
+                            </tr>
+                            <tr>
+                                <td>URL:</td>
+                                <td><a href="${rawUrl}" target="_blank">${rawUrl.substring(0, 50)}...</a></td>
+                            </tr>
+                            <tr>
+                                <td>SHA:</td>
+                                <td>${image.sha ? image.sha.substring(0, 10) : 'N/A'}</td>
+                            </tr>
+                        </table>
+                        <div class="info-actions">
+                            <button class="modal-btn" onclick="copyImageUrl()">
+                                <i class="fas fa-link"></i> Copy URL
+                            </button>
+                            <button class="modal-btn" onclick="downloadImage('${rawUrl}', '${image.name}')">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button class="modal-btn favorite-info-btn" onclick="toggleFavorite(${JSON.stringify(image).replace(/"/g, '&quot;')})">
+                                <i class="${favorites.some(fav => fav.path === image.path) ? 'fas' : 'far'} fa-star"></i> 
+                                ${favorites.some(fav => fav.path === image.path) ? 'Favorited' : 'Favorite'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                
+                // Fade in animation
+                setTimeout(() => {
+                    modal.classList.add('show');
+                }, 10);
+            });
+        }
+        
+        // Close info modal
+        function closeInfoModal() {
+            const modal = document.getElementById('infoModal');
+            modal.classList.remove('show');
+            
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        
+        // Modify the renderImages function to include favorites and click-to-view
+        function renderImages(images) {
+            const imageGrid = document.getElementById('imageGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (images.length === 0) {
+                imageGrid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            imageGrid.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            // Clear existing images
+            imageGrid.innerHTML = '';
+            
+            // Add images to grid
+            images.forEach((image, index) => {
+                const imageCard = document.createElement('div');
+                imageCard.className = 'image-card';
+                
+                const rawUrl = createRawUrl(image.path);
+                const extension = image.name.split('.').pop().toLowerCase();
+                const fileSize = formatFileSize(image.size);
+                
+                // Get image dimensions and then update the card
+                getImageDimensions(rawUrl).then(dimensions => {
+                    const dimensionsText = dimensions.width > 0 ? `${dimensions.width} × ${dimensions.height}` : 'Unknown';
+                    
+                    imageCard.innerHTML = `
+                        <div class="image-container" data-index="${index}">
+                            <img src="${rawUrl}" alt="${image.name}" loading="lazy">
+                            <div class="image-overlay">
+                                <div class="image-dimensions">${dimensionsText}</div>
+                                <button class="favorite-btn" data-path="${image.path}">
+                                    <i class="${favorites.some(fav => fav.path === image.path) ? 'fas' : 'far'} fa-star"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="image-info">
+                            <div class="image-name">${image.name}</div>
+                            <div class="image-meta">
+                                <span>${extension.toUpperCase()}</span>
+                                <span>${fileSize}</span>
+                            </div>
+                            <div class="image-actions">
+                                <button class="image-btn view-btn" data-index="${index}">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="image-btn info-btn" data-index="${index}">
+                                    <i class="fas fa-info-circle"></i> Info
+                                </button>
+                                <button class="image-btn download-btn" data-url="${rawUrl}" data-name="${image.name}">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Add event listeners
+                    const container = imageCard.querySelector('.image-container');
+                    container.addEventListener('click', () => {
+                        openImageModal(images, index);
+                    });
+                    
+                    const favoriteBtn = imageCard.querySelector('.favorite-btn');
+                    favoriteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        toggleFavorite(image);
+                    });
+                    
+                    const infoBtn = imageCard.querySelector('.info-btn');
+                    infoBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showImageInfo(image);
+                    });
+                });
+                
+                imageGrid.appendChild(imageCard);
+            });
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = parseInt(btn.getAttribute('data-index'));
+                    openImageModal(images, index);
+                });
+            });
+            
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const url = btn.getAttribute('data-url');
+                    const name = btn.getAttribute('data-name');
+                    downloadImage(url, name);
+                });
+            });
+            
+            // Update favorite buttons
+            setTimeout(updateFavoriteButtons, 100);
+        }
+        
+        // Modify the openImageModal function to include dimensions and favorite button
+        function openImageModal(images, index) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalInfo = document.getElementById('modalInfo');
+            
+            currentImages = images;
+            currentImageIndex = index;
+            
+            const image = images[index];
+            const rawUrl = createRawUrl(image.path);
+            
+            modalImage.src = rawUrl;
+            modalTitle.textContent = image.name;
+            
+            // Get image dimensions
+            getImageDimensions(rawUrl).then(dimensions => {
+                const extension = image.name.split('.').pop().toUpperCase();
+                const fileSize = formatFileSize(image.size);
+                const dimensionsText = dimensions.width > 0 ? `${dimensions.width} × ${dimensions.height}` : 'Unknown';
+                
+                modalInfo.textContent = `${extension} • ${fileSize} • ${dimensionsText}`;
+                
+                // Update favorite button
+                const isFavorite = favorites.some(fav => fav.path === image.path);
+                document.getElementById('favoriteBtn').innerHTML = `
+                    <i class="${isFavorite ? 'fas' : 'far'} fa-star"></i> ${isFavorite ? 'Favorited' : 'Favorite'}
+                `;
+                document.getElementById('favoriteBtn').className = `modal-btn ${isFavorite ? 'favorited' : ''}`;
+            });
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Fade in animation
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+    </script>
+    
+    <!-- Add Info Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content info-modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Image Information</div>
+                <button class="close-modal" onclick="closeInfoModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="infoContent">
+                <!-- Image info will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add CSS for new features -->
+    <style>
+        /* Favorites button */
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .image-container:hover .favorite-btn {
+            opacity: 1;
+        }
+        
+        .favorite-btn.favorited, .modal-btn.favorited {
+            color: #ffcc00;
+        }
+        
+        /* Image overlay */
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .image-container:hover .image-overlay {
+            opacity: 1;
+        }
+        
+        .image-dimensions {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            align-self: flex-start;
+        }
+        
+        /* Info modal */
+        .info-modal-content {
+            width: 600px;
+            max-width: 90%;
+        }
+        
+        .modal-body {
+            padding: 16px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .info-image {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .info-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+        }
+        
+        .info-details h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+        
+        .info-table td {
+            padding: 8px;
+            border-bottom: 1px solid var(--divider-color);
+        }
+        
+        .info-table td:first-child {
+            font-weight: 500;
+            width: 120px;
+        }
+        
+        .info-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        /* Make image cards clickable */
+        .image-container {
+            cursor: pointer;
+        }
+    </style>
+    
+    <!-- Update modal footer to include favorite button -->
+    <script>
+        // Update the modal footer to include favorite button
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalActions = document.querySelector('.modal-footer .modal-actions');
+            
+            // Add favorite button before download button
+            const favoriteBtn = document.createElement('button');
+            favoriteBtn.className = 'modal-btn';
+            favoriteBtn.id = 'favoriteBtn';
+            favoriteBtn.innerHTML = '<i class="far fa-star"></i> Favorite';
+            
+            // Insert before the download button
+            modalActions.insertBefore(favoriteBtn, document.getElementById('downloadBtn'));
+            
+            // Add info button
+            const infoBtn = document.createElement('button');
+            infoBtn.className = 'modal-btn';
+            infoBtn.id = 'infoBtn';
+            infoBtn.innerHTML = '<i class="fas fa-info-circle"></i> Info';
+            
+            // Insert before the favorite button
+            modalActions.insertBefore(infoBtn, favoriteBtn);
+            
+            // Add event listeners
+            favoriteBtn.addEventListener('click', () => {
+                if (currentImages.length === 0 || currentImageIndex < 0) return;
+                toggleFavorite(currentImages[currentImageIndex]);
+            });
+            
+            infoBtn.addEventListener('click', () => {
+                if (currentImages.length === 0 || currentImageIndex < 0) return;
+                closeImageModal();
+                setTimeout(() => {
+                    showImageInfo(currentImages[currentImageIndex]);
+                }, 300);
+            });
+            
+            // Add favorites channel
+            const filterChannels = document.getElementById('filterChannels');
+            const favoritesChannel = document.createElement('div');
+            favoritesChannel.className = 'channel';
+            favoritesChannel.innerHTML = `
+                <i class="fas fa-star" style="color: #ffcc00;"></i>
+                <span class="channel-name">Favorites</span>
+            `;
+            
+            filterChannels.appendChild(favoritesChannel);
+            
+            // Add event listener
+            favoritesChannel.addEventListener('click', () => {
+                showFavorites();
+            });
+        });
     </script>
 </body>
-</html>                    
+</html>                 
