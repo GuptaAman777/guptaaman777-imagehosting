@@ -5,2306 +5,446 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GuptaAman777 Image Gallery</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary-color: #10b981;
-            --secondary-dark: #059669;
-            --background-color: #f9fafb;
-            --card-bg: #ffffff;
-            --text-color: #1f2937;
-            --text-light: #6b7280;
-            --border-radius: 12px;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --primary-color: #5865F2;
+            --secondary-color: #3BA55C;
+            --background-color: #36393F;
+            --sidebar-color: #2F3136;
+            --channel-color: #42464D;
+            --text-color: #DCDDDE;
+            --text-muted: #96989D;
+            --header-color: #202225;
+            --card-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            --hover-bg: rgba(79, 84, 92, 0.3);
+            --active-bg: rgba(79, 84, 92, 0.6);
+            --divider-color: #42464D;
+            --status-online: #3BA55C;
+            --status-idle: #FAA61A;
+            --status-dnd: #ED4245;
+            --status-offline: #747F8D;
+            --scrollbar-thumb: #202225;
+            --scrollbar-track: #2E3338;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
             background-color: var(--background-color);
             color: var(--text-color);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header Styles */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-md);
-            margin-bottom: 30px;
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            transition: var(--transition-normal);
-        }
-
-        .header:hover {
-            box-shadow: var(--shadow-lg);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            gap: 12px;
-        }
-
-        .logo i {
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .search-bar {
-            position: relative;
-            flex-grow: 1;
-            max-width: 500px;
-            margin: 0 30px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 12px 20px 12px 45px;
-            border: 2px solid #e5e7eb;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: var(--transition-normal);
-            outline: none;
-        }
-
-        .search-bar input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
-
-        .search-bar i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-            font-size: 1.1rem;
-        }
-
-        .controls {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border: none;
-            border-radius: 50px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            font-family: inherit;
-            outline: none;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--secondary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid #e5e7eb;
-            color: var(--text-color);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        .btn-icon {
-            width: 42px;
-            height: 42px;
-            padding: 0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-icon i {
-            font-size: 1.1rem;
-        }
-
-        /* Filter Bar Styles */
-        .filter-bar {
-            display: flex;
-            align-items: center;
-            padding: 15px 25px;
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-            transition: var(--transition-normal);
-            animation: slideDown 0.5s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .filter-bar:hover {
-            box-shadow: var(--shadow-md);
-        }
-
-        .filter-label {
-            font-weight: 600;
-            color: var(--text-color);
-            margin-right: 15px;
-        }
-
-        .filter-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-option {
-            padding: 8px 16px;
-            border-radius: 50px;
-            background-color: #f3f4f6;
-            color: var(--text-color);
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            user-select: none;
-        }
-
-        .filter-option:hover {
-            background-color: #e5e7eb;
-            transform: translateY(-2px);
-        }
-
-        .filter-option.active {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
-        }
-
-        .view-toggle {
-            margin-left: auto;
-            display: flex;
-            gap: 8px;
-            background-color: #f3f4f6;
-            border-radius: 50px;
-            padding: 4px;
-        }
-
-        .view-btn {
-            border: none;
-            background: transparent;
-            padding: 8px 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-light);
-        }
-
-        .view-btn.active {
-            background-color: white;
-            color: var(--primary-color);
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* Gallery Styles */
-        .directory-tree {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .folder {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            transition: var(--transition-bounce);
-            transform-origin: center;
-            animation: folderAppear 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        @keyframes folderAppear {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .folder:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .folder-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 20px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition-normal);
-            position: relative;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .folder-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .folder-header:hover::before {
-            transform: translateX(100%);
-        }
-
-        .folder-header i {
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .folder-header.active i {
-            transform: rotate(90deg);
-        }
-
-        .folder-content {
-            display: none;
-            padding: 20px;
-            animation: expandContent 0.4s ease-out;
-        }
-
-        @keyframes expandContent {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .folder-info {
+        .app-container {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            color: var(--text-light);
+            height: 100vh;
         }
 
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-        }
-
-        .image-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            aspect-ratio: 1/1;
-            cursor: pointer;
-            transition: var(--transition-bounce);
-            animation: imageAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            animation-fill-mode: both;
-        }
-
-        @keyframes imageAppear {
-            from {
-                opacity: 0;
-                transform: scale(0.8) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .image-item:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-md);
-            z-index: 10;
-        }
-
-        .image-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition-normal);
-        }
-
-        .image-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .image-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            padding: 15px 10px 10px;
+        /* Sidebar styles */
+        .sidebar {
+            width: 72px;
+            background-color: var(--sidebar-color);
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: var(--transition-normal);
+            align-items: center;
+            padding: 12px 0;
+            overflow-y: auto;
+            flex-shrink: 0;
         }
 
-        .image-item:hover .image-overlay {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .image-name {
-            color: white;
-            font-size: 0.85rem;
-            font-weight: 500;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .image-actions {
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
             display: flex;
-            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: border-radius 0.2s;
+            color: white;
+            font-size: 20px;
         }
 
-        .image-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
+        .server-icon:hover {
+            border-radius: 16px;
+            background-color: var(--primary-color);
+        }
+
+        .server-icon.active {
+            border-radius: 16px;
+        }
+
+        .server-divider {
+            height: 2px;
             width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            backdrop-filter: blur(4px);
+            background-color: var(--divider-color);
+            margin: 8px 0;
         }
 
-        .image-btn:hover {
-            background-color: white;
-            color: var(--primary-color);
-            transform: translateY(-3px);
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.show {
-            opacity: 1;
-        }
-
-        .modal-content {
-            position: relative;
-            width: 90%;
-            max-width: 1200px;
-            height: 90%;
+        /* Channel sidebar styles */
+        .channels-sidebar {
+            width: 240px;
+            background-color: var(--channel-color);
             display: flex;
             flex-direction: column;
-            animation: modalZoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
         }
 
-        @keyframes modalZoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .modal-image-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #modalImage {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        .modal-toolbar {
+        .server-header {
+            padding: 16px;
+            font-weight: bold;
+            font-size: 16px;
+            border-bottom: 1px solid var(--divider-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background-color: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            margin-top: 15px;
         }
 
-        .modal-info {
-            display: flex;
-            flex-direction: column;
-            color: white;
-        }
-
-        #modalImageName {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        #modalImageDetails {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 4px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: var(--transition-normal);
-        }
-
-        .modal-btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .modal-btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .modal-btn-secondary {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .modal-btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            transition: var(--transition-normal);
-        }
-
-        .close-modal:hover {
-            color: #f87171;
-            transform: rotate(90deg);
-        }
-
-        .nav-buttons {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            padding: 0 20px;
-            pointer-events: none;
-        }
-
-        .nav-button {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: rgba(0,0,0,0.5);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            pointer-events: auto;
-            backdrop-filter: blur(4px);
-        }
-
-        .nav-button:hover {
-            background-color: var(--primary-color);
-            transform: scale(1.1);
-        }
-
-        .zoom-controls {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            background-color: rgba(0,0,0,0.5);
-            padding: 8px;
-            border-radius: 50px;
-            backdrop-filter: blur(4px);
-        }
-
-        .zoom-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition-normal);
-        }
-
-        .zoom-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        /* Loading and Messages */
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            gap: 20px;
-            text-align: center;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.7;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .loading i {
-            font-size: 3rem;
-            color: var(--primary-color);
-        }
-
-        .loading-text {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(99, 102, 241, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .no-results {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            gap: 15px;
-            text-align: center;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .no-results i {
-            font-size: 3rem;
-            color: var(--text-light);
-            margin-bottom: 10px;
-        }
-
-        .no-results p {
-            font-size: 1.2rem;
-            color: var(--text-color);
-            max-width: 500px;
-        }
-
-        /* Tooltip and Toast */
-        .tooltip {
-            position: absolute;
-            background-color: rgba(0,0,0,0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.2s;
-            z-index: 100;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 250px;
-            white-space: nowrap;
+        .server-name {
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            z-index: 2000;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast i {
-            font-size: 1.2rem;
-        }
-
-        /* Stats Bar */
-        .stats-bar {
+        .channel-category {
+            padding: 16px 8px 4px 16px;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 20px;
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: var(--text-light);
-            animation: slideUp 0.5s ease-out;
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .channel-category i {
+            font-size: 10px;
+            cursor: pointer;
         }
 
-        .stats-item {
+        .channel {
+            padding: 6px 8px 6px 20px;
+            margin: 1px 8px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 14px;
         }
 
-        .stats-item i {
-            color: var(--primary-color);
-        }
-
-        .stats-value {
-            font-weight: 600;
+        .channel:hover {
+            background-color: var(--hover-bg);
             color: var(--text-color);
         }
 
-        /* Dark Theme */
-        .dark-theme {
-            --background-color: #111827;
-            --card-bg: #1f2937;
-            --text-color: #f9fafb;
-            --text-light: #d1d5db;
-        }
-
-        .dark-theme .search-bar input {
-            background-color: #374151;
-            border-color: #4b5563;
-            color: white;
-        }
-
-        .dark-theme .search-bar i {
-            color: #d1d5db;
-        }
-
-        .dark-theme .btn-outline {
-            border-color: #4b5563;
-            color: #d1d5db;
-        }
-
-        .dark-theme .filter-option {
-            background-color: #374151;
-            color: #d1d5db;
-        }
-
-        .dark-theme .view-toggle {
-            background-color: #374151;
-        }
-
-        .dark-theme .view-btn.active {
-            background-color: #4b5563;
-            color: white;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .header {
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-
-            .search-bar {
-                order: 3;
-                max-width: 100%;
-                margin: 10px 0 0;
-            }
-
-            .controls {
-                margin-left: auto;
-            }
-
-            .directory-tree {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 15px;
-            }
-
-            .logo {
-                margin-bottom: 15px;
-            }
-
-            .search-bar {
-                order: 2;
-                margin: 15px 0;
-            }
-
-            .controls {
-                order: 3;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .filter-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .view-toggle {
-                margin-left: 0;
-                align-self: center;
-            }
-
-            .directory-tree {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-toolbar {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .modal-actions {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .stats-bar {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
-            }
-        }
-
-        /* Grid and List View */
-        .grid-view .directory-tree {
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        }
-
-        .list-view .directory-tree {
-            grid-template-columns: 1fr;
-        }
-
-        .list-view .folder {
-            margin-bottom: 15px;
-        }
-
-        .list-view .image-grid {
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <i class="fas fa-images"></i>
-                <span>GuptaAman777 Gallery</span>
-            </div>
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search images by name..." id="searchInput">
-            </div>
-            <div class="controls">
-                <button class="btn btn-outline" id="expandAllBtn">
-                    <i class="fas fa-folder-open"></i>
-                    <span>Expand All</span>
-                </button>
-                <button class="btn btn-outline" id="collapseAllBtn">
-                    <i class="fas fa-folder"></i>
-                    <span>Collapse All</span>
-                </button>
-                <button class="btn btn-primary" id="refreshBtn">
-                    <i class="fas fa-sync-alt"></i>
-                    <span>Refresh</span>
-                </button>
-                <button class="btn btn-icon btn-outline" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="stats-bar" id="statsBar" style="display:none;">
-            <div class="stats-item">
-                <i class="fas fa-folder"></i>
-                <span>Folders: <span id="folderCount" class="stats-value">0</span></span>
-            </div>
-            <div class="stats-item">
-                <i class="fas fa-images"></i>
-                <span>Total Images: <span id="imageCount" class="stats-value">0</span></span>
-            </div>
-            <div class="stats-item">
-                <i class="fas fa-filter"></i>
-                <span>Showing: <span id="filteredCount" class="stats-value">0</span> images</span>
-            </div>
-            <button class="btn btn-outline" id="clearFiltersBtn">
-                <i class="fas fa-times"></i>
-                <span>Clear Filters</span>
-            </button>
-        </div>
-
-        <div class="filter-bar" id="filterBar" style="display:none;">
-            <div class="filter-label">Filter by extension:</div>
-            <div class="filter-options" id="extensionFilters">
-                <!-- Extension filters will be added here -->
-            </div>
-            <div class="view-toggle">
-                <button class="view-btn active" id="gridViewBtn">
-                    <i class="fas fa-th"></i>
-                    <span>Grid</span>
-                </button>
-                <button class="view-btn" id="listViewBtn">
-                    <i class="fas fa-list"></i>
-                    <span>List</span>
-                </button>
-            </div>
-        </div>
-        <div class="directory-tree grid-view" id="directoryTree">
-            <!-- Folders and images will be dynamically added here -->
-            <div class="loading" id="loadingIndicator">
-                <div class="loading-spinner"></div>
-                <div class="loading-text">Loading your gallery...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Image Viewer Modal -->
-    <div class="modal" id="imageModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeModal"><i class="fas fa-times"></i></span>
-            <div class="modal-image-container">
-                <img id="modalImage" src="" alt="Image Preview">
-                <div class="nav-buttons">
-                    <button class="nav-button" id="prevImage"><i class="fas fa-chevron-left"></i></button>
-                    <button class="nav-button" id="nextImage"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div class="zoom-controls">
-                    <button class="zoom-btn" id="zoomOut"><i class="fas fa-search-minus"></i></button>
-                    <button class="zoom-btn" id="zoomReset"><i class="fas fa-undo"></i></button>
-                    <button class="zoom-btn" id="zoomIn"><i class="fas fa-search-plus"></i></button>
-                </div>
-            </div>
-            <div class="modal-toolbar">
-                <div class="modal-info">
-                    <div id="modalImageName">Image Name</div>
-                    <div id="modalImageDetails">Details</div>
-                </div>
-                <div class="modal-actions">
-                    <button class="modal-btn modal-btn-secondary" id="copyLinkBtn">
-                        <i class="fas fa-link"></i>
-                        <span>Copy Link</span>
-                    </button>
-                    <button class="modal-btn modal-btn-primary" id="downloadBtn">
-                        <i class="fas fa-download"></i>
-                        <span>Download</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tooltip Element -->
-    <div class="tooltip" id="tooltip"></div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Link copied to clipboard!</span>
-    </div>
-
-    <script>
-        // Main Gallery App
-        const GalleryApp = {
-            // State variables
-            currentFolder: null,
-            currentImage: null,
-            currentImageIndex: 0,
-            currentImages: [],
-            zoomLevel: 1,
-            isDarkTheme: false,
-            isGridView: true,
-            extensionFilters: new Set(),
-            activeFilters: new Set(),
-            searchTerm: '',
-            
-            // DOM Elements
-            elements: {
-                directoryTree: document.getElementById('directoryTree'),
-                searchInput: document.getElementById('searchInput'),
-                expandAllBtn: document.getElementById('expandAllBtn'),
-                collapseAllBtn: document.getElementById('collapseAllBtn'),
-                refreshBtn: document.getElementById('refreshBtn'),
-                themeToggle: document.getElementById('themeToggle'),
-                gridViewBtn: document.getElementById('gridViewBtn'),
-                listViewBtn: document.getElementById('listViewBtn'),
-                statsBar: document.getElementById('statsBar'),
-                filterBar: document.getElementById('filterBar'),
-                extensionFilters: document.getElementById('extensionFilters'),
-                folderCount: document.getElementById('folderCount'),
-                imageCount: document.getElementById('imageCount'),
-                filteredCount: document.getElementById('filteredCount'),
-                clearFiltersBtn: document.getElementById('clearFiltersBtn'),
-                loadingIndicator: document.getElementById('loadingIndicator'),
-                
-                // Modal elements
-                imageModal: document.getElementById('imageModal'),
-                modalImage: document.getElementById('modalImage'),
-                modalImageName: document.getElementById('modalImageName'),
-                modalImageDetails: document.getElementById('modalImageDetails'),
-                closeModal: document.getElementById('closeModal'),
-                prevImage: document.getElementById('prevImage'),
-                nextImage: document.getElementById('nextImage'),
-                zoomIn: document.getElementById('zoomIn'),
-                zoomOut: document.getElementById('zoomOut'),
-                zoomReset: document.getElementById('zoomReset'),
-                copyLinkBtn: document.getElementById('copyLinkBtn'),
-                downloadBtn: document.getElementById('downloadBtn'),
-                
-                // Tooltip and toast
-                tooltip: document.getElementById('tooltip'),
-                toast: document.getElementById('toast'),
-                toastMessage: document.getElementById('toastMessage')
-            },
-            
-            // Sample data - in a real app, this would come from a server
-            sampleData: {
-                folders: [
-                    {
-                        name: 'Vacation Photos',
-                        path: '/vacation',
-                        count: 12,
-                        images: [
-                            { name: 'Beach Sunset.jpg', path: '/vacation/beach-sunset.jpg', size: '2.4 MB', dimensions: '1920x1080', type: 'jpg' },
-                            { name: 'Mountain View.png', path: '/vacation/mountain-view.png', size: '3.1 MB', dimensions: '2560x1440', type: 'png' },
-                            { name: 'City Skyline.jpg', path: '/vacation/city-skyline.jpg', size: '1.8 MB', dimensions: '1920x1080', type: 'jpg' },
-                            { name: 'Resort.jpg', path: '/vacation/resort.jpg', size: '2.2 MB', dimensions: '2048x1365', type: 'jpg' },
-                            { name: 'Hiking Trail.png', path: '/vacation/hiking-trail.png', size: '4.5 MB', dimensions: '3840x2160', type: 'png' },
-                            { name: 'Beach Waves.gif', path: '/vacation/beach-waves.gif', size: '5.7 MB', dimensions: '800x600', type: 'gif' }
-                        ]
-                    },
-                    {
-                        name: 'Work Projects',
-                        path: '/work',
-                        count: 8,
-                        images: [
-                            { name: 'Presentation.png', path: '/work/presentation.png', size: '1.2 MB', dimensions: '1920x1080', type: 'png' },
-                            { name: 'Mockup Design.jpg', path: '/work/mockup-design.jpg', size: '2.8 MB', dimensions: '3000x2000', type: 'jpg' },
-                            { name: 'Logo Draft.svg', path: '/work/logo-draft.svg', size: '0.5 MB', dimensions: 'Vector', type: 'svg' },
-                            { name: 'Team Photo.jpg', path: '/work/team-photo.jpg', size: '3.4 MB', dimensions: '4000x3000', type: 'jpg' }
-                        ]
-                    },
-                    {
-                        name: 'Family',
-                        path: '/family',
-                        count: 15,
-                        images: [
-                            { name: 'Birthday Party.jpg', path: '/family/birthday-party.jpg', size: '2.7 MB', dimensions: '2048x1536', type: 'jpg' },
-                            { name: 'Holiday Gathering.png', path: '/family/holiday-gathering.png', size: '3.9 MB', dimensions: '3840x2160', type: 'png' },
-                            { name: 'Picnic.jpg', path: '/family/picnic.jpg', size: '1.5 MB', dimensions: '1920x1080', type: 'jpg' },
-                            { name: 'Graduation.jpg', path: '/family/graduation.jpg', size: '2.3 MB', dimensions: '2560x1440', type: 'jpg' },
-                            { name: 'Family Portrait.png', path: '/family/family-portrait.png', size: '4.2 MB', dimensions: '4000x3000', type: 'png' }
-                        ]
-                    },
-                    {
-                        name: 'Wallpapers',
-                        path: '/wallpapers',
-                        count: 10,
-                        images: [
-                            { name: 'Abstract.jpg', path: '/wallpapers/abstract.jpg', size: '1.9 MB', dimensions: '3840x2160', type: 'jpg' },
-                            { name: 'Nature.png', path: '/wallpapers/nature.png', size: '4.7 MB', dimensions: '5120x2880', type: 'png' },
-                            { name: 'Space.jpg', path: '/wallpapers/space.jpg', size: '3.2 MB', dimensions: '3840x2160', type: 'jpg' },
-                            { name: 'Minimalist.png', path: '/wallpapers/minimalist.png', size: '2.1 MB', dimensions: '2560x1440', type: 'png' },
-                            { name: 'Cityscape.jpg', path: '/wallpapers/cityscape.jpg', size: '3.8 MB', dimensions: '3840x2160', type: 'jpg' },
-                            { name: 'Geometric.svg', path: '/wallpapers/geometric.svg', size: '0.8 MB', dimensions: 'Vector', type: 'svg' },
-                            { name: 'Ocean.jpg', path: '/wallpapers/ocean.jpg', size: '2.5 MB', dimensions: '2560x1440', type: 'jpg' }
-                        ]
-                    }
-                ]
-            },
-            
-            // Initialize the app
-            init() {
-                this.setupEventListeners();
-                this.loadGallery();
-                this.updateStats();
-            },
-            
-            // Set up all event listeners
-            setupEventListeners() {
-                // Search functionality
-                this.elements.searchInput.addEventListener('input', () => {
-                    this.searchTerm = this.elements.searchInput.value.toLowerCase();
-                    this.filterGallery();
-                });
-                
-                // Button controls
-                this.elements.expandAllBtn.addEventListener('click', () => this.expandAllFolders());
-                this.elements.collapseAllBtn.addEventListener('click', () => this.collapseAllFolders());
-                this.elements.refreshBtn.addEventListener('click', () => this.refreshGallery());
-                this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
-                this.elements.clearFiltersBtn.addEventListener('click', () => this.clearFilters());
-                
-                // View toggle
-                this.elements.gridViewBtn.addEventListener('click', () => this.setViewMode('grid'));
-                this.elements.listViewBtn.addEventListener('click', () => this.setViewMode('list'));
-                
-                // Modal controls
-                this.elements.closeModal.addEventListener('click', () => this.closeImageModal());
-                this.elements.prevImage.addEventListener('click', () => this.navigateImage('prev'));
-                this.elements.nextImage.addEventListener('click', () => this.navigateImage('next'));
-                this.elements.zoomIn.addEventListener('click', () => this.zoomImage('in'));
-                this.elements.zoomOut.addEventListener('click', () => this.zoomImage('out'));
-                this.elements.zoomReset.addEventListener('click', () => this.zoomImage('reset'));
-                this.elements.copyLinkBtn.addEventListener('click', () => this.copyImageLink());
-                this.elements.downloadBtn.addEventListener('click', () => this.downloadImage());
-                
-                // Keyboard navigation for modal
-                document.addEventListener('keydown', (e) => {
-                    if (!this.elements.imageModal.classList.contains('show')) return;
-                    
-                    switch (e.key) {
-                        case 'Escape':
-                            this.closeImageModal();
-                            break;
-                        case 'ArrowLeft':
-                            this.navigateImage('prev');
-                            break;
-                        case 'ArrowRight':
-                            this.navigateImage('next');
-                            break;
-                        case '+':
-                            this.zoomImage('in');
-                            break;
-                        case '-':
-                            this.zoomImage('out');
-                            break;
-                        case '0':
-                            this.zoomImage('reset');
-                            break;
-                    }
-                });
-                
-                // Close modal when clicking outside the content
-                this.elements.imageModal.addEventListener('click', (e) => {
-                    if (e.target === this.elements.imageModal) {
-                        this.closeImageModal();
-                    }
-                });
-                
-                // Setup tooltip behavior
-                document.addEventListener('mousemove', (e) => {
-                    this.elements.tooltip.style.left = (e.pageX + 15) + 'px';
-                    this.elements.tooltip.style.top = (e.pageY + 15) + 'px';
-                });
-            },
-            
-            // Load gallery data and render folders
-            loadGallery() {
-                // Show loading indicator
-                this.elements.loadingIndicator.style.display = 'flex';
-                
-                // Simulate loading delay (would be a real API call in production)
-                setTimeout(() => {
-                    // Hide loading indicator
-                    this.elements.loadingIndicator.style.display = 'none';
-                    
-                    // Render folders
-                    this.renderFolders(this.sampleData.folders);
-                    
-                    // Show stats and filter bar
-                    this.elements.statsBar.style.display = 'flex';
-                    this.elements.filterBar.style.display = 'flex';
-                    
-                    // Collect all unique extensions for filters
-                    this.collectExtensions();
-                    
-                    // Update stats
-                    this.updateStats();
-                }, 1500);
-            },
-            
-            // Render folder structure
-            renderFolders(folders) {
-                // Clear existing content except loading indicator
-                Array.from(this.elements.directoryTree.children).forEach(child => {
-                    if (!child.id || child.id !== 'loadingIndicator') {
-                        this.elements.directoryTree.removeChild(child);
-                    }
-                });
-                
-                // Create folder elements with delay for animation
-                folders.forEach((folder, index) => {
-                    setTimeout(() => {
-                        const folderElement = this.createFolderElement(folder);
-                        this.elements.directoryTree.appendChild(folderElement);
-                    }, index * 150);
-                });
-            },
-            
-            // Create a folder element
-            createFolderElement(folder) {
-                const folderElement = document.createElement('div');
-                folderElement.className = 'folder';
-                folderElement.dataset.path = folder.path;
-                
-                // Create folder header
-                const folderHeader = document.createElement('div');
-                folderHeader.className = 'folder-header';
-                folderHeader.innerHTML = `
-                    <span>${folder.name}</span>
-                    <i class="fas fa-chevron-right"></i>
-                `;
-                
-                // Create folder content container
-                const folderContent = document.createElement('div');
-                folderContent.className = 'folder-content';
-                
-                // Add folder info
-                const folderInfo = document.createElement('div');
-                folderInfo.className = 'folder-info';
-                folderInfo.innerHTML = `
-                    <span>${folder.count} items</span>
-                    <span>Path: ${folder.path}</span>
-                `;
-                folderContent.appendChild(folderInfo);
-                
-                // Create image grid
-                const imageGrid = document.createElement('div');
-                imageGrid.className = 'image-grid';
-                
-                // Add images with delay for animation
-                folder.images.forEach((image, index) => {
-                    setTimeout(() => {
-                        const imageElement = this.createImageElement(image);
-                        imageGrid.appendChild(imageElement);
-                    }, index * 100);
-                });
-                
-                folderContent.appendChild(imageGrid);
-                
-                // Add click event to toggle folder
-                folderHeader.addEventListener('click', () => {
-                    this.toggleFolder(folderHeader, folderContent);
-                });
-                
-                // Append elements to folder
-                folderElement.appendChild(folderHeader);
-                folderElement.appendChild(folderContent);
-                
-                return folderElement;
-            },
-            
-            // Create an image element
-            createImageElement(image) {
-                const imageElement = document.createElement('div');
-                imageElement.className = 'image-item';
-                imageElement.dataset.path = image.path;
-                imageElement.dataset.name = image.name;
-                imageElement.dataset.size = image.size;
-                imageElement.dataset.dimensions = image.dimensions;
-                imageElement.dataset.type = image.type;
-                
-                // Use a placeholder image for demo, in real app use actual image path
-                const placeholderUrl = this.getPlaceholderImage(image.type);
-                
-                imageElement.innerHTML = `
-                    <img src="${placeholderUrl}" alt="${image.name}">
-                    <div class="image-overlay">
-                        <div class="image-name">${image.name}</div>
-                        <div class="image-actions">
-                            <button class="image-btn copy-link-btn" title="Copy Link">
-                                <i class="fas fa-link"></i>
-                            </button>
-                            <button class="image-btn download-btn" title="Download">
-                                <i class="fas fa-download"></i>
-                            </button>
-                            <button class="image-btn view-btn" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                // Add event listeners for image actions
-                imageElement.querySelector('.view-btn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    this.openImageModal(image, imageElement);
-                });
-                
-                imageElement.querySelector('.copy-link-btn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    this.copyImageLink(image.path);
-                });
-                
-                imageElement.querySelector('.download-btn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    this.downloadImage(image);
-                });
-                
-                // Open modal when clicking on the image
-                imageElement.addEventListener('click', () => {
-                    this.openImageModal(image, imageElement);
-                });
-                
-                // Add tooltip for image name on hover
-                imageElement.addEventListener('mouseenter', () => {
-                    this.showTooltip(image.name);
-                });
-                
-                imageElement.addEventListener('mouseleave', () => {
-                    this.hideTooltip();
-                });
-                
-                return imageElement;
-            },
-            
-            // Get placeholder image based on file type
-            getPlaceholderImage(type) {
-                // In a real app, use actual thumbnails
-                switch (type.toLowerCase()) {
-                    case 'jpg':
-                    case 'jpeg':
-                        return `https://source.unsplash.com/random/300x300?sig=${Math.random()}`;
-                    case 'png':
-                        return `https://source.unsplash.com/random/300x300?sig=${Math.random()}`;
-                    case 'gif':
-                        return `https://source.unsplash.com/random/300x300?sig=${Math.random()}`;
-                    case 'svg':
-                        return `https://source.unsplash.com/random/300x300?sig=${Math.random()}`;
-                    default:
-                        return `https://source.unsplash.com/random/300x300?sig=${Math.random()}`;
-                }
-            },
-            
-            // Toggle folder open/close
-            toggleFolder(header, content) {
-                const isOpen = header.classList.contains('active');
-                
-                if (isOpen) {
-                    header.classList.remove('active');
-                    content.style.display = 'none';
-                } else {
-                    header.classList.add('active');
-                    content.style.display = 'block';
-                }
-            },
-            
-            // Expand all folders
-            expandAllFolders() {
-                const folderHeaders = document.querySelectorAll('.folder-header');
-                const folderContents = document.querySelectorAll('.folder-content');
-                
-                folderHeaders.forEach(header => header.classList.add('active'));
-                folderContents.forEach(content => content.style.display = 'block');
-            },
-            
-            // Collapse all folders
-            collapseAllFolders() {
-                const folderHeaders = document.querySelectorAll('.folder-header');
-                const folderContents = document.querySelectorAll('.folder-content');
-                
-                folderHeaders.forEach(header => header.classList.remove('active'));
-                folderContents.forEach(content => content.style.display = 'none');
-            },
-            
-            // Refresh gallery
-            refreshGallery() {
-                // Add refresh animation to button
-                this.elements.refreshBtn.classList.add('rotating');
-                
-                // Reload gallery data
-                this.loadGallery();
-                
-                // Remove animation after a delay
-                setTimeout(() => {
-                    this.elements.refreshBtn.classList.remove('rotating');
-                }, 1000);
-            },
-            
-            // Toggle dark/light theme
-            toggleTheme() {
-                document.body.classList.toggle('dark-theme');
-                this.isDarkTheme = document.body.classList.contains('dark-theme');
-                
-                // Update theme toggle icon
-                if (this.isDarkTheme) {
-                    this.elements.themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                } else {
-                    this.elements.themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                }
-            },
-            
-            // Set view mode (grid or list)
-            setViewMode(mode) {
-                if (mode === 'grid') {
-                    this.elements.directoryTree.classList.add('grid-view');
-                    this.elements.directoryTree.classList.remove('list-view');
-                    this.elements.gridViewBtn.classList.add('active');
-                    this.elements.listViewBtn.classList.remove('active');
-                    this.isGridView = true;
-                } else {
-                    this.elements.directoryTree.classList.add('list-view');
-                    this.elements.directoryTree.classList.remove('grid-view');
-                    this.elements.listViewBtn.classList.add('active');
-                    this.elements.gridViewBtn.classList.remove('active');
-                    this.isGridView = false;
-                }
-            },
-            
-            // Collect all unique file extensions for filters
-            collectExtensions() {
-                this.extensionFilters.clear();
-                
-                this.sampleData.folders.forEach(folder => {
-                    folder.images.forEach(image => {
-                        this.extensionFilters.add(image.type);
-                    });
-                });
-                
-                // Render extension filters
-                this.renderExtensionFilters();
-            },
-            
-            // Render extension filter buttons
-            renderExtensionFilters() {
-                this.elements.extensionFilters.innerHTML = '';
-                
-                this.extensionFilters.forEach(ext => {
-                    const filterBtn = document.createElement('div');
-                    filterBtn.className = 'filter-option';
-                    filterBtn.textContent = ext.toUpperCase();
-                    filterBtn.dataset.extension = ext;
-                    
-                    filterBtn.addEventListener('click', () => {
-                        this.toggleFilter(filterBtn, ext);
-                    });
-                    
-                    this.elements.extensionFilters.appendChild(filterBtn);
-                });
-            },
-            
-            // Toggle a filter on/off
-            toggleFilter(filterBtn, extension) {
-                filterBtn.classList.toggle('active');
-                
-                if (filterBtn.classList.contains('active')) {
-                    this.activeFilters.add(extension);
-                } else {
-                    this.activeFilters.delete(extension);
-                }
-                
-                this.filterGallery();
-            },
-            
-            // Clear all active filters
-            clearFilters() {
-                this.activeFilters.clear();
-                this.elements.searchInput.value = '';
-                this.searchTerm = '';
-                
-                // Reset filter buttons
-                document.querySelectorAll('.filter-option').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                this.filterGallery();
-            },
-            
-            // Filter gallery based on search term and active filters
-            filterGallery() {
-                const folders = document.querySelectorAll('.folder');
-                let totalVisible = 0;
-                
-                folders.forEach(folder => {
-                    const images = folder.querySelectorAll('.image-item');
-                    let visibleCount = 0;
-                    
-                    images.forEach(image => {
-                        const imageName = image.dataset.name.toLowerCase();
-                        const imageType = image.dataset.type;
-                        
-                        // Check if image matches search and filter criteria
-                        const matchesSearch = !this.searchTerm || imageName.includes(this.searchTerm);
-                        const matchesFilter = this.activeFilters.size === 0 || this.activeFilters.has(imageType);
-                        
-                        if (matchesSearch && matchesFilter) {
-                            image.style.display = '';
-                            visibleCount++;
-                            totalVisible++;
-                        } else {
-                            image.style.display = 'none';
-                        }
-                    });
-                    
-                    // Show/hide folder based on whether it has visible images
-                    if (visibleCount > 0) {
-                        folder.style.display = '';
-                    } else {
-                        folder.style.display = 'none';
-                    }
-                });
-                
-                // Update filtered count
-                this.elements.filteredCount.textContent = totalVisible;
-                
-                // Show no results message if needed
-                this.showNoResultsIfNeeded(totalVisible);
-            },
-            
-            // Show "no results" message if needed
-            showNoResultsIfNeeded(visibleCount) {
-                // Remove existing no results message if any
-                const existingMessage = document.getElementById('noResultsMessage');
-                if (existingMessage) {
-                    this.elements.directoryTree.removeChild(existingMessage);
-                }
-                
-                // If no visible images, show message
-                if (visibleCount === 0) {
-                    const noResults = document.createElement('div');
-                    noResults.className = 'no-results';
-                    noResults.id = 'noResultsMessage';
-                    noResults.innerHTML = `
-                        <i class="fas fa-search"></i>
-                        <p>No images found matching your search criteria.</p>
-                        <button class="btn btn-primary" id="clearSearchBtn">
-                            <i class="fas fa-times"></i>
-                            <span>Clear Search</span>
-                        </button>
-                    `;
-                    
-                    this.elements.directoryTree.appendChild(noResults);
-                    
-                    // Add event listener to clear search button
-                    document.getElementById('clearSearchBtn').addEventListener('click', () => {
-                        this.clearFilters();
-                    });
-                }
-            },
-            
-            // Update statistics
-            updateStats() {
-                const folderCount = this.sampleData.folders.length;
-                let imageCount = 0;
-                
-                this.sampleData.folders.forEach(folder => {
-                    imageCount += folder.images.length;
-                });
-                
-                this.elements.folderCount.textContent = folderCount;
-                this.elements.imageCount.textContent = imageCount;
-                this.elements.filteredCount.textContent = imageCount;
-            },
-            
-            // Open image modal
-            openImageModal(image, imageElement) {
-                // Get all visible images in the current context
-                const visibleImages = Array.from(document.querySelectorAll('.image-item')).filter(img => 
-                    img.style.display !== 'none'
-                );
-                
-                // Find index of current image
-                this.currentImageIndex = visibleImages.indexOf(imageElement);
-                this.currentImages = visibleImages;
-                this.currentImage = image;
-                
-                // Set modal image and details
-                const placeholderUrl = this.getPlaceholderImage(image.type);
-                this.elements.modalImage.src = placeholderUrl;
-                this.elements.modalImageName.textContent = image.name;
-                this.elements.modalImageDetails.textContent = `${image.dimensions} • ${image.size} • ${image.type.toUpperCase()}`;
-                
-                // Reset zoom
-                this.zoomLevel = 1;
-                this.elements.modalImage.style.transform = `scale(${this.zoomLevel})`;
-                
-                // Show modal with animation
-                this.elements.imageModal.style.display = 'flex';
-                setTimeout(() => {
-                    this.elements.imageModal.classList.add('show');
-                }, 10);
-                
-                // Disable body scroll
-                document.body.style.overflow = 'hidden';
-            },
-            
-            // Close image modal
-            closeImageModal() {
-                this.elements.imageModal.classList.remove('show');
-                
-                // Hide modal after animation completes
-                setTimeout(() => {
-                    this.elements.imageModal.style.display = 'none';
-                }, 300);
-                
-                // Re-enable body scroll
-                document.body.style.overflow = '';
-            },
-            
-            // Navigate to previous/next image
-            navigateImage(direction) {
-                if (this.currentImages.length <= 1) return;
-                
-                if (direction === 'prev') {
-                    this.currentImageIndex = (this.currentImageIndex - 1 + this.currentImages.length) % this.currentImages.length;
-                } else {
-                    this.currentImageIndex = (this.currentImageIndex + 1) % this.currentImages.length;
-                }
-                
-                const newImageElement = this.currentImages[this.currentImageIndex];
-                const newImage = {
-                    name: newImageElement.dataset.name,
-                    path: newImageElement.dataset.path,
-                    size: newImageElement.dataset.size,
-                    dimensions: newImageElement.dataset.dimensions,
-                    type: newImageElement.dataset.type
-                };
-                
-                // Update modal with new image
-                const placeholderUrl = this.getPlaceholderImage(newImage.type);
-                
-                // Add transition effect
-                this.elements.modalImage.style.opacity = '0';
-                setTimeout(() => {
-                    this.elements.modalImage.src = placeholderUrl;
-                    this.elements.modalImageName.textContent = newImage.name;
-                    this.elements.modalImageDetails.textContent = `${newImage.dimensions} • ${newImage.size} • ${newImage.type.toUpperCase()}`;
-                    
-                    // Reset zoom
-                    this.zoomLevel = 1;
-                    this.elements.modalImage.style.transform = `scale(${this.zoomLevel})`;
-                    
-                    this.elements.modalImage.style.opacity = '1';
-                }, 300);
-                
-                this.currentImage = newImage;
-            },
-            
-            // Zoom image in/out
-            zoomImage(action) {
-                switch (action) {
-                    case 'in':
-                        this.zoomLevel = Math.min(this.zoomLevel + 0.25, 3);
-                        break;
-                    case 'out':
-                        this.zoomLevel = Math.max(this.zoomLevel - 0.25, 0.5);
-                        break;
-                    case 'reset':
-                        this.zoomLevel = 1;
-                        break;
-                }
-                
-                this.elements.modalImage.style.transform = `scale(${this.zoomLevel})`;
-            },
-                        // Copy image link to clipboard
-                        copyImageLink(path = null) {
-                const imagePath = path || this.currentImage.path;
-                
-                // In a real app, this would be a full URL
-                const imageUrl = `https://example.com${imagePath}`;
-                
-                // Copy to clipboard
-                navigator.clipboard.writeText(imageUrl)
-                    .then(() => {
-                        this.showToast('Link copied to clipboard!');
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy link: ', err);
-                        this.showToast('Failed to copy link', 'error');
-                    });
-            },
-            
-            // Download image
-            downloadImage(image = null) {
-                const imageToDownload = image || this.currentImage;
-                
-                // In a real app, this would trigger a download
-                // For demo purposes, we'll just show a toast
-                this.showToast(`Downloading ${imageToDownload.name}...`);
-                
-                // Simulate download delay
-                setTimeout(() => {
-                    this.showToast(`${imageToDownload.name} downloaded successfully!`);
-                }, 1500);
-            },
-            
-            // Show tooltip
-            showTooltip(text) {
-                this.elements.tooltip.textContent = text;
-                this.elements.tooltip.style.display = 'block';
-            },
-            
-            // Hide tooltip
-            hideTooltip() {
-                this.elements.tooltip.style.display = 'none';
-            },
-            
-            // Show toast notification
-            showToast(message, type = 'success') {
-                this.elements.toastMessage.textContent = message;
-                
-                // Set toast type (success or error)
-                if (type === 'error') {
-                    this.elements.toast.classList.add('error');
-                    this.elements.toast.querySelector('i').className = 'fas fa-exclamation-circle';
-                } else {
-                    this.elements.toast.classList.remove('error');
-                    this.elements.toast.querySelector('i').className = 'fas fa-check-circle';
-                }
-                
-                // Show toast
-                this.elements.toast.classList.add('show');
-                
-                // Hide toast after delay
-                setTimeout(() => {
-                    this.elements.toast.classList.remove('show');
-                }, 3000);
-            }
-        };
-        
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            GalleryApp.init();
-        });
-    </script>
-    
-    <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        :root {
-            --primary-color: #4a6cf7;
-            --primary-hover: #3a5ce5;
-            --secondary-color: #6c757d;
-            --secondary-hover: #5a6268;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-            --border-color: #dee2e6;
-            --text-color: #212529;
-            --text-muted: #6c757d;
-            --bg-color: #ffffff;
-            --card-bg: #ffffff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-            --border-radius: 8px;
-            --spacing: 1rem;
-        }
-        
-        body {
-            background-color: var(--bg-color);
+        .channel.active {
+            background-color: var(--active-bg);
             color: var(--text-color);
-            line-height: 1.6;
-            transition: var(--transition);
         }
-        
-        /* Dark theme */
-        body.dark-theme {
-            --bg-color: #1a1a1a;
-            --card-bg: #2d2d2d;
-            --text-color: #f8f9fa;
-            --text-muted: #adb5bd;
-            --border-color: #444;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+        .channel i {
+            margin-right: 6px;
+            font-size: 16px;
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+
+        .channel-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-        
-        /* Header styles */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .app-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .search-bar {
+
+        /* Main content area */
+        .content-area {
             flex: 1;
-            margin: 0 2rem;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
-        
+
+        .content-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--divider-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-channel-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-channel-info i {
+            margin-right: 6px;
+            font-size: 18px;
+            color: var(--text-muted);
+        }
+
+        .header-channel-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .header-action {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .header-action:hover {
+            color: var(--text-color);
+        }
+
+        .search-container {
+            position: relative;
+            width: 240px;
+        }
+
         .search-input {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background-color: var(--card-bg);
+            padding: 8px 12px 8px 32px;
+            background-color: var(--header-color);
+            border: none;
+            border-radius: 4px;
             color: var(--text-color);
-            font-size: 1rem;
-            transition: var(--transition);
+            font-size: 14px;
         }
-        
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
         .search-input:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.25);
         }
-        
+
         .search-icon {
             position: absolute;
-            left: 0.75rem;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
+            font-size: 14px;
         }
-        
-        .toolbar {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: var(--transition);
-            border: 1px solid var(--border-color);
-        }
-        
-        .btn:hover {
-            background-color: var(--border-color);
-        }
-        
-        .btn i {
-            font-size: 1rem;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-        }
-        
-        .btn-group {
-            display: flex;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-        }
-        
-        .btn-group .btn {
-            border-radius: 0;
-            border-right: none;
-        }
-        
-        .btn-group .btn:first-child {
-            border-top-left-radius: var(--border-radius);
-            border-bottom-left-radius: var(--border-radius);
-        }
-        
-        .btn-group .btn:last-child {
-            border-top-right-radius: var(--border-radius);
-            border-bottom-right-radius: var(--border-radius);
-            border-right: 1px solid var(--border-color);
-        }
-        
-        .btn-group .btn.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        /* Stats and filter bar */
-        .stats-bar, .filter-bar {
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.75rem 1rem;
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-        
-        .stats {
-            display: flex;
-            gap: 1.5rem;
-        }
-        
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .stat-value {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        
-        .filter-options {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .filter-option {
-            padding: 0.25rem 0.75rem;
-            background-color: var(--light-color);
-            color: var(--text-color);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .filter-option:hover {
-            background-color: var(--border-color);
-        }
-        
-        .filter-option.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        /* Directory tree and gallery */
-        .directory-tree {
-            margin-top: 1rem;
+
+        /* Gallery content */
+        .gallery-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
             display: grid;
-            gap: 1.5rem;
-            transition: var(--transition);
-        }
-        
-        .directory-tree.grid-view {
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            align-content: start;
         }
-        
-        .directory-tree.list-view {
-            grid-template-columns: 1fr;
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        
-        .folder {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Image card styles */
+        .image-card {
+            background-color: var(--channel-color);
+            border-radius: 8px;
             overflow: hidden;
-            transition: var(--transition);
+            transition: transform 0.2s;
+            box-shadow: var(--card-shadow);
         }
-        
-        .folder:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+        .image-card:hover {
+            transform: translateY(-4px);
         }
-        
-        .folder-header {
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
-        }
-        
-        .folder-header i {
-            transition: transform 0.3s ease;
-        }
-        
-        .folder-header.active i {
-            transform: rotate(90deg);
-        }
-        
-        .folder-content {
-            display: none;
-            padding: 1rem;
-        }
-        
-        .folder-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-        
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
-        }
-        
-        .image-item {
+
+        .image-container {
             position: relative;
-            border-radius: var(--border-radius);
+            padding-top: 56.25%; /* 16:9 aspect ratio */
             overflow: hidden;
-            aspect-ratio: 1;
-            cursor: pointer;
-            transition: var(--transition);
         }
-        
-        .image-item:hover {
-            transform: scale(1.05);
-        }
-        
-        .image-item img {
+
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: var(--transition);
+            transition: transform 0.3s;
         }
-        
-        .image-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-            padding: 0.75rem;
-            color: white;
-            opacity: 0;
-            transition: var(--transition);
+
+        .image-card:hover .image-container img {
+            transform: scale(1.05);
         }
-        
-        .image-item:hover .image-overlay {
-            opacity: 1;
+
+        .image-info {
+            padding: 12px;
         }
-        
+
         .image-name {
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
+            font-weight: 500;
+            margin-bottom: 4px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
+        .image-meta {
+            color: var(--text-muted);
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
         .image-actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
+            justify-content: space-between;
+            margin-top: 8px;
         }
-        
+
         .image-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
+            background-color: var(--background-color);
+            color: var(--text-color);
             border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
+            gap: 4px;
+            transition: background-color 0.2s;
         }
-        
+
         .image-btn:hover {
             background-color: var(--primary-color);
         }
-        
+
         /* Loading indicator */
         .loading {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 3rem;
-            grid-column: 1 / -1;
+            height: 100%;
+            width: 100%;
+            color: var(--text-muted);
+            gap: 16px;
         }
-        
-        .loading-spinner {
+
+        .spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid rgba(74, 108, 247, 0.3);
-            border-top: 4px solid var(--primary-color);
+            border: 4px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
+            border-left-color: var(--primary-color);
             animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
         }
-        
-        .loading-text {
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* No results message */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
             color: var(--text-muted);
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
+
         /* Modal styles */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
             z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
         }
-        
-        .modal.show {
-            opacity: 1;
-        }
-        
+
         .modal-content {
             position: relative;
-            width: 90%;
-            max-width: 1000px;
+            max-width: 90%;
             max-height: 90vh;
-            margin: 5vh auto;
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
             display: flex;
             flex-direction: column;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: var(--background-color);
         }
-        
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 36px;
-            height: 36px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border-radius: 50%;
+
+        .modal-header {
+            padding: 16px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            border-bottom: 1px solid var(--divider-color);
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
             cursor: pointer;
-            z-index: 10;
-            transition: var(--transition);
         }
-        
+
         .close-modal:hover {
-            background-color: var(--danger-color);
+            color: var(--text-color);
         }
-        
+
         .modal-image-container {
             position: relative;
             height: 70vh;
             background-color: #000;
             display: flex;
-            align-items: center;
             justify-content: center;
-            overflow: hidden;
+            align-items: center;
         }
-        
-        #modalImage {
+
+        .modal-image-container img {
             max-width: 100%;
             max-height: 100%;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            object-fit: contain;
         }
-        
+
         .nav-buttons {
             position: absolute;
             top: 0;
@@ -2314,13 +454,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 1rem;
+            padding: 0 16px;
             pointer-events: none;
         }
-        
+
         .nav-button {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
@@ -2330,262 +470,919 @@
             justify-content: center;
             cursor: pointer;
             pointer-events: auto;
-            transition: var(--transition);
+            transition: background-color 0.2s;
         }
-        
+
         .nav-button:hover {
             background-color: var(--primary-color);
         }
-        
-        .zoom-controls {
-            position: absolute;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 0.5rem;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 0.5rem;
-            border-radius: 30px;
-        }
-        
-        .zoom-btn {
-            width: 36px;
-            height: 36px;
-            background-color: transparent;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .zoom-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .modal-toolbar {
-            padding: 1rem;
+
+        .modal-footer {
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid var(--divider-color);
         }
-        
+
         .modal-info {
-            flex: 1;
-        }
-        
-        #modalImageName {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        
-        #modalImageDetails {
-            font-size: 0.9rem;
             color: var(--text-muted);
+            font-size: 14px;
         }
-        
+
         .modal-actions {
             display: flex;
-            gap: 0.75rem;
+            gap: 8px;
         }
-        
+
         .modal-btn {
-            padding: 0.5rem 1rem;
+            background-color: var(--channel-color);
+            color: var(--text-color);
             border: none;
-            border-radius: var(--border-radius);
-            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 4px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: var(--transition);
+            gap: 6px;
+            transition: background-color 0.2s;
         }
-        
+
+        .modal-btn:hover {
+            background-color: var(--hover-bg);
+        }
+
         .modal-btn-primary {
             background-color: var(--primary-color);
-            color: white;
         }
-        
+
         .modal-btn-primary:hover {
-            background-color: var(--primary-hover);
+            background-color: #4752c4;
         }
-        
-        .modal-btn-secondary {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        .modal-btn-secondary:hover {
-            background-color: var(--secondary-hover);
-        }
-        
-        /* Tooltip */
-        .tooltip {
-            position: absolute;
-            display: none;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 0.5rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            z-index: 100;
-            pointer-events: none;
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
+
         /* Toast notification */
         .toast {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background-color: var(--success-color);
+            bottom: 24px;
+            right: 24px;
+            background-color: var(--primary-color);
             color: white;
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            box-shadow: var(--shadow);
-            transform: translateY(100px);
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 2000;
             opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            z-index: 1000;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            box-shadow: var(--card-shadow);
         }
-        
+
         .toast.show {
-            transform: translateY(0);
             opacity: 1;
+            transform: translateY(0);
         }
-        
-        .toast.error {
-            background-color: var(--danger-color);
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background-color: var(--header-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: var(--card-shadow);
         }
-        
-        .toast i {
-            font-size: 1.2rem;
-        }
-        
-        /* No results message */
-        .no-results {
-            grid-column: 1 / -1;
+
+        /* Filter tags */
+        .filter-tags {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem;
-            text-align: center;
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
         }
-        
-        .no-results i {
-            font-size: 3rem;
+
+        .filter-tag {
+            background-color: var(--channel-color);
             color: var(--text-muted);
-            margin-bottom: 1rem;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        
-        .no-results p {
-            margin-bottom: 1.5rem;
-            color: var(--text-muted);
+
+        .filter-tag:hover {
+            background-color: var(--hover-bg);
+            color: var(--text-color);
         }
-        
-        /* Animation for refresh button */
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+
+        .filter-tag.active {
+            background-color: var(--primary-color);
+            color: white;
         }
-        
-        .rotating {
-            animation: rotate 1s linear infinite;
-        }
-        
-        /* Responsive styles */
+
+        /* Mobile responsiveness */
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .header {
+            .app-container {
                 flex-direction: column;
-                gap: 1rem;
             }
-            
-            .search-bar {
-                margin: 1rem 0;
+
+            .sidebar {
                 width: 100%;
+                height: 60px;
+                flex-direction: row;
+                padding: 0 16px;
+                overflow-x: auto;
             }
-            
-            .toolbar {
+
+            .server-icon {
+                margin: 0 4px;
+            }
+
+            .server-divider {
+                width: 2px;
+                height: 32px;
+                margin: 0 8px;
+            }
+
+            .channels-sidebar {
                 width: 100%;
-                justify-content: space-between;
+                height: 60px;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 0 16px;
             }
-            
-            .stats-bar, .filter-bar {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
-            
-            .stats {
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
-            
-            .directory-tree.grid-view {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-            
-            .modal-content {
-                width: 95%;
-                max-height: 95vh;
-                margin: 2.5vh auto;
-            }
-            
-            .modal-image-container {
-                height: 60vh;
-            }
-            
-            .modal-toolbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .modal-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .btn span {
+
+            .server-header {
                 display: none;
             }
-            
-            .btn {
-                padding: 0.5rem;
+
+            .channel-category {
+                display: none;
             }
-            
-            .directory-tree.grid-view {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+
+            .channel {
+                padding: 8px 12px;
+                margin: 0 4px;
+                white-space: nowrap;
             }
-            
-            .image-grid {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+
+            .content-area {
+                height: calc(100vh - 120px);
             }
-            
-            .modal-image-container {
-                height: 50vh;
+
+            .gallery-content {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .search-container {
+                width: 160px;
             }
         }
     </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Server sidebar -->
+        <div class="sidebar">
+            <div class="server-icon active">
+                <i class="fas fa-image"></i>
+            </div>
+            <div class="server-divider"></div>
+            <!-- Additional server icons would go here in a real Discord-like app -->
+            <div class="server-icon">
+                <i class="fas fa-folder"></i>
+            </div>
+            <div class="server-icon">
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+
+        <!-- Channels sidebar -->
+        <div class="channels-sidebar">
+            <div class="server-header">
+                <div class="server-name">GuptaAman777 Gallery</div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div class="channel-category">
+                <span>Image Collections</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div id="folderChannels">
+                <!-- Folder channels will be dynamically added here -->
+                <div class="channel active">
+                    <i class="fas fa-hashtag"></i>
+                    <span class="channel-name">all-images</span>
+                </div>
+            </div>
+            
+            <div class="channel-category">
+                <span>Filters</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <div id="filterChannels">
+                <!-- Filter channels will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Main content area -->
+        <div class="content-area">
+            <div class="content-header">
+                <div class="header-channel-info">
+                    <i class="fas fa-hashtag"></i>
+                    <span class="header-channel-name" id="currentChannel">all-images</span>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search images..." id="searchInput">
+                    </div>
+                    <div class="header-action" id="refreshBtn" title="Refresh">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <div class="header-action" id="expandAllBtn" title="Expand All">
+                        <i class="fas fa-expand-alt"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <span>Loading images from GitHub repository...</span>
+            </div>
+            
+            <div id="noResults" class="no-results" style="display:none;">
+                <i class="fas fa-search" style="font-size: 2em; margin-bottom: 15px;"></i>
+                <p>No images found matching your search criteria.</p>
+            </div>
+            
+            <div class="gallery-content" id="galleryContent" style="display:none;">
+                <div class="filter-tags" id="filterTags">
+                    <!-- Filter tags will be dynamically added here -->
+                </div>
+                
+                <div id="imageGrid" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px;">
+                    <!-- Images will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Image Viewer</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-image-container">
+                <img id="modalImage" src="" alt="Full Image">
+                <div class="nav-buttons">
+                    <button class="nav-button" id="prevImageBtn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-button" id="nextImageBtn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-info" id="modalInfo">Image details</div>
+                <div class="modal-actions">
+                    <button class="modal-btn" id="copyUrlBtn"><i class="fas fa-link"></i> Copy URL</button>
+                    <button class="modal-btn modal-btn-primary" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+    <div id="toast" class="toast">URL copied to clipboard!</div>
+
+    <script>
+        // Configuration
+        const GITHUB_USERNAME = 'GuptaAman777';
+        const GITHUB_REPO = 'guptaaman777-imagehosting';
+        const BRANCH = 'main';
+        
+        // Global state
+        let allImages = [];
+        let currentImages = [];
+        let currentImageIndex = 0;
+        let activeFilters = new Set();
+        let currentToastTimeout = null;
+        let currentFolder = 'all';
+
+        // Fetch repository contents recursively
+        async function fetchAllRepositoryContents(path = '') {
+            const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${path}`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const contents = await response.json();
+                let allImages = [];
+
+                for (const item of contents) {
+                    if (item.type === 'dir') {
+                        const subImages = await fetchAllRepositoryContents(item.path);
+                        allImages = allImages.concat(subImages);
+                    } else if (isImageFile(item.name)) {
+                        allImages.push(item);
+                    }
+                }
+
+                return allImages;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return [];
+            }
+        }
+
+        // Check if file is an image
+        function isImageFile(filename) {
+            const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
+            return imageExtensions.includes(filename.split('.').pop().toLowerCase());
+        }
+
+        // Create raw GitHub URL for image - properly encoding the path
+        function createRawUrl(path) {
+            // Split the path into segments and encode each segment individually
+            const pathSegments = path.split('/');
+            const encodedPath = pathSegments.map(segment => encodeURIComponent(segment)).join('/');
+            return `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${BRANCH}/${encodedPath}`;
+        }
+
+        // Organize images into folder structure
+        function organizeImagesByFolders(images) {
+            const folderStructure = {
+                'all': { name: 'All Images', images: [...images] }
+            };
+
+            images.forEach(image => {
+                const pathParts = image.path.split('/');
+                
+                // Determine the folder path (everything except the filename)
+                if (pathParts.length > 1) {
+                    const folderPath = pathParts[0]; // Just use the first level folder
+                    
+                    // Ensure folder exists in structure
+                    if (!folderStructure[folderPath]) {
+                        folderStructure[folderPath] = { 
+                            name: folderPath.charAt(0).toUpperCase() + folderPath.slice(1), 
+                            images: [] 
+                        };
+                    }
+                    
+                    // Add image to folder
+                    folderStructure[folderPath].images.push(image);
+                } else {
+                    // For root images, create a "Root" folder if it doesn't exist
+                    if (!folderStructure['root']) {
+                        folderStructure['root'] = { name: 'Root', images: [] };
+                    }
+                    folderStructure['root'].images.push(image);
+                }
+            });
+
+            return folderStructure;
+        }
+
+        // Get unique file extensions from images
+        function getUniqueExtensions(images) {
+            const extensions = new Set();
+            images.forEach(image => {
+                const extension = image.name.split('.').pop().toLowerCase();
+                extensions.add(extension);
+            });
+            return Array.from(extensions);
+        }
+
+        // Initialize folder channels
+        function initializeFolderChannels(folderStructure) {
+            const folderChannels = document.getElementById('folderChannels');
+            folderChannels.innerHTML = '';
+            
+            // Add "all-images" channel
+            const allChannel = document.createElement('div');
+            allChannel.className = 'channel active';
+            allChannel.setAttribute('data-folder', 'all');
+            allChannel.innerHTML = `
+                <i class="fas fa-hashtag"></i>
+                <span class="channel-name">all-images</span>
+            `;
+            folderChannels.appendChild(allChannel);
+            
+            // Add other folder channels
+            Object.entries(folderStructure).forEach(([key, folder]) => {
+                if (key !== 'all') {
+                    const channelElement = document.createElement('div');
+                    channelElement.className = 'channel';
+                    channelElement.setAttribute('data-folder', key);
+                    channelElement.innerHTML = `
+                        <i class="fas fa-hashtag"></i>
+                        <span class="channel-name">${folder.name.toLowerCase()}</span>
+                    `;
+                    folderChannels.appendChild(channelElement);
+                }
+            });
+            
+            // Add event listeners to channels
+            document.querySelectorAll('.channel').forEach(channel => {
+                channel.addEventListener('click', () => {
+                    // Remove active class from all channels
+                    document.querySelectorAll('.channel').forEach(ch => {
+                        ch.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked channel
+                    channel.classList.add('active');
+                    
+                    // Update current folder and display images
+                    const folder = channel.getAttribute('data-folder');
+                    currentFolder = folder;
+                    
+                    // Update header
+                    document.getElementById('currentChannel').textContent = channel.querySelector('.channel-name').textContent;
+                    
+                    // Display images for this folder
+                    displayImagesForFolder(folder);
+                });
+            });
+        }
+
+        // Initialize filter tags
+        function initializeFilterTags(extensions) {
+            const filterTags = document.getElementById('filterTags');
+            filterTags.innerHTML = '<div class="filter-tag active" data-extension="all">All</div>';
+            
+            extensions.forEach(ext => {
+                const filterTag = document.createElement('div');
+                filterTag.className = 'filter-tag';
+                filterTag.setAttribute('data-extension', ext);
+                filterTag.textContent = ext.toUpperCase();
+                filterTags.appendChild(filterTag);
+            });
+            
+            // Add event listeners to filter tags
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const extension = tag.getAttribute('data-extension');
+                    
+                    if (extension === 'all') {
+                        // Deactivate all other filters
+                        document.querySelectorAll('.filter-tag').forEach(t => {
+                            t.classList.remove('active');
+                        });
+                        tag.classList.add('active');
+                        activeFilters.clear();
+                    } else {
+                        // Remove "all" filter if it's active
+                        document.querySelector('.filter-tag[data-extension="all"]').classList.remove('active');
+                        
+                        // Toggle this filter
+                        tag.classList.toggle('active');
+                        
+                        if (tag.classList.contains('active')) {
+                            activeFilters.add(extension);
+                        } else {
+                            activeFilters.delete(extension);
+                        }
+                        
+                        // If no filters are active, activate "all"
+                        if (activeFilters.size === 0) {
+                            document.querySelector('.filter-tag[data-extension="all"]').classList.add('active');
+                        }
+                    }
+                    
+                    applyFilters();
+                });
+            });
+            
+            // Also initialize filter channels
+            const filterChannels = document.getElementById('filterChannels');
+            filterChannels.innerHTML = '';
+            
+            extensions.forEach(ext => {
+                const channelElement = document.createElement('div');
+                channelElement.className = 'channel';
+                channelElement.setAttribute('data-extension', ext);
+                channelElement.innerHTML = `
+                    <i class="fas fa-circle" style="font-size: 10px;"></i>
+                    <span class="channel-name">${ext.toUpperCase()}</span>
+                `;
+                filterChannels.appendChild(channelElement);
+            });
+            
+            // Add event listeners to filter channels
+            document.querySelectorAll('#filterChannels .channel').forEach(channel => {
+                channel.addEventListener('click', () => {
+                    const extension = channel.getAttribute('data-extension');
+                    
+                    // Toggle active state
+                    channel.classList.toggle('active');
+                    
+                    // Update filter tags to match
+                    const correspondingTag = document.querySelector(`.filter-tag[data-extension="${extension}"]`);
+                    if (correspondingTag) {
+                        correspondingTag.classList.toggle('active');
+                    }
+                    
+                    // Update active filters
+                    if (channel.classList.contains('active')) {
+                        activeFilters.add(extension);
+                        // Remove "all" filter if it's active
+                        document.querySelector('.filter-tag[data-extension="all"]').classList.remove('active');
+                    } else {
+                        activeFilters.delete(extension);
+                        // If no filters are active, activate "all"
+                        if (activeFilters.size === 0) {
+                            document.querySelector('.filter-tag[data-extension="all"]').classList.add('active');
+                        }
+                    }
+                    
+                    applyFilters();
+                });
+            });
+        }
+
+        // Apply filters to current images
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            // Filter images based on active filters and search term
+            let filteredImages = [];
+            
+            if (activeFilters.size === 0) {
+                // If no filters are active, show all images in current folder
+                filteredImages = [...currentImages];
+            } else {
+                // Filter by extension
+                filteredImages = currentImages.filter(image => {
+                    const extension = image.name.split('.').pop().toLowerCase();
+                    return activeFilters.has(extension);
+                });
+            }
+            
+            // Apply search filter
+            if (searchTerm) {
+                filteredImages = filteredImages.filter(image => 
+                    image.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Display filtered images
+            renderImages(filteredImages);
+        }
+
+        // Display images for a specific folder
+        function displayImagesForFolder(folder) {
+            const folderStructure = organizeImagesByFolders(allImages);
+            
+            if (folderStructure[folder]) {
+                currentImages = folderStructure[folder].images;
+                applyFilters();
+            }
+        }
+
+        // Render images to the grid
+        function renderImages(images) {
+            const imageGrid = document.getElementById('imageGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (images.length === 0) {
+                imageGrid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            imageGrid.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            // Clear existing images
+            imageGrid.innerHTML = '';
+            
+            // Add images to grid
+            images.forEach((image, index) => {
+                const imageCard = document.createElement('div');
+                imageCard.className = 'image-card';
+                
+                const rawUrl = createRawUrl(image.path);
+                const extension = image.name.split('.').pop().toLowerCase();
+                const fileSize = formatFileSize(image.size);
+                
+                imageCard.innerHTML = `
+                    <div class="image-container">
+                        <img src="${rawUrl}" alt="${image.name}" loading="lazy">
+                    </div>
+                    <div class="image-info">
+                        <div class="image-name">${image.name}</div>
+                        <div class="image-meta">
+                            <span>${extension.toUpperCase()}</span>
+                            <span>${fileSize}</span>
+                        </div>
+                        <div class="image-actions">
+                            <button class="image-btn view-btn" data-index="${index}">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="image-btn download-btn" data-url="${rawUrl}" data-name="${image.name}">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                imageGrid.appendChild(imageCard);
+            });
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const index = parseInt(btn.getAttribute('data-index'));
+                    openImageModal(images, index);
+                });
+            });
+            
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const url = btn.getAttribute('data-url');
+                    const name = btn.getAttribute('data-name');
+                    downloadImage(url, name);
+                });
+            });
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // Open image modal
+        function openImageModal(images, index) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalInfo = document.getElementById('modalInfo');
+            
+            currentImages = images;
+            currentImageIndex = index;
+            
+            const image = images[index];
+            const rawUrl = createRawUrl(image.path);
+            
+            modalImage.src = rawUrl;
+            modalTitle.textContent = image.name;
+            
+            const extension = image.name.split('.').pop().toUpperCase();
+            const fileSize = formatFileSize(image.size);
+            modalInfo.textContent = `${extension} • ${fileSize}`;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Fade in animation
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        // Close image modal
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('show');
+            
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Navigate to previous image
+        function navigateToPrevImage() {
+            if (currentImages.length === 0) return;
+            
+            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+            updateModalImage();
+        }
+
+        // Navigate to next image
+        function navigateToNextImage() {
+            if (currentImages.length === 0) return;
+            
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+            updateModalImage();
+        }
+
+        // Update modal image
+        function updateModalImage() {
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalInfo = document.getElementById('modalInfo');
+            
+            const image = currentImages[currentImageIndex];
+            const rawUrl = createRawUrl(image.path);
+            
+            // Add fade out/in effect
+            modalImage.style.opacity = '0';
+            
+            setTimeout(() => {
+                modalImage.src = rawUrl;
+                modalTitle.textContent = image.name;
+                
+                const extension = image.name.split('.').pop().toUpperCase();
+                const fileSize = formatFileSize(image.size);
+                modalInfo.textContent = `${extension} • ${fileSize}`;
+                
+                modalImage.style.opacity = '1';
+            }, 200);
+        }
+
+        // Copy image URL to clipboard
+        function copyImageUrl() {
+            if (currentImages.length === 0 || currentImageIndex < 0) return;
+            
+            const image = currentImages[currentImageIndex];
+            const rawUrl = createRawUrl(image.path);
+            
+            navigator.clipboard.writeText(rawUrl).then(() => {
+                showToast('URL copied to clipboard!');
+            }).catch(err => {
+                console.error('Could not copy URL: ', err);
+                showToast('Failed to copy URL', true);
+            });
+        }
+
+        // Download image
+        function downloadImage(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.target = '_blank';
+            a.click();
+        }
+
+        // Show toast notification
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            
+            // Clear any existing timeout
+            if (currentToastTimeout) {
+                clearTimeout(currentToastTimeout);
+            }
+            
+            // Set message and show toast
+            toast.textContent = message;
+            toast.className = isError ? 'toast error show' : 'toast show';
+            
+            // Hide toast after 3 seconds
+            currentToastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize tooltip functionality
+        function initializeTooltips() {
+            const tooltip = document.getElementById('tooltip');
+            
+            document.querySelectorAll('[title]').forEach(element => {
+                element.addEventListener('mouseenter', (e) => {
+                    const title = e.target.getAttribute('title');
+                    if (!title) return;
+                    
+                    // Remove the title attribute to prevent default tooltip
+                    e.target.setAttribute('data-title', title);
+                    e.target.removeAttribute('title');
+                    
+                    // Position and show tooltip
+                    const rect = e.target.getBoundingClientRect();
+                    tooltip.textContent = title;
+                    tooltip.style.top = (rect.top - tooltip.offsetHeight - 10) + 'px';
+                    tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+                    tooltip.style.opacity = '1';
+                });
+                
+                element.addEventListener('mouseleave', (e) => {
+                    // Restore title attribute
+                    const dataTitle = e.target.getAttribute('data-title');
+                    if (dataTitle) {
+                        e.target.setAttribute('title', dataTitle);
+                        e.target.removeAttribute('data-title');
+                    }
+                    
+                    // Hide tooltip
+                    tooltip.style.opacity = '0';
+                });
+            });
+        }
+
+        // Initialize the application
+        async function initializeApp() {
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('galleryContent').style.display = 'none';
+            
+            try {
+                // Fetch all images from repository
+                allImages = await fetchAllRepositoryContents();
+                
+                if (allImages.length === 0) {
+                    document.getElementById('loading').innerHTML = `
+                        <i class="fas fa-exclamation-circle" style="font-size: 2em; margin-bottom: 15px;"></i>
+                        <p>No images found in the repository. Please check your repository settings.</p>
+                    `;
+                    return;
+                }
+                
+                // Organize images by folders
+                const folderStructure = organizeImagesByFolders(allImages);
+                
+                // Get unique file extensions
+                const extensions = getUniqueExtensions(allImages);
+                
+                // Initialize UI components
+                initializeFolderChannels(folderStructure);
+                initializeFilterTags(extensions);
+                initializeTooltips();
+                
+                // Set initial images (all images)
+                currentImages = folderStructure['all'].images;
+                renderImages(currentImages);
+                
+                // Hide loading, show content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('galleryContent').style.display = 'grid';
+                
+                // Add event listeners
+                document.getElementById('searchInput').addEventListener('input', () => {
+                    applyFilters();
+                });
+                
+                document.getElementById('refreshBtn').addEventListener('click', (e) => {
+                    e.target.classList.add('rotating');
+                    initializeApp().then(() => {
+                        e.target.classList.remove('rotating');
+                        showToast('Gallery refreshed!');
+                    });
+                });
+                
+                document.querySelector('.close-modal').addEventListener('click', closeImageModal);
+                
+                document.getElementById('prevImageBtn').addEventListener('click', navigateToPrevImage);
+                document.getElementById('nextImageBtn').addEventListener('click', navigateToNextImage);
+                
+                document.getElementById('copyUrlBtn').addEventListener('click', copyImageUrl);
+                
+                document.getElementById('downloadBtn').addEventListener('click', () => {
+                    if (currentImages.length === 0 || currentImageIndex < 0) return;
+                    
+                    const image = currentImages[currentImageIndex];
+                    const rawUrl = createRawUrl(image.path);
+                    downloadImage(rawUrl, image.name);
+                });
+                
+                // Close modal when clicking outside content
+                document.getElementById('imageModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('imageModal')) {
+                        closeImageModal();
+                    }
+                });
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (document.getElementById('imageModal').style.display === 'flex') {
+                        if (e.key === 'Escape') {
+                            closeImageModal();
+                        } else if (e.key === 'ArrowLeft') {
+                            navigateToPrevImage();
+                        } else if (e.key === 'ArrowRight') {
+                            navigateToNextImage();
+                        }
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                document.getElementById('loading').innerHTML = `
+                    <i class="fas fa-exclamation-circle" style="font-size: 2em; margin-bottom: 15px;"></i>
+                    <p>Error loading images: ${error.message}</p>
+                `;
+            }
+        }
+
+        // Initialize the app when the page loads
+        window.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
 </body>
-</html>
+</html>                    
