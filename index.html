@@ -3,56 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImageDrive - GuptaAman777</title>
+    <title>Stable Image Gallery - GuptaAman777</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- Base & Theme --- */
         :root {
             --primary-color: #5865F2; /* Discord Purple */
-            --secondary-color: #3BA55C; /* Discord Green */
             --background-primary: #36393F; /* Discord Dark */
             --background-secondary: #2F3136; /* Discord Darker */
-            --background-secondary-alt: #292B2F;
             --background-tertiary: #202225; /* Discord Darkest */
-            --channel-color: #2F3136; /* Background for nav */
             --interactive-normal: #B9BBBE;
             --interactive-hover: #DCDEE1;
             --interactive-active: #FFFFFF;
             --interactive-muted: #72767D;
             --header-primary: #FFFFFF;
-            --header-secondary: #B9BBBE;
             --text-normal: #DCDDDE;
             --text-muted: #96989D;
             --scrollbar-thumb: #202225;
             --scrollbar-track: #2E3338;
             --card-bg: #2F3136;
             --card-hover-bg: #32353B;
-            --card-border: rgba(0, 0, 0, 0.1);
             --input-bg: #202225;
             --divider-color: #3A3D42;
-            --status-online: #3BA55C;
-            --favorite-color: #FAA61A; /* Gold/Yellow */
+            --error-color: #ED4245; /* Discord Red */
 
             --font-primary: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            --border-radius-base: 5px;
-            --border-radius-large: 8px;
+            --border-radius: 5px;
             --spacing-unit: 8px;
-            --card-shadow: 0 1px 3px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.2);
-            --card-hover-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.25);
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.15);
             --transition-fast: 0.15s ease-in-out;
             --transition-base: 0.2s ease-in-out;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            font-size: 16px;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; }
         body {
             font-family: var(--font-primary);
             background-color: var(--background-primary);
@@ -61,21 +44,15 @@
             height: 100vh;
             overflow: hidden;
         }
-
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         /* --- Layout --- */
-        .app-container {
-            display: flex;
-            flex: 1;
-            height: 100vh;
-        }
+        .app-container { display: flex; flex: 1; height: 100vh; }
 
-        /* --- Left Sidebar (Folders/Nav) --- */
-        .navigation-sidebar {
+        .sidebar {
             width: 240px;
             background-color: var(--background-secondary);
             display: flex;
@@ -83,903 +60,373 @@
             flex-shrink: 0;
             border-right: 1px solid var(--divider-color);
         }
-
         .sidebar-header {
-            padding: var(--spacing-unit) * 2;
+            padding: calc(var(--spacing-unit) * 2);
             font-weight: 600;
             font-size: 1.1rem;
             color: var(--header-primary);
             border-bottom: 1px solid var(--divider-color);
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-unit);
+            display: flex; align-items: center; gap: var(--spacing-unit);
         }
-        .sidebar-header .logo {
-            color: var(--primary-color);
-        }
-
-
-        .sidebar-content {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: var(--spacing-unit) 0;
-        }
-
+        .sidebar-header .logo { color: var(--primary-color); }
+        .sidebar-content { flex-grow: 1; overflow-y: auto; padding: var(--spacing-unit) 0; }
         .nav-section-title {
             padding: calc(var(--spacing-unit)*1.5) calc(var(--spacing-unit)*2) var(--spacing-unit);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
+            text-transform: uppercase; font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
         }
-
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: calc(var(--spacing-unit) * 1.5);
+            display: flex; align-items: center; gap: calc(var(--spacing-unit) * 1.5);
             padding: var(--spacing-unit) calc(var(--spacing-unit) * 2);
-            margin: 1px var(--spacing-unit);
-            border-radius: var(--border-radius-base);
-            cursor: pointer;
-            color: var(--interactive-normal);
+            margin: 1px var(--spacing-unit); border-radius: var(--border-radius);
+            cursor: pointer; color: var(--interactive-normal); font-size: 0.9rem;
             transition: background-color var(--transition-fast), color var(--transition-fast);
-            font-size: 0.9rem;
         }
+        .nav-item i { width: 18px; text-align: center; margin-right: calc(var(--spacing-unit)*0.5); color: var(--text-muted); }
+        .nav-item:hover { background-color: var(--background-tertiary); color: var(--interactive-hover); }
+        .nav-item.active { background-color: var(--background-tertiary); color: var(--interactive-active); font-weight: 500; }
+        .nav-item.active i { color: var(--interactive-active); }
+        .nav-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; }
 
-        .nav-item i {
-            width: 18px; /* Fixed width for alignment */
-            text-align: center;
-            margin-right: calc(var(--spacing-unit)*0.5);
-            color: var(--text-muted);
-            transition: color var(--transition-fast);
-        }
-        .nav-item .icon-favorite { color: var(--favorite-color);}
-
-        .nav-item:hover {
-            background-color: var(--background-secondary-alt);
-            color: var(--interactive-hover);
-        }
-        .nav-item:hover i {
-            color: var(--interactive-hover);
-        }
-
-        .nav-item.active {
-            background-color: var(--background-tertiary);
-            color: var(--interactive-active);
-            font-weight: 500;
-        }
-        .nav-item.active i {
-             color: var(--interactive-active);
-        }
-
-        .nav-item .folder-indent {
-            padding-left: 20px; /* Indent subfolders */
-        }
-        .nav-item .nav-text {
-             white-space: nowrap;
-             overflow: hidden;
-             text-overflow: ellipsis;
-             flex-grow: 1;
-        }
-
-
-        /* --- Main Content Area --- */
-        .content-area {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background-color: var(--background-primary);
-        }
-
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .content-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             padding: var(--spacing-unit) calc(var(--spacing-unit) * 2);
-            border-bottom: 1px solid var(--divider-color);
-            flex-shrink: 0;
-            background-color: var(--background-secondary); /* Slightly different bg for header */
-            min-height: 58px; /* Match sidebar header height approx */
+            border-bottom: 1px solid var(--divider-color); flex-shrink: 0;
+            background-color: var(--background-secondary); min-height: 58px;
         }
-
-        .breadcrumbs {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-unit);
-            color: var(--interactive-normal);
-            font-size: 0.9rem;
-            flex-wrap: wrap;
-        }
-        .breadcrumbs span:not(.separator) { cursor: pointer; }
-        .breadcrumbs span:not(.separator):hover { color: var(--interactive-hover); text-decoration: underline; }
-        .breadcrumbs span.current { color: var(--header-primary); font-weight: 500; cursor: default; text-decoration: none;}
-        .breadcrumbs .separator { color: var(--text-muted); }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: calc(var(--spacing-unit) * 2);
-        }
-
-        .search-container {
-            position: relative;
-        }
+        .header-title { font-size: 1.1rem; font-weight: 500; color: var(--header-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .header-actions { display: flex; align-items: center; gap: calc(var(--spacing-unit) * 2); }
+        .search-container { position: relative; }
         .search-input {
-            background-color: var(--input-bg);
-            border: 1px solid var(--divider-color);
-            border-radius: var(--border-radius-base);
-            padding: calc(var(--spacing-unit)*0.75) var(--spacing-unit) calc(var(--spacing-unit)*0.75) calc(var(--spacing-unit)*3.5);
-            color: var(--text-normal);
-            width: 220px;
-            transition: width var(--transition-base), background-color var(--transition-base);
+            background-color: var(--input-bg); border: 1px solid var(--divider-color);
+            border-radius: var(--border-radius); padding: calc(var(--spacing-unit)*0.75) var(--spacing-unit) calc(var(--spacing-unit)*0.75) calc(var(--spacing-unit)*3.5);
+            color: var(--text-normal); width: 220px; transition: border-color var(--transition-base);
         }
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            background-color: var(--background-primary);
-            width: 250px;
-        }
-        .search-icon {
-            position: absolute;
-            left: var(--spacing-unit);
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-        .clear-search {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1.1em;
-            display: none; /* Initially hidden */
-         }
-        .clear-search:hover { color: var(--interactive-hover); }
-
+        .search-input:focus { outline: none; border-color: var(--primary-color); }
+        .search-icon { position: absolute; left: var(--spacing-unit); top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
         .action-button {
-            background: none;
-            border: none;
-            color: var(--interactive-normal);
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: var(--spacing-unit);
-            border-radius: var(--border-radius-base);
+            background: none; border: none; color: var(--interactive-normal); font-size: 1.1rem;
+            cursor: pointer; padding: var(--spacing-unit); border-radius: var(--border-radius);
             transition: color var(--transition-fast), background-color var(--transition-fast);
         }
-        .action-button:hover {
-            color: var(--interactive-hover);
-            background-color: var(--background-tertiary);
-        }
-        .action-button.active {
-             color: var(--primary-color);
-             background-color: rgba(88, 101, 242, 0.1);
-        }
+        .action-button:hover { color: var(--interactive-hover); background-color: var(--background-tertiary); }
 
         /* --- Gallery Content --- */
-        .gallery-wrapper {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: calc(var(--spacing-unit) * 2);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust minmax for desired card size */
-            gap: calc(var(--spacing-unit) * 2);
-            align-content: start;
-        }
-         .gallery-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-unit);
-        }
-
-        /* Image Card / List Item */
-        .image-item {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius-large);
-            overflow: hidden;
-            transition: transform var(--transition-base), box-shadow var(--transition-base);
-            position: relative;
-            box-shadow: var(--card-shadow);
-            cursor: pointer; /* Click anywhere to open */
-        }
-        .image-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--card-hover-shadow);
-            background-color: var(--card-hover-bg);
-        }
-
-        /* Grid View Specifics */
-        .gallery-grid .image-item {
-             display: flex;
-             flex-direction: column;
-        }
-        .gallery-grid .image-container {
-            position: relative;
-            padding-top: 75%; /* Aspect ratio (4:3). Adjust as needed. 56.25% for 16:9 */
-            background-color: var(--background-tertiary); /* Placeholder color */
-            overflow: hidden;
-        }
-        .gallery-grid .image-container img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-         .image-item:hover .image-container img {
-             transform: scale(1.05);
-         }
-
-        .image-info {
-            padding: calc(var(--spacing-unit) * 1.5);
-        }
-
-        .image-name {
-            font-weight: 500;
-            margin-bottom: calc(var(--spacing-unit) * 0.5);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-size: 0.9rem;
-            color: var(--header-primary);
-        }
-
-        .image-meta {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            gap: var(--spacing-unit);
-        }
-
-        /* List View Specifics */
-         .gallery-list .image-item {
-            display: flex;
-            align-items: center;
-            padding: var(--spacing-unit);
-            gap: calc(var(--spacing-unit) * 2);
-        }
-         .gallery-list .image-container {
-             width: 48px;
-             height: 48px;
-             flex-shrink: 0;
-             border-radius: var(--border-radius-base);
-             overflow: hidden;
-             background-color: var(--background-tertiary);
-        }
-        .gallery-list .image-container img {
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-        }
-         .gallery-list .image-info {
-             flex-grow: 1;
-             display: grid; /* Use grid for column alignment */
-             grid-template-columns: 3fr 1fr 1fr auto; /* Name | Type | Size | Actions */
-             align-items: center;
-             gap: calc(var(--spacing-unit) * 2);
-             padding: 0;
-         }
-         .gallery-list .image-name {
-             margin-bottom: 0;
-         }
-        .gallery-list .image-meta {
-            display: contents; /* Allow meta items to flow into the grid */
-        }
-        .gallery-list .image-meta span {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-             white-space: nowrap;
-             overflow: hidden;
-             text-overflow: ellipsis;
-        }
-
-        /* Actions common to both views */
-        .image-actions {
-            position: absolute;
-            top: var(--spacing-unit);
-            right: var(--spacing-unit);
-            display: flex;
-            gap: calc(var(--spacing-unit) * 0.5);
-            opacity: 0;
-            transition: opacity var(--transition-fast);
-            pointer-events: none; /* Initially ignore hover for children */
-             background-color: rgba(32, 34, 37, 0.8); /* Slight background */
-             padding: 4px;
-             border-radius: var(--border-radius-base);
-        }
-         .gallery-list .image-actions { /* Adjust for list view */
-             position: static; /* Take flow */
-             opacity: 1;
-             background-color: transparent;
-             padding: 0;
-             justify-self: end; /* Align to end of grid cell */
-             pointer-events: auto;
-         }
-
-        .image-item:hover .image-actions {
-            opacity: 1;
-            pointer-events: auto; /* Allow hover for children */
-        }
-
-        .action-icon-btn {
-            background: none;
-            border: none;
-            color: var(--interactive-normal);
-            font-size: 0.9rem; /* Smaller icon */
-            padding: calc(var(--spacing-unit) * 0.5);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: color var(--transition-fast), background-color var(--transition-fast);
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .action-icon-btn:hover {
-            color: var(--interactive-hover);
-            background-color: var(--background-secondary-alt);
-        }
-         .action-icon-btn.favorite-btn.is-favorite {
-             color: var(--favorite-color);
-         }
-         .action-icon-btn.favorite-btn.is-favorite:hover {
-              color: lighten(var(--favorite-color), 10%);
-         }
-          .action-icon-btn i {
-             line-height: 1; /* Fix potential alignment issues */
-         }
-
-        /* --- Loading & No Results --- */
+        .gallery-content { flex-grow: 1; overflow-y: auto; padding: calc(var(--spacing-unit) * 2); position: relative; }
         .status-indicator {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: var(--spacing-unit) * 4;
-            color: var(--text-muted);
-            background-color: rgba(54, 57, 63, 0.8); /* Semi-transparent overlay */
-            z-index: 10;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: var(--spacing-unit) * 4; color: var(--text-muted);
+            background-color: rgba(54, 57, 63, 0.9); z-index: 10; border-radius: var(--border-radius);
         }
-         .status-indicator i {
-             font-size: 2.5rem;
-             margin-bottom: var(--spacing-unit) * 2;
-             color: var(--text-muted);
-         }
-         .spinner {
-             width: 48px;
-             height: 48px;
-             border: 4px solid rgba(255, 255, 255, 0.1);
-             border-radius: 50%;
-             border-left-color: var(--primary-color);
-             animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-             margin-bottom: var(--spacing-unit) * 2;
+        .status-indicator i { font-size: 2.5rem; margin-bottom: var(--spacing-unit) * 2; }
+        .status-indicator .error-icon { color: var(--error-color); }
+        .spinner {
+             width: 40px; height: 40px; border: 4px solid rgba(255, 255, 255, 0.1);
+             border-radius: 50%; border-left-color: var(--primary-color);
+             animation: spin 1s linear infinite; margin-bottom: var(--spacing-unit) * 2;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: calc(var(--spacing-unit) * 2); }
+        .image-card {
+            background-color: var(--card-bg); border-radius: var(--border-radius); overflow: hidden;
+            box-shadow: var(--card-shadow); cursor: pointer; transition: transform var(--transition-base);
+            position: relative;
+        }
+        .image-card:hover { transform: translateY(-2px); background-color: var(--card-hover-bg); }
+        .image-container {
+            position: relative; padding-top: 75%; /* 4:3 aspect ratio */
+            background-color: var(--background-tertiary); overflow: hidden;
+        }
+        .image-container img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; transition: transform 0.3s ease;
+        }
+        .image-card:hover .image-container img { transform: scale(1.05); }
+        .image-info { padding: var(--spacing-unit); }
+        .image-name { font-weight: 500; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--header-primary); }
+        .image-meta { color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; text-transform: uppercase; }
 
         /* --- Modal --- */
-        .modal {
-            display: none; /* Changed to none */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            align-items: center; /* Vertically center */
-            justify-content: center; /* Horizontally center */
-            opacity: 0; /* Start hidden */
-            transition: opacity var(--transition-base);
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85); z-index: 1000;
+            opacity: 0; transition: opacity var(--transition-base);
+            align-items: center; justify-content: center;
         }
-        .modal.show {
-             display: flex; /* Use flex when showing */
-             opacity: 1;
-        }
-
+        .modal-overlay.show { display: flex; opacity: 1; }
         .modal-content {
-            background-color: var(--background-secondary);
-            border-radius: var(--border-radius-large);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-            max-width: 90vw;
-            max-height: 90vh;
-            width: 80vw; /* Default width */
-            height: 85vh; /* Default height */
-            overflow: hidden; /* Important for layout */
+            background-color: var(--background-secondary); border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column;
+            max-width: 85vw; max-height: 85vh; width: auto; height: auto; /* Adjust dynamically */
+            overflow: hidden; transform: scale(0.95); transition: transform var(--transition-base);
         }
+        .modal-overlay.show .modal-content { transform: scale(1); }
 
         .modal-header {
             padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--divider-color);
-            flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--divider-color); flex-shrink: 0;
         }
-
-        .modal-title {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--header-primary);
-             white-space: nowrap;
-             overflow: hidden;
-             text-overflow: ellipsis;
+        .modal-title { font-weight: 600; color: var(--header-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .modal-actions { display: flex; gap: var(--spacing-unit); }
+        .modal-action-btn {
+            background: none; border: none; color: var(--interactive-normal); font-size: 1rem;
+            padding: calc(var(--spacing-unit) * 0.75); border-radius: 50%; cursor: pointer;
+            transition: color var(--transition-fast), background-color var(--transition-fast);
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
         }
-
-        .modal-header-actions {
-            display: flex;
-            gap: var(--spacing-unit);
-            align-items: center;
-        }
-         .modal-action-btn {
-             background: none;
-             border: none;
-             color: var(--interactive-normal);
-             font-size: 1rem;
-             padding: calc(var(--spacing-unit) * 0.75);
-             border-radius: 50%;
-             cursor: pointer;
-             transition: color var(--transition-fast), background-color var(--transition-fast);
-             width: 32px;
-             height: 32px;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-         }
-         .modal-action-btn:hover {
-             color: var(--interactive-hover);
-             background-color: var(--background-tertiary);
-         }
-          .modal-action-btn.is-favorite { color: var(--favorite-color); }
-          .modal-action-btn.is-favorite:hover { color: lighten(var(--favorite-color), 10%); }
-
-        .close-modal { /* Specifically styling the close button */
-            font-size: 1.2rem;
-            color: var(--interactive-normal);
-            background: none; border: none; cursor: pointer; padding: 5px;
-            transition: color 0.2s;
-        }
-        .close-modal:hover { color: var(--interactive-hover); }
-
+        .modal-action-btn:hover { color: var(--interactive-hover); background-color: var(--background-tertiary); }
 
         .modal-body {
-            flex-grow: 1;
-            position: relative;
-            display: flex; /* Use flex for centering */
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; /* Allows panning */
-            background-color: var(--background-tertiary); /* Dark bg for image contrast */
+            flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center;
+            padding: var(--spacing-unit); /* Add some padding around the image */
+             background-color: var(--background-primary); /* Match content area bg */
+             min-height: 200px; /* Ensure body has some size */
         }
-
-        .modal-image-container {
-            width: 100%; /* Fill the modal body */
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         .modal-body img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-            cursor: grab;
-             will-change: transform; /* Performance hint */
+            display: block; max-width: 100%; max-height: 100%; object-fit: contain;
+            height: auto; /* Let height adjust based on width */
+            width: auto; /* Let width adjust based on height */
         }
-         .modal-body img.zoomed-in { cursor: grabbing; }
-
         .modal-nav {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            transform: translateY(-50%);
-            display: flex;
-            justify-content: space-between;
-            padding: 0 var(--spacing-unit);
-            pointer-events: none; /* Ignore wrapper, handle buttons */
+            position: absolute; top: 50%; transform: translateY(-50%);
+            left: var(--spacing-unit); right: var(--spacing-unit);
+            display: flex; justify-content: space-between; pointer-events: none;
         }
-
         .nav-button {
-            background-color: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            cursor: pointer;
-            pointer-events: auto;
-            opacity: 0.7;
+            background-color: rgba(0, 0, 0, 0.5); border: none; color: white;
+            width: 40px; height: 40px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 1rem;
+            cursor: pointer; pointer-events: auto; opacity: 0.7;
             transition: opacity var(--transition-fast), background-color var(--transition-fast);
         }
-        .nav-button:hover {
-            opacity: 1;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-         .nav-button:disabled {
-            opacity: 0.3;
-            cursor: default;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-
-        .modal-footer {
-            padding: calc(var(--spacing-unit)*1) calc(var(--spacing-unit)*2);
-            border-top: 1px solid var(--divider-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-             background-color: var(--background-secondary);
-        }
-
-        .modal-info {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-             white-space: nowrap;
-             overflow: hidden;
-             text-overflow: ellipsis;
-        }
-
-        /* Info Modal specific styles */
-         .info-modal-content { max-width: 600px; width: auto; height: auto; max-height: 80vh;}
-         .info-modal-body { padding: calc(var(--spacing-unit) * 2); overflow-y: auto; }
-         .info-details { display: flex; flex-direction: column; gap: var(--spacing-unit)*2; }
-         .info-thumbnail { text-align: center; }
-         .info-thumbnail img { max-width: 100%; max-height: 200px; border-radius: var(--border-radius-base); }
-         .info-table { width: 100%; border-collapse: collapse; }
-         .info-table td { padding: var(--spacing-unit); border-bottom: 1px solid var(--divider-color); font-size: 0.9rem;}
-         .info-table td:first-child { font-weight: 500; color: var(--header-secondary); width: 100px; }
-         .info-table td:last-child { word-break: break-all; } /* Wrap long text */
-         .info-table tr:last-child td { border-bottom: none; }
-         .info-table a { color: var(--primary-color); text-decoration: none; }
-         .info-table a:hover { text-decoration: underline; }
+        .nav-button:hover { opacity: 1; background-color: rgba(0, 0, 0, 0.7); }
+        .nav-button:disabled { opacity: 0.3; cursor: default; background-color: rgba(0, 0, 0, 0.3); }
 
         /* --- Toast --- */
         .toast {
-            position: fixed;
-            bottom: calc(var(--spacing-unit) * 3);
-            right: calc(var(--spacing-unit) * 3);
-            background-color: var(--background-tertiary);
-            color: var(--text-normal);
+            position: fixed; bottom: calc(var(--spacing-unit) * 3); right: calc(var(--spacing-unit) * 3);
+            background-color: var(--background-tertiary); color: var(--text-normal);
             padding: var(--spacing-unit) calc(var(--spacing-unit) * 2);
-            border-radius: var(--border-radius-base);
-            font-size: 0.9rem;
-            z-index: 2000;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: var(--border-radius); font-size: 0.9rem; z-index: 2000;
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            pointer-events: none;
         }
         .toast.show { opacity: 1; transform: translateY(0); }
-        .toast.error { background-color: #ED4245; color: white; } /* Discord Red */
+        .toast.error { background-color: var(--error-color); color: white; }
 
-        /* --- Tooltip --- */
-        .tooltip {
-            position: absolute;
-            background-color: var(--background-tertiary);
-            color: var(--text-normal);
-            padding: calc(var(--spacing-unit) * 0.75) var(--spacing-unit);
-            border-radius: var(--border-radius-base);
-            font-size: 0.8rem;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.2s;
-            white-space: nowrap;
-            z-index: 3000; /* Above everything */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
-            .navigation-sidebar {
-                display: none; /* Hide full sidebar on small screens */
-                 /* Consider a bottom nav or hamburger menu approach if needed */
-            }
-             .content-header {
-                 padding: var(--spacing-unit);
-                 min-height: auto;
-                 flex-wrap: wrap; /* Allow wrapping */
-                 gap: var(--spacing-unit);
-             }
-             .breadcrumbs { font-size: 0.8rem; }
+         /* --- Responsive Refinements --- */
+         @media (max-width: 768px) {
+            .sidebar { display: none; /* Simplify for mobile: remove sidebar */ }
+             .content-header { padding: var(--spacing-unit); }
              .search-input { width: 150px; }
-             .search-input:focus { width: 180px; }
-            .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-             .gallery-wrapper { padding: var(--spacing-unit); }
-             .modal-content { width: 95vw; height: 90vh; }
-             .nav-button { width: 35px; height: 35px; font-size: 0.9rem; }
-              .gallery-list .image-info {
-                 grid-template-columns: 2fr 1fr auto; /* Simplify for mobile list */
-                 gap: var(--spacing-unit);
-             }
-             .gallery-list .image-meta .file-size { display: none; } /* Hide size on mobile list */
-        }
+             .image-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--spacing-unit); }
+             .gallery-content { padding: var(--spacing-unit); }
+              .modal-content { max-width: 95vw; max-height: 90vh; }
+              .modal-body img { /* Ensure image doesn't overflow modal body padding */
+                 max-width: calc(100% - 2 * var(--spacing-unit));
+                 max-height: calc(100% - 2 * var(--spacing-unit));
+              }
+             .nav-button { width: 35px; height: 35px; }
+             /* Simple mobile nav could be added here if needed later */
+         }
+
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Navigation Sidebar -->
-        <nav class="navigation-sidebar">
+        <!-- Sidebar -->
+        <nav class="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-images logo"></i>
-                <span>ImageDrive</span>
+                <span>Image Viewer</span>
             </div>
             <div class="sidebar-content">
                 <div class="nav-section">
-                    <div class="nav-item active" id="nav-all-images" data-view="all">
+                    <div class="nav-item active" id="nav-all-images">
                         <i class="fas fa-grip-horizontal"></i>
                         <span class="nav-text">All Images</span>
                     </div>
-                    <div class="nav-item" id="nav-favorites" data-view="favorites">
-                         <i class="fas fa-star icon-favorite"></i>
-                         <span class="nav-text">Favorites</span>
-                     </div>
+                    <!-- Favorites can be added later if needed -->
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Folders</div>
-                    <div id="folder-navigation">
-                        <!-- Folder nav items will be generated here -->
-                        <!-- Example:
-                        <div class="nav-item" data-folder="folder-name">
-                             <i class="fas fa-folder"></i>
-                             <span class="nav-text">folder-name</span>
-                         </div>
-                         <div class="nav-item" data-folder="parent/subfolder">
-                              <i class="fas fa-folder folder-indent"></i>
-                              <span class="nav-text">subfolder</span>
-                          </div> -->
-                    </div>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title">File Types</div>
-                    <div id="file-type-filters">
-                        <!-- File type nav items will be generated here -->
-                         <!-- Example:
-                        <div class="nav-item" data-filter-type="type" data-filter-value="jpg">
-                             <i class="fas fa-file-image"></i>
-                             <span class="nav-text">JPG</span>
-                         </div> -->
+                    <div id="folder-list">
+                        <!-- Folder items will be added dynamically -->
                     </div>
                 </div>
             </div>
         </nav>
 
-        <!-- Main Content -->
+        <!-- Main Content Area -->
         <main class="content-area">
             <header class="content-header">
-                <div class="breadcrumbs" id="breadcrumbs">
-                    <!-- Breadcrumbs will be generated here -->
-                    <span data-folder="" class="current">All Images</span>
-                </div>
+                <div class="header-title" id="headerTitle">All Images</div>
                 <div class="header-actions">
                     <div class="search-container">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="search-input" placeholder="Search images..." id="searchInput">
-                         <button class="clear-search" id="clearSearchBtn" style="display: none;">&times;</button>
+                        <input type="text" class="search-input" placeholder="Search by name..." id="searchInput">
                     </div>
-                    <button class="action-button" id="sortBtn" title="Sort Options (Not Implemented)">
-                         <i class="fas fa-sort-amount-down"></i>
-                     </button>
-                     <button class="action-button active" id="gridViewBtn" title="Grid View">
-                         <i class="fas fa-th-large"></i>
-                     </button>
-                     <button class="action-button" id="listViewBtn" title="List View">
-                         <i class="fas fa-list"></i>
-                     </button>
                     <button class="action-button" id="refreshBtn" title="Refresh Images">
                         <i class="fas fa-sync-alt"></i>
                     </button>
                 </div>
             </header>
 
-            <div class="gallery-wrapper" id="galleryWrapper">
-                <div class="status-indicator" id="loadingIndicator" style="display: none;">
+            <div class="gallery-content">
+                 <!-- Status Indicators -->
+                 <div class="status-indicator" id="loadingIndicator" style="display: none;">
                      <div class="spinner"></div>
-                     <span>Loading images...</span>
+                     <span id="loadingMessage">Loading images...</span>
                  </div>
-                 <div class="status-indicator" id="noResultsIndicator" style="display: none;">
+                 <div class="status-indicator" id="errorIndicator" style="display: none;">
+                      <i class="fas fa-exclamation-triangle error-icon"></i>
+                     <p>Error Loading Images</p>
+                     <span id="errorMessage" style="font-size: 0.8rem; margin-top: 5px;"></span>
+                 </div>
+                <div class="status-indicator" id="noResultsIndicator" style="display: none;">
                      <i class="fas fa-search"></i>
-                     <p>No images found.</p>
-                     <span id="noResultsReason"></span>
+                     <p>No Images Found</p>
+                      <span id="noResultsMessage" style="font-size: 0.8rem; margin-top: 5px;"></span>
                  </div>
-                 <div class="gallery-grid" id="galleryContainer"> {/* Start with grid view */}
-                     {/* Image items will be dynamically added here */}
-                 </div>
+
+                <!-- Image Grid -->
+                <div class="image-grid" id="imageGrid">
+                    <!-- Image cards added here -->
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Image Detail Modal -->
-    <div id="imageModal" class="modal">
+    <!-- Image Modal -->
+    <div class="modal-overlay" id="imageModal">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title" id="modalTitle">Image Title</span>
-                <div class="modal-header-actions">
-                     <button class="modal-action-btn" id="modalFavoriteBtn" title="Favorite">
-                         <i class="far fa-star"></i> <!-- Toggles fas/far -->
-                     </button>
-                     <button class="modal-action-btn" id="modalInfoBtn" title="Image Info">
-                         <i class="fas fa-info-circle"></i>
-                     </button>
+                <div class="modal-actions">
                      <button class="modal-action-btn" id="modalCopyUrlBtn" title="Copy Image URL">
                          <i class="fas fa-link"></i>
                      </button>
                      <button class="modal-action-btn" id="modalDownloadBtn" title="Download Image">
                           <i class="fas fa-download"></i>
                       </button>
-                    <button class="modal-action-btn close-modal" title="Close">
+                     <button class="modal-action-btn" id="closeModalBtn" title="Close">
                          <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
             <div class="modal-body">
-                 <div class="modal-image-container" id="modalImageContainer">
-                     <img id="modalImage" src="" alt="Full Image">
+                <img id="modalImage" src="" alt="Full Size Image">
+                 <div class="modal-nav">
+                    <button class="nav-button" id="prevImageBtn" title="Previous Image"><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-button" id="nextImageBtn" title="Next Image"><i class="fas fa-chevron-right"></i></button>
                 </div>
-                <div class="modal-nav">
-                    <button class="nav-button" id="prevImageBtn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="nav-button" id="nextImageBtn"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-            <div class="modal-footer">
-                 <span class="modal-info" id="modalInfo">Image details loading...</span>
-                 {/* Can add other footer elements if needed */}
             </div>
         </div>
     </div>
 
-    <!-- Info Modal -->
-     <div id="infoModal" class="modal">
-         <div class="modal-content info-modal-content">
-             <div class="modal-header">
-                 <div class="modal-title">Image Information</div>
-                 <button class="modal-action-btn close-info-modal" title="Close Info">
-                    <i class="fas fa-times"></i>
-                 </button>
-             </div>
-             <div class="info-modal-body">
-                 <div id="infoContent">
-                     <!-- Image info details here -->
-                 </div>
-             </div>
-         </div>
-     </div>
-
-    <div id="tooltip" class="tooltip"></div>
+    <!-- Toast Notification -->
     <div id="toast" class="toast">Toast Message</div>
 
     <script>
-        // --- Constants ---
+        // --- Configuration ---
         const GITHUB_USERNAME = 'GuptaAman777';
         const GITHUB_REPO = 'guptaaman777-imagehosting';
         const BRANCH = 'main';
-        const API_BASE_URL = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/git/trees/${BRANCH}?recursive=1`; // Use Git Trees API for full recursive list
+        const API_URL = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/git/trees/${BRANCH}?recursive=1`;
+        const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'ico'];
 
         // --- State ---
-        let allImages = []; // Raw image data from GitHub
-        let filteredImages = []; // Images currently matching filters/search/folder
-        let displayedImages = []; // The final set being shown (e.g., could be sorted subset of filteredImages)
-        let currentImageIndex = -1; // Index within displayedImages for modal navigation
-        let favorites = JSON.parse(localStorage.getItem('imageGalleryFavorites_v2')) || []; // Array of image paths
-        let currentViewMode = 'grid'; // 'grid' or 'list'
-        let currentSort = { field: 'name', direction: 'asc' }; // Example, not implemented yet
-        let currentFolder = null; // null for root/all, or folder path string
+        let allImages = [];           // Raw data from API
+        let displayedImages = [];     // Images currently shown after filtering/search
+        let topLevelFolders = [];     // List of unique top-level folder names
+        let currentView = { type: 'all', value: null }; // { type: 'all' } or { type: 'folder', value: 'foldername' }
         let currentSearchTerm = '';
-        let currentFilter = { type: null, value: null }; // e.g., { type: 'extension', value: 'png' }
-        let currentToastTimeout = null;
-        let isZoomed = false;
-        let zoomLevel = 1;
-        let dragStart = { x: 0, y: 0 };
-        let currentTransform = { x: 0, y: 0 };
-        let tooltipTimeout = null;
-        let tooltipElement = null;
+        let currentModalIndex = -1;
+        let toastTimeout = null;
 
         // --- DOM Elements ---
         const $ = (selector) => document.querySelector(selector);
         const $$ = (selector) => document.querySelectorAll(selector);
-        const loadingIndicator = $('#loadingIndicator');
-        const noResultsIndicator = $('#noResultsIndicator');
-        const noResultsReason = $('#noResultsReason');
-        const galleryContainer = $('#galleryContainer');
-        const galleryWrapper = $('#galleryWrapper');
+
+        const sidebar = $('.sidebar'); // Needed? Only if hiding/showing on mobile
+        const folderListContainer = $('#folder-list');
+        const navAllImages = $('#nav-all-images');
+        const headerTitle = $('#headerTitle');
         const searchInput = $('#searchInput');
-        const clearSearchBtn = $('#clearSearchBtn');
         const refreshBtn = $('#refreshBtn');
-        const gridViewBtn = $('#gridViewBtn');
-        const listViewBtn = $('#listViewBtn');
-        const breadcrumbsContainer = $('#breadcrumbs');
-        const folderNavigation = $('#folder-navigation');
-        const fileTypeFilters = $('#file-type-filters');
+        const galleryContent = $('.gallery-content');
+        const imageGrid = $('#imageGrid');
+        const loadingIndicator = $('#loadingIndicator');
+        const loadingMessage = $('#loadingMessage');
+        const errorIndicator = $('#errorIndicator');
+        const errorMessage = $('#errorMessage');
+        const noResultsIndicator = $('#noResultsIndicator');
+        const noResultsMessage = $('#noResultsMessage');
+
         const imageModal = $('#imageModal');
-        const modalImage = $('#modalImage');
-        const modalImageContainer = $('#modalImageContainer');
         const modalTitle = $('#modalTitle');
-        const modalInfo = $('#modalInfo');
+        const modalImage = $('#modalImage');
         const prevImageBtn = $('#prevImageBtn');
-        const nextImageBtn =$('#nextImageBtn');
-        const modalFavoriteBtn = $('#modalFavoriteBtn');
-        const modalInfoBtn = $('#modalInfoBtn');
+        const nextImageBtn = $('#nextImageBtn');
+        const closeModalBtn = $('#closeModalBtn');
         const modalCopyUrlBtn = $('#modalCopyUrlBtn');
         const modalDownloadBtn = $('#modalDownloadBtn');
-        const infoModal = $('#infoModal');
-        const infoContent = $('#infoContent');
-        const tooltip = $('#tooltip');
+
         const toast = $('#toast');
 
-
-        // --- API Functions ---
+        // --- API & Data Handling ---
         async function fetchImageData() {
-            showLoading('Fetching image list from GitHub...');
+            showLoading('Fetching image list...');
             try {
-                // Using the Git Trees API gets all files recursively in one request
-                const response = await fetch(API_BASE_URL);
+                const response = await fetch(API_URL);
                 if (!response.ok) {
-                    if (response.status === 404) throw new Error(`Repository or branch not found. Check username/repo/branch.`);
-                    if (response.status === 403) throw new Error(`GitHub API rate limit exceeded. Please wait a bit.`);
-                    throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
+                    if (response.status === 404) throw new Error(`Repository or branch not found.`);
+                    if (response.status === 403) throw new Error(`API rate limit likely exceeded. Wait a moment.`);
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
                 }
                 const data = await response.json();
 
-                if (!data.tree) {
-                     throw new Error("Invalid data structure received from GitHub API.");
-                }
+                if (!data.tree) throw new Error("Invalid data structure from API.");
 
+                const uniqueFolders = new Set();
                 allImages = data.tree
                     .filter(item => item.type === 'blob' && isImageFile(item.path))
-                    .map(item => ({
-                        path: item.path,
-                        name: item.path.split('/').pop(),
-                        sha: item.sha,
-                        size: item.size || 0, // Size might not always be present in tree; can fetch individually if needed
-                        rawUrl: createRawUrl(item.path),
-                        extension: item.path.split('.').pop().toLowerCase()
-                    }));
+                    .map(item => {
+                        const pathParts = item.path.split('/');
+                        const name = pathParts.pop();
+                        const folder = pathParts.length > 0 ? pathParts[0] : null; // Top-level folder only
+                        if (folder) uniqueFolders.add(folder);
+                        return {
+                            path: item.path,
+                            name: name,
+                            sha: item.sha,
+                            size: item.size || 0, // May not be accurate from tree API
+                            rawUrl: createRawUrl(item.path),
+                            folder: folder,
+                            extension: name.split('.').pop()?.toLowerCase() || ''
+                        };
+                    });
 
-                 // Basic Sort - can be expanded
-                 allImages.sort((a, b) => a.path.localeCompare(b.path));
-
-                console.log(`Fetched ${allImages.length} images.`);
-                 return true;
+                topLevelFolders = Array.from(uniqueFolders).sort();
+                console.log(`Fetched ${allImages.length} images, ${topLevelFolders.length} top-level folders.`);
+                 hideStatusIndicators();
+                 return true; // Indicate success
 
             } catch (error) {
-                console.error('Fetch error:', error);
-                 showError(`Failed to load images: ${error.message}`);
-                 return false;
-            } finally {
-                hideLoading();
+                console.error("Fetch error:", error);
+                showError(error.message);
+                 return false; // Indicate failure
             }
         }
 
-        // --- Utility Functions ---
-        function isImageFile(filename) {
-            const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'ico'];
-            const ext = filename.split('.').pop()?.toLowerCase();
-            return ext ? imageExtensions.includes(ext) : false;
+        function isImageFile(filePath) {
+            const ext = filePath.split('.').pop()?.toLowerCase();
+            return ext ? IMAGE_EXTENSIONS.includes(ext) : false;
         }
 
         function createRawUrl(path) {
@@ -987,15 +434,194 @@
             return `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${BRANCH}/${encodedPath}`;
         }
 
-         function formatFileSize(bytes) {
-            if (!bytes || bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        // --- UI Rendering ---
+        function buildSidebar() {
+            folderListContainer.innerHTML = ''; // Clear old list
+            topLevelFolders.forEach(folder => {
+                const div = document.createElement('div');
+                div.className = 'nav-item';
+                div.dataset.folder = folder;
+                div.innerHTML = `
+                    <i class="fas fa-folder"></i>
+                    <span class="nav-text">${folder}</span>
+                `;
+                div.addEventListener('click', () => setActiveView('folder', folder));
+                folderListContainer.appendChild(div);
+            });
         }
 
-         // Debounce function
+        function setActiveView(type, value = null) {
+            currentView = { type, value };
+            currentSearchTerm = ''; // Reset search on view change
+            searchInput.value = '';
+
+             // Update header title
+             headerTitle.textContent = type === 'folder' ? value : 'All Images';
+
+             // Update sidebar active class
+             $$('.sidebar .nav-item').forEach(item => item.classList.remove('active'));
+             if (type === 'all') {
+                 navAllImages.classList.add('active');
+             } else if (type === 'folder') {
+                const folderItem = folderListContainer.querySelector(`.nav-item[data-folder="${value}"]`);
+                if (folderItem) folderItem.classList.add('active');
+             }
+
+             filterAndRenderImages();
+             galleryContent.scrollTop = 0; // Scroll to top of gallery
+        }
+
+        function filterAndRenderImages() {
+             let imagesToFilter = allImages;
+
+             // 1. Filter by current view (folder or all)
+             if (currentView.type === 'folder') {
+                 imagesToFilter = allImages.filter(img => img.folder === currentView.value);
+             } // 'all' uses allImages
+
+             // 2. Filter by search term
+             if (currentSearchTerm) {
+                const searchTermLower = currentSearchTerm.toLowerCase();
+                 imagesToFilter = imagesToFilter.filter(img => img.name.toLowerCase().includes(searchTermLower));
+             }
+
+             displayedImages = imagesToFilter;
+             renderGrid();
+        }
+
+        function renderGrid() {
+             hideStatusIndicators(); // Clear any previous status
+            imageGrid.innerHTML = ''; // Clear previous content
+
+            if (displayedImages.length === 0) {
+                 let reason = "No images found";
+                 if (currentView.type === 'folder') reason += ` in folder "${currentView.value}"`;
+                 if (currentSearchTerm) reason += ` matching "${currentSearchTerm}"`;
+                 showNoResults(reason + ".");
+                 return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            displayedImages.forEach((image, index) => {
+                const card = document.createElement('div');
+                card.className = 'image-card';
+                card.dataset.index = index;
+                card.innerHTML = `
+                    <div class="image-container">
+                        <img src="${image.rawUrl}" alt="${image.name}" loading="lazy" onerror="this.style.visibility='hidden';">
+                    </div>
+                    <div class="image-info">
+                        <div class="image-name">${image.name}</div>
+                        <div class="image-meta">${image.extension}</div>
+                    </div>
+                `;
+                 // Add listener directly here for simplicity
+                card.addEventListener('click', () => openModal(index));
+                fragment.appendChild(card);
+            });
+            imageGrid.appendChild(fragment);
+        }
+
+        // --- Modal ---
+        function openModal(index) {
+             if (index < 0 || index >= displayedImages.length) return;
+             currentModalIndex = index;
+             const image = displayedImages[index];
+
+            modalImage.src = image.rawUrl; // Start loading
+            modalImage.alt = image.name;
+            modalTitle.textContent = image.name;
+
+             // Set up action button data/listeners
+            modalDownloadBtn.onclick = () => downloadImage(image.rawUrl, image.name);
+            modalCopyUrlBtn.onclick = () => copyUrl(image.rawUrl);
+
+             // Update nav buttons
+             prevImageBtn.disabled = index === 0;
+             nextImageBtn.disabled = index === displayedImages.length - 1;
+
+             imageModal.classList.add('show');
+             document.body.style.overflow = 'hidden'; // Prevent body scroll
+        }
+
+        function closeModal() {
+            imageModal.classList.remove('show');
+            document.body.style.overflow = ''; // Restore body scroll
+             // Optional: clear src after fade out to prevent brief flash
+             setTimeout(() => { modalImage.src = ""; }, 200);
+        }
+
+        function navigateModal(direction) {
+            const newIndex = currentModalIndex + direction;
+            if (newIndex >= 0 && newIndex < displayedImages.length) {
+                 openModal(newIndex);
+            }
+        }
+
+        // --- Actions (Download, Copy) ---
+         function downloadImage(url, filename) {
+            try {
+                 const a = document.createElement('a');
+                 a.href = url;
+                 a.download = filename;
+                 a.target = '_blank'; // Good fallback for browsers restricting direct downloads
+                 document.body.appendChild(a);
+                 a.click();
+                 document.body.removeChild(a);
+                 showToast(`Downloading ${filename}...`);
+             } catch (error) {
+                 console.error("Download error:", error);
+                 showToast("Download failed.", true);
+             }
+        }
+
+        function copyUrl(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Image URL copied to clipboard!');
+            }).catch(err => {
+                 console.error('Failed to copy URL: ', err);
+                showToast('Failed to copy URL.', true);
+            });
+         }
+
+        // --- Status Indicators ---
+         function showLoading(message = 'Loading...') {
+             hideStatusIndicators(); // Hide others first
+             loadingMessage.textContent = message;
+             loadingIndicator.style.display = 'flex';
+             imageGrid.style.display = 'none'; // Hide grid
+         }
+         function showError(msg) {
+             hideStatusIndicators();
+             errorMessage.textContent = msg;
+             errorIndicator.style.display = 'flex';
+              imageGrid.style.display = 'none';
+         }
+         function showNoResults(msg) {
+             hideStatusIndicators();
+             noResultsMessage.textContent = msg;
+             noResultsIndicator.style.display = 'flex';
+              imageGrid.style.display = 'none';
+         }
+         function hideStatusIndicators() {
+            loadingIndicator.style.display = 'none';
+            errorIndicator.style.display = 'none';
+             noResultsIndicator.style.display = 'none';
+             imageGrid.style.display = 'grid'; // Show grid
+         }
+
+
+        // --- Toast Notifications ---
+         function showToast(message, isError = false) {
+             if (toastTimeout) clearTimeout(toastTimeout);
+             toast.textContent = message;
+             toast.className = `toast ${isError ? 'error' : ''} show`;
+             toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+         // --- Debounce ---
          function debounce(func, wait) {
              let timeout;
              return function executedFunction(...args) {
@@ -1008,774 +634,50 @@
              };
          }
 
-        // --- UI Update Functions ---
-        function showLoading(message = 'Loading...') {
-            loadingIndicator.querySelector('span').textContent = message;
-            loadingIndicator.style.display = 'flex';
-            galleryContainer.style.display = 'none';
-             noResultsIndicator.style.display = 'none';
-        }
-
-        function hideLoading() {
-            loadingIndicator.style.display = 'none';
-        }
-
-        function showError(message, reason = '') {
-             hideLoading();
-             galleryContainer.style.display = 'none';
-             noResultsIndicator.querySelector('p').textContent = message;
-             noResultsReason.textContent = reason;
-             noResultsIndicator.style.display = 'flex';
-        }
-
-         function showNoResults(reason = '') {
-             hideLoading();
-             galleryContainer.style.display = 'none';
-             noResultsIndicator.querySelector('p').textContent = 'No images found.';
-             noResultsReason.textContent = reason;
-             noResultsIndicator.style.display = 'flex';
-         }
-
-        function updateBreadcrumbs() {
-             breadcrumbsContainer.innerHTML = '';
-             let pathSegments = currentFolder ? currentFolder.split('/') : [];
-             let currentPath = '';
-
-            // Add root/all link
-             const rootSpan = document.createElement('span');
-             rootSpan.textContent = 'All Images';
-             if (currentFolder !== null) {
-                 rootSpan.onclick = () => navigateToFolder(null);
-                 rootSpan.style.cursor = 'pointer';
-             } else {
-                 rootSpan.classList.add('current');
-             }
-             breadcrumbsContainer.appendChild(rootSpan);
-
-             pathSegments.forEach((segment, index) => {
-                currentPath += (currentPath ? '/' : '') + segment;
-
-                 const separator = document.createElement('span');
-                 separator.className = 'separator';
-                 separator.textContent = '>';
-                 breadcrumbsContainer.appendChild(separator);
-
-                 const segmentSpan = document.createElement('span');
-                 segmentSpan.textContent = segment;
-                 if (index === pathSegments.length - 1) {
-                     segmentSpan.classList.add('current');
-                 } else {
-                     // Use closure to capture correct path for click handler
-                     const pathOnClick = currentPath;
-                     segmentSpan.onclick = () => navigateToFolder(pathOnClick);
-                     segmentSpan.style.cursor = 'pointer';
-                 }
-                 breadcrumbsContainer.appendChild(segmentSpan);
-             });
-         }
-
-
-         function updateActiveNavItem() {
-             $$('.navigation-sidebar .nav-item').forEach(item => item.classList.remove('active'));
-
-             let activeItem;
-             if (currentFilter.type === 'favorites') {
-                 activeItem = $('#nav-favorites');
-             } else if (currentFilter.type === 'extension') {
-                activeItem = $(`#file-type-filters .nav-item[data-filter-value="${currentFilter.value}"]`);
-             } else if (currentFolder === null && currentFilter.type === null) {
-                 activeItem = $('#nav-all-images');
-             } else if (currentFolder) {
-                 activeItem = $(`#folder-navigation .nav-item[data-folder="${currentFolder}"]`);
-             }
-
-             if (activeItem) {
-                 activeItem.classList.add('active');
-             } else if ($('#nav-all-images')) {
-                  $('#nav-all-images').classList.add('active'); // Fallback
-             }
-         }
-
-
-        function buildNavigation() {
-            const folders = {};
-             const extensions = new Set();
-
-             allImages.forEach(img => {
-                extensions.add(img.extension);
-                const pathParts = img.path.split('/');
-                if (pathParts.length > 1) {
-                    let currentPath = '';
-                    for (let i = 0; i < pathParts.length - 1; i++) {
-                         const part = pathParts[i];
-                         const parentPath = currentPath;
-                         currentPath += (currentPath ? '/' : '') + part;
-                         if (!folders[currentPath]) {
-                            folders[currentPath] = { name: part, path: currentPath, depth: i, parent: parentPath || null };
-                        }
-                     }
-                 }
-            });
-
-            // Build Folder Nav HTML
-            folderNavigation.innerHTML = ''; // Clear previous
-            const sortedFolderPaths = Object.keys(folders).sort((a, b) => a.localeCompare(b));
-
-            sortedFolderPaths.forEach(path => {
-                 const folder = folders[path];
-                 const div = document.createElement('div');
-                 div.className = 'nav-item';
-                 div.dataset.folder = folder.path;
-                 div.innerHTML = `
-                     <i class="fas fa-folder" style="padding-left: ${folder.depth * 20}px;"></i>
-                     <span class="nav-text">${folder.name}</span>
-                 `;
-                 div.onclick = () => navigateToFolder(folder.path);
-                 folderNavigation.appendChild(div);
-             });
-
-             // Build File Type Filter Nav HTML
-             fileTypeFilters.innerHTML = ''; // Clear previous
-             const sortedExtensions = Array.from(extensions).sort();
-             sortedExtensions.forEach(ext => {
-                const div = document.createElement('div');
-                 div.className = 'nav-item';
-                 div.dataset.filterType = 'extension';
-                 div.dataset.filterValue = ext;
-                 div.innerHTML = `
-                     <i class="fas fa-file-image"></i>
-                     <span class="nav-text">${ext.toUpperCase()}</span>
-                 `;
-                div.onclick = () => applyFilter({ type: 'extension', value: ext });
-                 fileTypeFilters.appendChild(div);
-            });
-        }
-
-        function renderImages() {
-             galleryContainer.innerHTML = ''; // Clear existing
-
-             if (displayedImages.length === 0) {
-                 let reason = 'No images match the current criteria.';
-                 if (currentSearchTerm) reason += ` Search: "${currentSearchTerm}".`;
-                 if (currentFolder) reason += ` Folder: "${currentFolder}".`;
-                 if (currentFilter.type === 'extension') reason += ` Type: "${currentFilter.value.toUpperCase()}".`;
-                  if (currentFilter.type === 'favorites') reason = 'You haven\'t added any favorites yet.';
-                 showNoResults(reason);
-                 return;
-             }
-
-             galleryContainer.style.display = (currentViewMode === 'grid') ? 'grid' : 'flex';
-             noResultsIndicator.style.display = 'none';
-
-            const fragment = document.createDocumentFragment();
-            displayedImages.forEach((image, index) => {
-                const isFavorite = favorites.includes(image.path);
-                const item = document.createElement('div');
-                item.className = 'image-item';
-                item.dataset.index = index; // Store index for modal navigation
-                item.dataset.path = image.path; // Store path for favorites
-
-                 item.onclick = (e) => {
-                    // Prevent modal opening if a button was clicked
-                     if (!e.target.closest('.action-icon-btn')) {
-                        openImageModal(index);
-                    }
-                };
-
-
-                 let innerHTML = '';
-                if (currentViewMode === 'grid') {
-                    innerHTML = `
-                        <div class="image-container">
-                            <img src="${image.rawUrl}" alt="${image.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.style.backgroundColor='var(--background-secondary)';">
-                        </div>
-                        <div class="image-info">
-                            <div class="image-name">${image.name}</div>
-                            <div class="image-meta">
-                                <span class="file-type">${image.extension.toUpperCase()}</span>
-                                <span class="file-size">${formatFileSize(image.size)}</span>
-                            </div>
-                        </div>
-                         <div class="image-actions">
-                             <button class="action-icon-btn favorite-btn ${isFavorite ? 'is-favorite' : ''}" title="Favorite" data-path="${image.path}">
-                                <i class="${isFavorite ? 'fas' : 'far'} fa-star"></i>
-                            </button>
-                             <button class="action-icon-btn info-btn" title="Info"> <i class="fas fa-info-circle"></i> </button>
-                         </div>
-                    `;
-                 } else { // List View
-                    innerHTML = `
-                        <div class="image-container">
-                             <img src="${image.rawUrl}" alt="${image.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.style.backgroundColor='var(--background-secondary)';">
-                        </div>
-                         <div class="image-info">
-                             <div class="image-name">${image.name}</div>
-                            <div class="image-meta">
-                                 <span class="file-type">${image.extension.toUpperCase()}</span>
-                                 <span class="file-size">${formatFileSize(image.size)}</span>
-                                <div class="image-actions">
-                                     <button class="action-icon-btn favorite-btn ${isFavorite ? 'is-favorite' : ''}" title="Favorite" data-path="${image.path}">
-                                        <i class="${isFavorite ? 'fas' : 'far'} fa-star"></i>
-                                    </button>
-                                     <button class="action-icon-btn info-btn" title="Info"> <i class="fas fa-info-circle"></i> </button>
-                                 </div>
-                             </div>
-                         </div>
-                    `;
-                }
-                item.innerHTML = innerHTML;
-                fragment.appendChild(item);
-            });
-
-            galleryContainer.appendChild(fragment);
-
-             // Add event listeners AFTER appending (more efficient)
-            $$('.image-item .favorite-btn').forEach(btn => {
-                btn.onclick = (e) => {
-                     e.stopPropagation(); // Prevent opening modal
-                    toggleFavorite(btn.dataset.path);
-                 };
-             });
-             $$('.image-item .info-btn').forEach(btn => {
-                 btn.onclick = (e) => {
-                     e.stopPropagation();
-                     const itemElement = btn.closest('.image-item');
-                     const image = displayedImages[parseInt(itemElement.dataset.index)];
-                     showImageInfo(image);
-                 };
-             });
-         }
-
-        // --- Data Filtering/Processing ---
-         function processAndDisplayImages() {
-             // 1. Filter by currentFolder
-             let folderFiltered = allImages;
-             if (currentFolder) {
-                 folderFiltered = allImages.filter(img =>
-                    img.path.startsWith(currentFolder + '/') && img.path.substring(currentFolder.length + 1).indexOf('/') === -1
-                 );
-             } else {
-                 // Root view: show only files in root, or maybe all files depending on preference
-                  // Showing ALL files if currentFolder is null
-                 folderFiltered = allImages;
-            }
-
-             // 2. Filter by active filter (type or favorites)
-             if (currentFilter.type === 'extension') {
-                 filteredImages = folderFiltered.filter(img => img.extension === currentFilter.value);
-             } else if (currentFilter.type === 'favorites') {
-                 filteredImages = allImages.filter(img => favorites.includes(img.path)); // Favorites override folder/search for simplicity
-                 // Adjust breadcrumbs for favorites view
-                 breadcrumbsContainer.innerHTML = '<span class="current">Favorites</span>';
-            } else {
-                 filteredImages = folderFiltered;
-             }
-
-            // 3. Filter by search term
-             if (currentSearchTerm) {
-                 const term = currentSearchTerm.toLowerCase();
-                // Ensure we are filtering the set determined by folder/extension filter
-                let baseForSearch = (currentFilter.type === 'extension' || currentFolder) ? filteredImages : allImages;
-                 if (currentFilter.type === 'favorites') baseForSearch = allImages.filter(img => favorites.includes(img.path)); // If in fav view, search only favs
-
-                 filteredImages = baseForSearch.filter(img =>
-                     img.name.toLowerCase().includes(term) || img.path.toLowerCase().includes(term)
-                 );
-                 if (currentFilter.type === 'favorites') {
-                      // Special breadcrumbs for favorite search result
-                     breadcrumbsContainer.innerHTML = `<span class="current">Favorites (Search: "${term}")</span>`;
-                 }
-            }
-
-            // 4. Sort (Not implemented yet - placeholder)
-            // filteredImages.sort(...) based on currentSort
-
-            // 5. Set displayed images and render
-            displayedImages = filteredImages;
-            renderImages();
-            updateActiveNavItem(); // Reflect current view/filter in sidebar
-
-            // Reset modal index if the list changes
-            if (currentImageIndex !== -1 && !displayedImages.some(img => img.path === displayedImages[currentImageIndex]?.path)) {
-                 currentImageIndex = -1;
-            }
-         }
-
-
-        // --- Navigation & Filtering Actions ---
-         function navigateToFolder(folderPath) {
-             console.log("Navigating to folder:", folderPath);
-            currentFolder = folderPath;
-            currentSearchTerm = ''; // Clear search on folder change
-            searchInput.value = '';
-            clearSearchBtn.style.display = 'none';
-            currentFilter = { type: null, value: null }; // Clear type filter on folder change
-             processAndDisplayImages();
-             updateBreadcrumbs();
-            galleryWrapper.scrollTop = 0; // Scroll to top
-        }
-
-        function applyFilter(filter) {
-             console.log("Applying filter:", filter);
-             currentFilter = filter;
-             currentSearchTerm = ''; // Clear search on filter change
-             searchInput.value = '';
-            clearSearchBtn.style.display = 'none';
-            currentFolder = null; // Clear folder on filter change (e.g., show all JPGs)
-
-             if (filter.type === 'favorites') {
-                 currentFolder = null; // Explicitly clear folder for favorites view
-                 // Breadcrumbs updated in processAndDisplayImages
-             } else {
-                 updateBreadcrumbs(); // Reset breadcrumbs if not favorites
-            }
-
-             processAndDisplayImages();
-             galleryWrapper.scrollTop = 0;
-        }
-
-
-        // --- Search ---
-        const debouncedSearch = debounce(() => {
-             currentSearchTerm = searchInput.value.trim();
-             clearSearchBtn.style.display = currentSearchTerm ? 'block' : 'none';
-            // No need to clear folder/filter when searching within current view
-             processAndDisplayImages();
-        }, 300);
-
-         function clearSearch() {
-             searchInput.value = '';
-             currentSearchTerm = '';
-            clearSearchBtn.style.display = 'none';
-             processAndDisplayImages();
-        }
-
-
-        // --- View Modes ---
-        function setViewMode(mode) {
-             if (mode === currentViewMode) return;
-             currentViewMode = mode;
-             galleryContainer.className = mode === 'grid' ? 'gallery-grid' : 'gallery-list';
-             gridViewBtn.classList.toggle('active', mode === 'grid');
-             listViewBtn.classList.toggle('active', mode === 'list');
-             renderImages(); // Re-render with the same data but different layout
-        }
-
-        // --- Favorites ---
-        function toggleFavorite(imagePath) {
-             const index = favorites.indexOf(imagePath);
-             let isFavoriteNow;
-             if (index > -1) {
-                 favorites.splice(index, 1); // Remove
-                 showToast('Removed from favorites');
-                isFavoriteNow = false;
-             } else {
-                 favorites.push(imagePath); // Add
-                 showToast('Added to favorites');
-                 isFavoriteNow = true;
-             }
-             localStorage.setItem('imageGalleryFavorites_v2', JSON.stringify(favorites));
-
-             // Update UI for the specific item everywhere
-             updateFavoriteStatusUI(imagePath, isFavoriteNow);
-
-             // If currently viewing favorites, refresh the view
-            if (currentFilter.type === 'favorites') {
-                processAndDisplayImages();
-             }
-         }
-
-         function updateFavoriteStatusUI(imagePath, isFavorite) {
-             // Update card button(s)
-             $$(`.image-item[data-path="${imagePath}"] .favorite-btn`).forEach(btn => {
-                btn.classList.toggle('is-favorite', isFavorite);
-                 btn.querySelector('i').className = `fa-star ${isFavorite ? 'fas' : 'far'}`;
-            });
-
-             // Update modal button if modal is showing this image
-             if (imageModal.classList.contains('show') && displayedImages[currentImageIndex]?.path === imagePath) {
-                 modalFavoriteBtn.classList.toggle('is-favorite', isFavorite);
-                modalFavoriteBtn.querySelector('i').className = `fa-star ${isFavorite ? 'fas' : 'far'}`;
-             }
-             // Update info modal button if it's open for this image
-              if (infoModal.classList.contains('show') && infoContent.querySelector(`.favorite-info-btn[data-path="${imagePath}"]`)) {
-                 const infoFavBtn = infoContent.querySelector('.favorite-info-btn');
-                 infoFavBtn.classList.toggle('is-favorite', isFavorite);
-                 infoFavBtn.querySelector('i').className = `fa-star ${isFavorite ? 'fas' : 'far'}`;
-              }
-         }
-
-
-        // --- Modal Functions ---
-         function openImageModal(index) {
-            if (index < 0 || index >= displayedImages.length) return;
-
-            currentImageIndex = index;
-            const image = displayedImages[index];
-
-            // Reset previous zoom/pan state
-            resetModalZoomPan();
-
-            modalImage.src = image.rawUrl; // Start loading immediately
-             modalImage.alt = image.name;
-            modalTitle.textContent = image.name;
-             modalInfo.textContent = `${image.extension.toUpperCase()} • ${formatFileSize(image.size)}`;
-
-            // Check favorite status
-            const isFavorite = favorites.includes(image.path);
-             modalFavoriteBtn.classList.toggle('is-favorite', isFavorite);
-            modalFavoriteBtn.querySelector('i').className = `fa-star ${isFavorite ? 'fas' : 'far'}`;
-
-            // Handle nav button states
-            prevImageBtn.disabled = index === 0;
-            nextImageBtn.disabled = index === displayedImages.length - 1;
-
-            imageModal.classList.add('show'); // Add class to trigger display and fade-in
-            document.body.style.overflow = 'hidden'; // Prevent body scroll
-        }
-
-        function closeModal() {
-            imageModal.classList.remove('show'); // Trigger fade-out
-            document.body.style.overflow = ''; // Restore body scroll
-             // Reset image src to prevent showing old image briefly on reopen
-             // Use setTimeout to allow fade-out transition to complete
-             setTimeout(() => { modalImage.src = ""; }, 300);
-         }
-
-        function navigateModal(direction) {
-             const newIndex = currentImageIndex + direction;
-             if (newIndex >= 0 && newIndex < displayedImages.length) {
-                openImageModal(newIndex);
-             }
-         }
-
-        function resetModalZoomPan() {
-             isZoomed = false;
-             zoomLevel = 1;
-             currentTransform = { x: 0, y: 0 };
-             modalImage.style.transform = 'translate(0px, 0px) scale(1)';
-             modalImageContainer.style.cursor = 'zoom-in'; // Reset cursor
-        }
-
-
-        // --- Modal Image Zoom/Pan ---
-         modalImageContainer.addEventListener('click', (e) => {
-             if (e.target !== modalImage) return; // Only zoom if clicking image directly
-             isZoomed = !isZoomed;
-             zoomLevel = isZoomed ? 2 : 1; // Simple 2x zoom toggle
-             if (!isZoomed) {
-                 currentTransform = { x: 0, y: 0 }; // Reset position when zooming out
-             }
-             modalImageContainer.style.cursor = isZoomed ? 'grab' : 'zoom-in';
-             updateImageTransform();
-         });
-
-         modalImageContainer.addEventListener('mousedown', (e) => {
-             if (!isZoomed || e.target !== modalImage) return;
-             modalImageContainer.style.cursor = 'grabbing';
-             dragStart = { x: e.clientX - currentTransform.x, y: e.clientY - currentTransform.y };
-             document.addEventListener('mousemove', handleMouseMove);
-             document.addEventListener('mouseup', handleMouseUp);
-         });
-
-         function handleMouseMove(e) {
-            // Calculate potential new transform without constraints first
-            let newX = e.clientX - dragStart.x;
-            let newY = e.clientY - dragStart.y;
-
-            // Get image and container dimensions
-            const imgRect = modalImage.getBoundingClientRect();
-            const containerRect = modalImageContainer.getBoundingClientRect();
-
-            // Calculate how much the scaled image exceeds the container
-            // Note: getBoundingClientRect includes the current scale transform
-            const scaledWidth = imgRect.width;
-            const scaledHeight = imgRect.height;
-            const overflowX = Math.max(0, (scaledWidth - containerRect.width) / 2);
-            const overflowY = Math.max(0, (scaledHeight - containerRect.height) / 2);
-
-            // Apply constraints - Don't let white space appear on the edges
-            currentTransform.x = Math.max(-overflowX, Math.min(overflowX, newX));
-            currentTransform.y = Math.max(-overflowY, Math.min(overflowY, newY));
-
-            updateImageTransform();
-        }
-
-
-         function handleMouseUp() {
-            if (isZoomed) modalImageContainer.style.cursor = 'grab';
-             document.removeEventListener('mousemove', handleMouseMove);
-             document.removeEventListener('mouseup', handleMouseUp);
-         }
-
-         function updateImageTransform() {
-             modalImage.style.transform = `translate(${currentTransform.x}px, ${currentTransform.y}px) scale(${zoomLevel})`;
-         }
-
-        // --- Image Info ---
-        async function showImageInfo(image) {
-             infoContent.innerHTML = '<div class="spinner" style="margin: 20px auto;"></div><span>Loading details...</span>'; // Placeholder
-             infoModal.classList.add('show');
-
-             // Attempt to get dimensions (best effort)
-            const dimensions = await getImageDimensions(image.rawUrl);
-             const dimensionsText = dimensions.width > 0 ? `${dimensions.width} &times; ${dimensions.height} px` : 'N/A';
-             const isFavorite = favorites.includes(image.path);
-
-            // Format info (GitHub API might not give creation/modified dates directly from tree)
-            infoContent.innerHTML = `
-                 <div class="info-details">
-                    <div class="info-thumbnail"><img src="${image.rawUrl}" alt="Thumbnail"></div>
-                    <table class="info-table">
-                        <tr><td>Name:</td><td>${image.name}</td></tr>
-                        <tr><td>Path:</td><td>${image.path}</td></tr>
-                         <tr><td>Dimensions:</td><td>${dimensionsText}</td></tr>
-                        <tr><td>File Size:</td><td>${formatFileSize(image.size)}</td></tr>
-                        <tr><td>File Type:</td><td>${image.extension.toUpperCase()}</td></tr>
-                         <tr><td>SHA:</td><td>${image.sha?.substring(0, 10) || 'N/A'}...</td></tr>
-                         <tr><td>URL:</td><td><a href="${image.rawUrl}" target="_blank" title="${image.rawUrl}">View Raw</a></td></tr>
-                     </table>
-                     <div style="display: flex; gap: 10px; justify-content: center;">
-                          <button class="modal-action-btn favorite-info-btn ${isFavorite ? 'is-favorite' : ''}" data-path="${image.path}" title="Favorite">
-                             <i class="fa-star ${isFavorite ? 'fas' : 'far'}"></i>
-                         </button>
-                         <button class="modal-action-btn" onclick="copyUrlFromInfo('${image.rawUrl}')" title="Copy URL"><i class="fas fa-link"></i></button>
-                         <button class="modal-action-btn" onclick="downloadImage('${image.rawUrl}', '${image.name}')" title="Download"><i class="fas fa-download"></i></button>
-                    </div>
-                 </div>
-            `;
-
-            // Add favorite listener to the button inside the info modal
-             const infoFavBtn = infoContent.querySelector('.favorite-info-btn');
-             if (infoFavBtn) {
-                 infoFavBtn.onclick = (e) => {
-                     e.stopPropagation();
-                     toggleFavorite(image.path);
-                 };
-            }
-         }
-
-         function closeInfoModal() {
-            infoModal.classList.remove('show');
-         }
-
-         function copyUrlFromInfo(url) {
-            navigator.clipboard.writeText(url).then(() => {
-                 showToast('URL copied to clipboard!');
-            }).catch(err => {
-                console.error('Could not copy URL: ', err);
-                 showToast('Failed to copy URL', true);
-             });
-         }
-
-
-        // --- Download & Copy URL ---
-        function downloadImage(url, filename) {
-            try {
-                const a = document.createElement('a');
-                 // Use fetch to get blob for potentially better cross-origin handling if needed
-                fetch(url)
-                     .then(res => res.blob())
-                     .then(blob => {
-                        const blobUrl = window.URL.createObjectURL(blob);
-                         a.href = blobUrl;
-                         a.download = filename;
-                         document.body.appendChild(a);
-                         a.click();
-                         document.body.removeChild(a);
-                         window.URL.revokeObjectURL(blobUrl); // Clean up
-                         showToast(`Downloading ${filename}...`);
-                    })
-                     .catch(err => {
-                         console.error('Download fetch error:', err);
-                         showToast(`Failed to initiate download for ${filename}`, true);
-                         // Fallback to direct link click?
-                        // a.href = url; a.target = '_blank'; a.download = filename; a.click();
-                     });
-
-             } catch (error) {
-                 console.error("Download error:", error);
-                 showToast("Download failed.", true);
-             }
-         }
-
-        function copyModalImageUrl() {
-             if (currentImageIndex < 0 || currentImageIndex >= displayedImages.length) return;
-             const image = displayedImages[currentImageIndex];
-            navigator.clipboard.writeText(image.rawUrl).then(() => {
-                 showToast('URL copied to clipboard!');
-            }).catch(err => {
-                console.error('Could not copy URL: ', err);
-                 showToast('Failed to copy URL', true);
-            });
-         }
-
-         // --- Toast Notifications ---
-        function showToast(message, isError = false) {
-            if (currentToastTimeout) clearTimeout(currentToastTimeout);
-            toast.textContent = message;
-            toast.className = `toast ${isError ? 'error' : ''} show`;
-            currentToastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-             }, 3000);
-        }
-
-        // --- Tooltips ---
-         function showTooltip(element, text) {
-            if (tooltipTimeout) clearTimeout(tooltipTimeout);
-            tooltipElement = element; // Store the element being hovered
-
-             tooltip.textContent = text;
-             const rect = element.getBoundingClientRect();
-             tooltip.style.opacity = '0'; // Start invisible for position calculation
-            tooltip.style.display = 'block'; // Make sure it's rendered
-
-            // Position below the element
-            const topPos = rect.bottom + window.scrollY + 5; // 5px gap
-            const leftPos = rect.left + window.scrollX + (rect.width / 2) - (tooltip.offsetWidth / 2);
-
-            tooltip.style.top = `${topPos}px`;
-            tooltip.style.left = `${Math.max(5, leftPos)}px`; // Ensure not off-screen left
-
-            tooltip.style.opacity = '1'; // Fade in
-         }
-
-         function hideTooltip(element) {
-            // Only hide if the tooltip is currently shown for *this* element
-            if (tooltipElement === element) {
-                 tooltipTimeout = setTimeout(() => {
-                     tooltip.style.opacity = '0';
-                     // Use transitionend event to set display: none if needed, avoids flicker
-                     tooltip.addEventListener('transitionend', function handler() {
-                          tooltip.style.display = 'none';
-                          tooltip.removeEventListener('transitionend', handler);
-                     });
-                    tooltipElement = null;
-                }, 100); // Small delay to allow moving cursor between elements
-            }
-         }
-
-        // Utility to add tooltip listeners
-        function addTooltipListener(selector, attribute = 'title') {
-             document.body.addEventListener('mouseover', (e) => {
-                const target = e.target.closest(selector);
-                 if (target && target.hasAttribute(attribute)) {
-                     const text = target.getAttribute(attribute);
-                      if (text) {
-                          showTooltip(target, text);
-                      }
-                 }
-            });
-
-             document.body.addEventListener('mouseout', (e) => {
-                const target = e.target.closest(selector);
-                 if (target) {
-                     hideTooltip(target);
-                 }
-             });
-             // Hide on scroll too
-              window.addEventListener('scroll', () => hideTooltip(tooltipElement), true);
-        }
-
-        // Async function to get image dimensions
-         function getImageDimensions(url) {
-             return new Promise((resolve) => {
-                 const img = new Image();
-                 img.onload = function() { resolve({ width: this.width, height: this.height }); };
-                 img.onerror = function() { resolve({ width: 0, height: 0 }); }; // Indicate failure
-                 img.src = url;
-             });
-         }
 
         // --- Initialization ---
+        const handleSearchInput = debounce(() => {
+             currentSearchTerm = searchInput.value.trim();
+             filterAndRenderImages();
+         }, 300);
+
+
         async function initializeApp() {
-             if (!(await fetchImageData())) {
-                 // Error message already shown by fetchImageData
-                 return;
-             }
+            // Initial setup
+             searchInput.addEventListener('input', handleSearchInput);
+             refreshBtn.addEventListener('click', initializeApp); // Re-run the init process
+            navAllImages.addEventListener('click', () => setActiveView('all'));
 
-             buildNavigation(); // Build folders and file type filters in sidebar
-             updateBreadcrumbs();
-             processAndDisplayImages(); // Initial render
-
-             // --- Event Listeners ---
-             // Search
-             searchInput.addEventListener('input', debouncedSearch);
-             clearSearchBtn.addEventListener('click', clearSearch);
-
-             // View Modes
-             gridViewBtn.addEventListener('click', () => setViewMode('grid'));
-             listViewBtn.addEventListener('click', () => setViewMode('list'));
-
-             // Refresh
-             refreshBtn.addEventListener('click', initializeApp); // Re-fetch and re-render
-
-             // Sidebar Navigation
-            $('#nav-all-images').onclick = () => {
-                currentFolder = null;
-                currentFilter = { type: null, value: null };
-                processAndDisplayImages();
-                updateBreadcrumbs();
-            };
-            $('#nav-favorites').onclick = () => applyFilter({ type: 'favorites' });
-
-             // Modal Controls
-            imageModal.querySelector('.close-modal').addEventListener('click', closeModal);
-            prevImageBtn.addEventListener('click', () => navigateModal(-1));
-            nextImageBtn.addEventListener('click', () => navigateModal(1));
-             modalFavoriteBtn.addEventListener('click', () => {
-                if (currentImageIndex !== -1) toggleFavorite(displayedImages[currentImageIndex].path);
+             // Modal Listeners
+            closeModalBtn.addEventListener('click', closeModal);
+             prevImageBtn.addEventListener('click', () => navigateModal(-1));
+             nextImageBtn.addEventListener('click', () => navigateModal(1));
+            imageModal.addEventListener('click', (e) => { // Close on overlay click
+                if (e.target === imageModal) closeModal();
              });
-             modalInfoBtn.addEventListener('click', () => {
-                 if (currentImageIndex !== -1) {
-                     closeModal(); // Close image modal first
-                     // Slight delay to ensure it's closed before opening info
-                    setTimeout(() => showImageInfo(displayedImages[currentImageIndex]), 150);
-                }
-             });
-             modalCopyUrlBtn.addEventListener('click', copyModalImageUrl);
-             modalDownloadBtn.addEventListener('click', () => {
-                if (currentImageIndex !== -1) {
-                     const img = displayedImages[currentImageIndex];
-                     downloadImage(img.rawUrl, img.name);
+
+            // Keyboard listener for modal navigation
+            document.addEventListener('keydown', (e) => {
+                if (imageModal.classList.contains('show')) {
+                    switch (e.key) {
+                        case 'Escape': closeModal(); break;
+                        case 'ArrowLeft': if (!prevImageBtn.disabled) navigateModal(-1); break;
+                         case 'ArrowRight': if (!nextImageBtn.disabled) navigateModal(1); break;
+                     }
                  }
              });
 
-              // Close modals on background click
-             imageModal.addEventListener('click', (e) => {
-                 if (e.target === imageModal) closeModal();
-             });
-             infoModal.addEventListener('click', (e) => {
-                 if (e.target === infoModal) closeInfoModal();
-             });
-             infoModal.querySelector('.close-info-modal').addEventListener('click', closeInfoModal);
-
-
-             // Keyboard Navigation for Modal
-             document.addEventListener('keydown', (e) => {
-                 if (imageModal.classList.contains('show')) {
-                     switch (e.key) {
-                         case 'Escape': closeModal(); break;
-                         case 'ArrowLeft': if (!prevImageBtn.disabled) navigateModal(-1); break;
-                         case 'ArrowRight': if (!nextImageBtn.disabled) navigateModal(1); break;
-                         // Add '+' '-' for zoom? Space for pan toggle?
-                    }
-                } else if (infoModal.classList.contains('show')) {
-                      if (e.key === 'Escape') closeInfoModal();
-                }
-             });
-
-              // Tooltips initialization
-             addTooltipListener('.action-button');
-             addTooltipListener('.action-icon-btn');
-             addTooltipListener('.modal-action-btn');
-             addTooltipListener('.nav-button');
-             addTooltipListener('.favorite-info-btn');
+            // Fetch data and render
+             if (await fetchImageData()) {
+                 buildSidebar();
+                 setActiveView('all'); // Start in 'all images' view
+             } // Error handling is done within fetchImageData
         }
 
-        // Start the app
+        // --- Start the App ---
         window.addEventListener('DOMContentLoaded', initializeApp);
 
     </script>
+
 </body>
 </html>
