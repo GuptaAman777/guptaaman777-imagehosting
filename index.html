@@ -29,357 +29,313 @@
             --transition-fast: 0.15s ease-in-out;
             --header-height: 64px;
             --content-header-height: 56px;
+            --details-panel-width: 300px; /* Width of the info panel */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { font-size: 14px; } /* Drive tends to use slightly smaller base font */
+        html { font-size: 14px; }
         body {
             font-family: var(--font-drive);
-            background-color: var(--drive-bg-primary);
+            background-color: #eef0f2; /* Slightly off-white for contrast with app */
             color: var(--drive-text-primary);
             display: flex;
             height: 100vh;
             overflow: hidden;
+            align-items: center; /* For login center */
+            justify-content: center; /* For login center */
         }
         ::-webkit-scrollbar { width: 10px; height: 10px; }
         ::-webkit-scrollbar-track { background: var(--drive-bg-tertiary); }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 5px; border: 2px solid var(--drive-bg-tertiary);}
         ::-webkit-scrollbar-thumb:hover { background: #aaa; }
 
+        /* --- Login Screen --- */
+        #loginOverlay {
+            position: fixed; /* Changed to fixed to ensure cover */
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--drive-bg-primary);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 5000;
+             transition: opacity 0.3s ease-out;
+        }
+        .login-box {
+            background-color: white; padding: 40px; border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); text-align: center; width: 320px;
+        }
+        .login-box h2 { margin-bottom: 10px; color: var(--drive-text-primary); font-weight: 500;}
+        .login-box p { margin-bottom: 25px; color: var(--drive-text-secondary); font-size: 0.9rem;}
+        .login-input-group { margin-bottom: 20px; text-align: left; }
+        .login-input-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 500; color: var(--drive-text-secondary);}
+        .login-input {
+            width: 100%; padding: 10px 12px; font-size: 1rem;
+            border: 1px solid var(--drive-border-color); border-radius: var(--border-radius-item);
+            outline: none; transition: border-color 0.2s;
+        }
+        .login-input:focus { border-color: var(--drive-accent-blue); }
+        .login-button {
+            width: 100%; padding: 10px; font-size: 1rem; font-weight: 500;
+            background-color: var(--drive-accent-blue); color: white; border: none;
+            border-radius: var(--border-radius-item); cursor: pointer; transition: background-color 0.2s;
+        }
+        .login-button:hover { background-color: #185abc; }
+        #loginError { color: var(--drive-error-color); margin-top: 15px; font-size: 0.85rem; height: 1.2em; }
+
         /* --- App Layout --- */
-        .drive-app { display: flex; width: 100%; height: 100%; }
+        .drive-app {
+            display: none; /* Initially hidden */
+            flex: 1; /* Take full space when visible */
+            width: 100%; height: 100%;
+             background-color: var(--drive-bg-primary);
+             box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15); /* Drive card shadow */
+        }
+
+        .app-content-wrapper { /* New wrapper for sidebar + main + details */
+             display: flex;
+             width: 100%; height: 100%;
+             position: relative; /* For positioning details panel */
+         }
 
         /* --- Sidebar (Navigation) --- */
         .sidebar {
-            width: 256px;
-            background-color: var(--drive-bg-secondary);
-            border-right: 1px solid var(--drive-border-color);
-            padding-top: var(--spacing-unit);
-            display: flex; flex-direction: column;
-            flex-shrink: 0;
+            width: 256px; background-color: var(--drive-bg-secondary);
+            border-right: 1px solid var(--drive-border-color); padding-top: var(--spacing-unit);
+            display: flex; flex-direction: column; flex-shrink: 0;
         }
-        .sidebar-header {
-            padding: calc(var(--spacing-unit)*2) calc(var(--spacing-unit)*3);
-            display: flex; align-items: center; gap: var(--spacing-unit);
-            font-size: 1.4rem; font-weight: 500;
-            margin-bottom: var(--spacing-unit);
-        }
-        .sidebar-header img { height: 24px; } /* Placeholder for a logo */
-
+        .sidebar-header { /* Style as needed */ }
         .sidebar-nav { flex-grow: 1; overflow-y: auto; }
-        .nav-group { margin-bottom: var(--spacing-unit); }
-        .nav-item {
-            display: flex; align-items: center; gap: calc(var(--spacing-unit)*2);
-            padding: var(--spacing-unit) calc(var(--spacing-unit)*3);
-            margin-right: calc(var(--spacing-unit)*2); /* Make space for rounded corner */
-            border-top-right-radius: 20px; border-bottom-right-radius: 20px;
-            cursor: pointer; color: var(--drive-text-secondary); font-weight: 500;
-            transition: background-color var(--transition-fast), color var(--transition-fast);
-            font-size: 0.95rem;
-        }
-        .nav-item i { width: 20px; text-align: center; color: var(--drive-icon-color); font-size: 1.1em;}
+        /* Other sidebar styles from previous version... */
+        .nav-item { display: flex; align-items: center; gap: calc(var(--spacing-unit)*2); padding: var(--spacing-unit) calc(var(--spacing-unit)*3); margin-right: calc(var(--spacing-unit)*2); border-top-right-radius: 20px; border-bottom-right-radius: 20px; cursor: pointer; color: var(--drive-text-secondary); font-weight: 500; transition: background-color var(--transition-fast), color var(--transition-fast); font-size: 0.95rem; }
+        .nav-item i { width: 20px; text-align: center; color: var(--drive-icon-color); font-size: 1.1em; }
         .nav-item:hover { background-color: var(--drive-bg-tertiary); }
         .nav-item.active { background-color: var(--drive-item-selected-bg); color: var(--drive-item-selected-text); font-weight: 700; }
         .nav-item.active i { color: var(--drive-item-selected-text); }
-        .nav-item .nav-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
+        .nav-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .nav-separator { height: 1px; background-color: var(--drive-border-color); margin: var(--spacing-unit) calc(var(--spacing-unit)*2); }
-        .folder-nav-list .nav-item { font-weight: 400; padding-left: calc(var(--spacing-unit)*5); } /* Indent folders */
+        .folder-nav-list .nav-item { font-weight: 400; padding-left: calc(var(--spacing-unit)*5); }
         .folder-nav-list .nav-item i { font-size: 1em; }
 
+        /* --- Main Content Area (adjust for details panel) --- */
+        .main-area {
+            flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;
+            transition: margin-right var(--transition-base); /* Animate when details panel opens */
+             position: relative;
+         }
+         .main-area.with-details { margin-right: var(--details-panel-width); }
 
-        /* --- Main Content Area --- */
-        .main-area { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        /* Top Bar (Search) - Unchanged */
+         .top-bar { height: var(--header-height); display: flex; align-items: center; padding: 0 calc(var(--spacing-unit)*3); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
+         .search-container { flex-grow: 1; max-width: 720px; position: relative; margin: 0 auto; background-color: var(--drive-bg-tertiary); border-radius: var(--border-radius-base); }
+         .search-icon { position: absolute; left: calc(var(--spacing-unit)*2); top: 50%; transform: translateY(-50%); color: var(--drive-icon-color); font-size: 1.2em; }
+         .search-input { width: 100%; height: 48px; background: transparent; border: none; outline: none; padding: 0 calc(var(--spacing-unit)*6) 0 calc(var(--spacing-unit)*6); font-size: 1rem; color: var(--drive-text-primary); }
+         .search-input::placeholder { color: var(--drive-text-secondary); }
 
-        /* Top Bar (Search) */
-        .top-bar {
-            height: var(--header-height);
-            display: flex; align-items: center;
-            padding: 0 calc(var(--spacing-unit)*3);
-            border-bottom: 1px solid var(--drive-border-color);
-            flex-shrink: 0;
-        }
-        .search-container {
-            flex-grow: 1; max-width: 720px; /* Mimic Drive search bar size */
-            position: relative; margin: 0 auto;
-            background-color: var(--drive-bg-tertiary);
-            border-radius: var(--border-radius-base);
-        }
-        .search-icon {
-            position: absolute; left: calc(var(--spacing-unit)*2); top: 50%;
-            transform: translateY(-50%); color: var(--drive-icon-color); font-size: 1.2em;
-        }
-        .search-input {
-            width: 100%; height: 48px;
-            background: transparent; border: none; outline: none;
-            padding: 0 calc(var(--spacing-unit)*6) 0 calc(var(--spacing-unit)*6); /* Left padding for icon, right for clear? */
-            font-size: 1rem; color: var(--drive-text-primary);
-        }
-        .search-input::placeholder { color: var(--drive-text-secondary); }
-        /* Action buttons (User, Settings) could go here if needed */
-
-        /* Content Header (Breadcrumbs, Actions) */
-        .content-header {
-            height: var(--content-header-height);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 calc(var(--spacing-unit)*3);
-            border-bottom: 1px solid var(--drive-border-color);
-            flex-shrink: 0;
-        }
-        .breadcrumbs { display: flex; align-items: center; gap: var(--spacing-unit); color: var(--drive-text-primary); font-weight: 500;}
-        .breadcrumbs span { cursor: pointer; }
-        .breadcrumbs span:hover { color: var(--drive-accent-blue); }
-        .breadcrumbs span.current { font-weight: 700; color: var(--drive-text-primary); cursor: default; }
-        .breadcrumbs .separator { color: var(--drive-icon-color); cursor: default; }
-        .content-actions .action-button {
-            background: none; border: none; color: var(--drive-icon-color); font-size: 1.3rem;
-            cursor: pointer; padding: var(--spacing-unit); border-radius: 50%;
-            transition: background-color var(--transition-fast);
-            width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
-        }
-        .content-actions .action-button:hover { background-color: var(--drive-item-hover-bg); }
-        .content-actions .action-button.active { color: var(--drive-accent-blue); background-color: var(--drive-item-selected-bg);}
+        /* Content Header (Breadcrumbs, Actions) - Add Info button */
+        .content-header { height: var(--content-header-height); display: flex; align-items: center; justify-content: space-between; padding: 0 calc(var(--spacing-unit)*3); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
+        .breadcrumbs { /* Unchanged */ }
+        .content-actions { display: flex; align-items: center; }
+        .action-button { background: none; border: none; color: var(--drive-icon-color); font-size: 1.3rem; cursor: pointer; padding: var(--spacing-unit); border-radius: 50%; transition: background-color var(--transition-fast); width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+        .action-button:hover { background-color: var(--drive-item-hover-bg); }
+        .action-button.active { color: var(--drive-accent-blue); background-color: var(--drive-item-selected-bg);}
 
 
-        /* --- File List Container --- */
-        .file-list-container {
-            flex-grow: 1; overflow-y: auto; padding: calc(var(--spacing-unit)*2); position: relative;
-             background-color: var(--drive-bg-primary);
-        }
-
-        /* Status Indicators */
-        .status-indicator {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--drive-text-secondary); text-align: center;
-            padding: var(--spacing-unit) * 4; z-index: 1;
-        }
-        .status-indicator i { font-size: 3rem; margin-bottom: var(--spacing-unit)*2; color: var(--drive-icon-color);}
-        .status-indicator .error-icon { color: var(--drive-error-color);}
-        .spinner { /* More subtle spinner */
-            width: 32px; height: 32px; border: 3px solid var(--drive-item-selected-bg);
-            border-radius: 50%; border-top-color: var(--drive-accent-blue);
-            animation: spin 1s linear infinite; margin-bottom: var(--spacing-unit)*2;
-        }
+        /* File List Container - Unchanged */
+        .file-list-container { flex-grow: 1; overflow-y: auto; padding: calc(var(--spacing-unit)*2); position: relative; background-color: var(--drive-bg-primary); }
+        /* Status Indicators - Unchanged */
+        .status-indicator { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; color: var(--drive-text-secondary); text-align: center; padding: var(--spacing-unit) * 4; z-index: 1; }
+        .status-indicator i { font-size: 3rem; margin-bottom: var(--spacing-unit)*2; color: var(--drive-icon-color); }
+        .status-indicator .error-icon { color: var(--drive-error-color); }
+        .spinner { width: 32px; height: 32px; border: 3px solid var(--drive-item-selected-bg); border-radius: 50%; border-top-color: var(--drive-accent-blue); animation: spin 1s linear infinite; margin-bottom: var(--spacing-unit)*2; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* File/Folder Items Common */
-        .file-item {
-            position: relative;
-            border: 1px solid transparent;
-            border-radius: var(--border-radius-item);
-            transition: background-color var(--transition-fast), border-color var(--transition-fast);
-             cursor: pointer;
-             -webkit-user-select: none; /* Prevent text selection on double click */
-            user-select: none;
-        }
+        /* Item Styling (Grid/List) - Unchanged */
+        .file-item { position: relative; border: 1px solid transparent; border-radius: var(--border-radius-item); transition: background-color var(--transition-fast), border-color var(--transition-fast); cursor: pointer; -webkit-user-select: none; user-select: none; }
         .file-item:hover { background-color: var(--drive-item-hover-bg); }
         .file-item.selected { background-color: var(--drive-item-selected-bg); border-color: var(--drive-accent-blue); color: var(--drive-item-selected-text); }
-        .file-item.selected .item-icon,
-        .file-item.selected .item-name { color: var(--drive-item-selected-text); }
-
+        .file-item.selected .item-icon, .file-item.selected .item-name { color: var(--drive-item-selected-text); }
         .item-icon { font-size: 1.2rem; color: var(--drive-icon-color); flex-shrink: 0; }
         .item-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.9rem; }
-
         /* Grid View */
         .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: calc(var(--spacing-unit)*2); }
-        .file-grid .file-item {
-            display: flex; flex-direction: column; padding: var(--spacing-unit);
-        }
-        .grid-item-preview {
-            height: 120px; background-color: var(--drive-bg-secondary); border-radius: var(--border-radius-item);
-            display: flex; align-items: center; justify-content: center; margin-bottom: var(--spacing-unit);
-            overflow: hidden; border: 1px solid var(--drive-border-color);
-        }
+        .file-grid .file-item { display: flex; flex-direction: column; padding: var(--spacing-unit); }
+        .grid-item-preview { height: 120px; background-color: var(--drive-bg-secondary); border-radius: var(--border-radius-item); display: flex; align-items: center; justify-content: center; margin-bottom: var(--spacing-unit); overflow: hidden; border: 1px solid var(--drive-border-color); }
         .grid-item-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .grid-item-preview .item-icon { font-size: 2.5rem; } /* Larger icon for folder preview */
+        .grid-item-preview .item-icon { font-size: 2.5rem; }
         .grid-item-info { display: flex; align-items: center; gap: var(--spacing-unit); }
-        .grid-item-info .item-icon { font-size: 1rem; } /* Small icon next to name */
-
+        .grid-item-info .item-icon { font-size: 1rem; }
         /* List View */
-        .file-list { display: flex; flex-direction: column; gap: 2px; } /* Minimal gap */
-        .file-list .list-header { /* Optional header row */
-            display: grid; grid-template-columns: minmax(250px, 3fr) 1fr 1fr; /* Adjust columns */
-            align-items: center; gap: var(--spacing-unit)*2; padding: var(--spacing-unit) calc(var(--spacing-unit)*2);
-            font-size: 0.85rem; color: var(--drive-text-secondary); font-weight: 500;
-            border-bottom: 1px solid var(--drive-border-color); margin-bottom: 4px; user-select: none;
-        }
-        .file-list .file-item {
-            display: grid; grid-template-columns: minmax(250px, 3fr) 1fr 1fr; /* Match header */
-            align-items: center; gap: calc(var(--spacing-unit)*2); padding: var(--spacing-unit) calc(var(--spacing-unit)*2);
-            border-radius: 0; /* List items often aren't rounded */
-            border: none; /* Use selection background instead */
-        }
+        .file-list { display: flex; flex-direction: column; gap: 2px; }
+        .file-list .list-header { display: grid; grid-template-columns: minmax(250px, 3fr) 1fr 1fr; align-items: center; gap: var(--spacing-unit)*2; padding: var(--spacing-unit) calc(var(--spacing-unit)*2); font-size: 0.85rem; color: var(--drive-text-secondary); font-weight: 500; border-bottom: 1px solid var(--drive-border-color); margin-bottom: 4px; user-select: none; }
+        .file-list .file-item { display: grid; grid-template-columns: minmax(250px, 3fr) 1fr 1fr; align-items: center; gap: calc(var(--spacing-unit)*2); padding: var(--spacing-unit) calc(var(--spacing-unit)*2); border-radius: 0; border: none; }
         .list-item-name { display: flex; align-items: center; gap: var(--spacing-unit)*1.5; }
         .list-item-meta { font-size: 0.85rem; color: var(--drive-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- Modal --- */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7); z-index: 1000;
-            opacity: 0; transition: opacity var(--transition-base);
-            align-items: center; justify-content: center;
-        }
-        .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content {
-            background-color: var(--drive-bg-primary); color: var(--drive-text-primary);
-            border-radius: var(--border-radius-base); box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex; flex-direction: column;
-            max-width: 90vw; max-height: 90vh; width: 80vw; height: 85vh; /* Adapt size */
-            overflow: hidden; transform: scale(0.95); transition: transform var(--transition-base);
-        }
-        .modal-overlay.show .modal-content { transform: scale(1); }
 
-        .modal-header {
-            display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-unit) calc(var(--spacing-unit)*2);
-            border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0;
-        }
-        .modal-title { font-weight: 500; font-size: 1rem; color: var(--drive-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .modal-actions .modal-action-btn {
-             background: none; border: none; color: var(--drive-icon-color); font-size: 1.2rem; cursor: pointer;
-             padding: var(--spacing-unit); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
-             transition: background-color var(--transition-fast);
+        /* --- Details Panel --- */
+        .details-panel {
+             position: absolute; top: 0; right: 0; bottom: 0;
+            width: var(--details-panel-width);
+            background-color: var(--drive-bg-secondary);
+             border-left: 1px solid var(--drive-border-color);
+             padding: calc(var(--spacing-unit) * 2);
+             overflow-y: auto;
+             display: none; /* Hidden by default */
+             flex-direction: column; /* To stack elements */
+             z-index: 5; /* Below modal but above content overlay */
          }
+         .details-panel.show { display: flex; }
+         .details-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: calc(var(--spacing-unit)*2); }
+         .details-title { font-size: 1rem; font-weight: 500; color: var(--drive-text-primary);}
+         .details-close-btn { /* Style the close button for details */ }
+         .details-preview { text-align: center; margin-bottom: calc(var(--spacing-unit)*2); background-color: white; padding: var(--spacing-unit); border-radius: var(--border-radius-item); border: 1px solid var(--drive-border-color); }
+         .details-preview img { max-width: 100%; max-height: 150px; object-fit: contain; }
+         .details-preview .folder-icon { font-size: 4em; color: var(--drive-icon-color); }
+         .details-section { margin-bottom: calc(var(--spacing-unit)*2); }
+         .details-section h3 { font-size: 0.9rem; font-weight: 500; color: var(--drive-text-primary); margin-bottom: var(--spacing-unit); border-bottom: 1px solid var(--drive-border-color); padding-bottom: calc(var(--spacing-unit)/2);}
+         .details-info-grid { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-unit) calc(var(--spacing-unit)*2); align-items: center; font-size: 0.85rem;}
+         .details-info-grid dt { font-weight: 500; color: var(--drive-text-secondary); white-space: nowrap; }
+         .details-info-grid dd { color: var(--drive-text-primary); word-break: break-word; /* Wrap long paths/SHAs */ }
+         .details-info-grid dd a { color: var(--drive-accent-blue); text-decoration: none; }
+         .details-info-grid dd a:hover { text-decoration: underline; }
+        .details-actions { margin-top: auto; /* Push actions to bottom */ padding-top: var(--spacing-unit)*2; border-top: 1px solid var(--drive-border-color); display: flex; justify-content: center; gap: var(--spacing-unit)*2; }
+        .details-action-button {
+            display: inline-flex; align-items: center; gap: var(--spacing-unit); padding: calc(var(--spacing-unit)*0.75) var(--spacing-unit);
+            border: 1px solid var(--drive-border-color); border-radius: var(--border-radius-item);
+            background-color: white; cursor: pointer; color: var(--drive-text-secondary); font-size: 0.85rem; transition: background-color 0.2s;
+        }
+        .details-action-button:hover { background-color: var(--drive-item-hover-bg); }
+        .details-action-button i { font-size: 1rem; }
+
+
+        /* --- Modal - Unchanged --- */
+         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; opacity: 0; transition: opacity var(--transition-base); align-items: center; justify-content: center; }
+         .modal-overlay.show { display: flex; opacity: 1; }
+         .modal-content { background-color: var(--drive-bg-primary); color: var(--drive-text-primary); border-radius: var(--border-radius-base); box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; max-width: 90vw; max-height: 90vh; width: 80vw; height: 85vh; overflow: hidden; transform: scale(0.95); transition: transform var(--transition-base); }
+         .modal-overlay.show .modal-content { transform: scale(1); }
+         .modal-header { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-unit) calc(var(--spacing-unit)*2); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
+         .modal-title { font-weight: 500; font-size: 1rem; color: var(--drive-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+         .modal-actions .modal-action-btn { background: none; border: none; color: var(--drive-icon-color); font-size: 1.2rem; cursor: pointer; padding: var(--spacing-unit); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; transition: background-color var(--transition-fast); }
          .modal-actions .modal-action-btn:hover { background-color: var(--drive-item-hover-bg); }
-         .modal-actions .modal-action-btn.favorite-btn.is-favorite { color: var(--drive-accent-blue); } /* Star blue when favorited */
-
-        .modal-body { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: var(--spacing-unit); background-color: var(--drive-bg-secondary); }
-        .modal-body img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; }
-        .modal-nav { position: absolute; top: 50%; transform: translateY(-50%); left: var(--spacing-unit); right: var(--spacing-unit); display: flex; justify-content: space-between; pointer-events: none; }
-        .nav-button {
-             background-color: rgba(32,33,36,0.6); /* Darker transparent background */
-             border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-             cursor: pointer; pointer-events: auto; opacity: 0.8; transition: opacity 0.2s;
-         }
+         .modal-actions .modal-action-btn.favorite-btn.is-favorite { color: var(--drive-accent-blue); }
+         .modal-body { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: var(--spacing-unit); background-color: var(--drive-bg-secondary); }
+         .modal-body img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; }
+         .modal-nav { position: absolute; top: 50%; transform: translateY(-50%); left: var(--spacing-unit); right: var(--spacing-unit); display: flex; justify-content: space-between; pointer-events: none; }
+         .nav-button { background-color: rgba(32,33,36,0.6); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; opacity: 0.8; transition: opacity 0.2s; }
          .nav-button:hover { opacity: 1; }
          .nav-button:disabled { opacity: 0.3; cursor: default; }
 
-        /* --- Toast --- */
-        .toast {
-            position: fixed; bottom: calc(var(--spacing-unit)*3); left: calc(var(--spacing-unit)*3);
-            background-color: #323232; /* Dark toast background */ color: white;
-            padding: calc(var(--spacing-unit)*1.5) calc(var(--spacing-unit)*2); border-radius: var(--border-radius-item);
-            font-size: 0.9rem; z-index: 2000; opacity: 0; transform: translateY(10px);
-            transition: opacity 0.3s, transform 0.3s; pointer-events: none; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
+        /* --- Toast - Unchanged --- */
+        .toast { position: fixed; bottom: calc(var(--spacing-unit)*3); left: calc(var(--spacing-unit)*3); background-color: #323232; color: white; padding: calc(var(--spacing-unit)*1.5) calc(var(--spacing-unit)*2); border-radius: var(--border-radius-item); font-size: 0.9rem; z-index: 2000; opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; pointer-events: none; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast.error { background-color: var(--drive-error-color); }
     </style>
 </head>
 <body>
-    <div class="drive-app">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                 <!-- Replace with actual logo if available -->
-                <i class="fa-solid fa-images" style="color: var(--drive-accent-blue); font-size: 1.8em;"></i>
-                 <span>ImageDrive</span>
-            </div>
-            <nav class="sidebar-nav">
-                <div class="nav-group">
-                     <div class="nav-item active" id="nav-my-images">
-                         <i class="fa-solid fa-photo-film"></i>
-                         <span class="nav-text">My Images</span>
+    <!-- Login Screen -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>Sign in</h2>
+            <p>to continue to ImageDrive</p>
+            <div class="login-input-group">
+                 <label for="username">Username</label>
+                 <input type="text" id="username" class="login-input" placeholder="Enter username">
+             </div>
+             <div class="login-input-group">
+                <label for="password">Password</label>
+                 <input type="password" id="password" class="login-input" placeholder="Enter password">
+             </div>
+             <button id="loginButton" class="login-button">Sign In</button>
+             <div id="loginError"></div> <!-- For error messages -->
+        </div>
+    </div>
+
+    <!-- Main Application Structure (initially hidden) -->
+    <div class="drive-app" id="driveApp">
+         <div class="app-content-wrapper">
+             <!-- Sidebar -->
+            <aside class="sidebar">
+                 <div class="sidebar-header">
+                    <i class="fa-solid fa-images" style="color: var(--drive-accent-blue); font-size: 1.8em;"></i>
+                     <span>ImageDrive</span>
+                </div>
+                 <nav class="sidebar-nav">
+                     <div class="nav-group">
+                        <div class="nav-item active" id="nav-my-images"> <i class="fa-solid fa-photo-film"></i> <span class="nav-text">My Images</span> </div>
+                        <div class="nav-item" id="nav-starred"> <i class="fa-regular fa-star"></i> <span class="nav-text">Starred</span> </div>
                     </div>
-                    <div class="nav-item" id="nav-starred">
-                         <i class="fa-regular fa-star"></i>
-                         <span class="nav-text">Starred</span>
-                    </div>
-                </div>
-                <div class="nav-separator"></div>
-                <div class="nav-group folder-nav-list" id="folder-list">
-                     <span style="padding: 0 24px; font-size: 0.8em; color: var(--drive-text-tertiary); text-transform: uppercase;">Folders</span>
-                     <!-- Folder nav items added dynamically -->
-                </div>
-            </nav>
-        </aside>
+                     <div class="nav-separator"></div>
+                     <div class="nav-group folder-nav-list" id="folder-list">
+                         <span style="padding: 0 24px; font-size: 0.8em; color: var(--drive-text-tertiary); text-transform: uppercase;">Folders</span>
+                        </div>
+                 </nav>
+            </aside>
 
-        <!-- Main Area -->
-        <main class="main-area">
-            <!-- Top Bar -->
-            <header class="top-bar">
-                <div class="search-container">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search in Images">
+            <!-- Main Area -->
+             <main class="main-area" id="mainArea">
+                <!-- Top Bar -->
+                 <header class="top-bar">
+                    <div class="search-container"> <i class="fas fa-search search-icon"></i> <input type="text" class="search-input" id="searchInput" placeholder="Search in Images"> </div>
+                 </header>
+                <!-- Content Header -->
+                 <div class="content-header">
+                     <div class="breadcrumbs" id="breadcrumbs"></div>
+                     <div class="content-actions">
+                         <button class="action-button" id="infoBtn" title="Show details (i)"> <i class="fas fa-info-circle"></i> </button>
+                        <button class="action-button active" id="gridViewBtn" title="Grid view"> <i class="fas fa-th-large"></i> </button>
+                        <button class="action-button" id="listViewBtn" title="List view"> <i class="fas fa-list"></i> </button>
+                        <button class="action-button" id="refreshBtn" title="Refresh"> <i class="fas fa-sync-alt"></i> </button>
+                     </div>
                 </div>
-                 <!-- Maybe User/Settings icons here -->
-            </header>
+                <!-- File List Container -->
+                 <div class="file-list-container" id="fileListContainer">
+                     <!-- Status Indicators -->
+                     <div class="status-indicator" id="loadingIndicator" style="display: none;"> <div class="spinner"></div> <span id="loadingMessage">Loading...</span> </div>
+                     <div class="status-indicator" id="errorIndicator" style="display: none;"> <i class="fas fa-exclamation-circle error-icon"></i> <p style="margin-bottom: 5px; font-weight: 500;">Couldn't load items</p> <span id="errorMessage" style="font-size: 0.9rem;"></span> </div>
+                     <div class="status-indicator" id="emptyFolderIndicator" style="display: none;"> <i class="fas fa-folder-open"></i> <p>Folder is empty</p> <span id="emptyFolderMessage" style="font-size: 0.9rem;"></span> </div>
+                     <!-- Header for List View -->
+                    <div class="file-list list-header" id="listHeader" style="display: none;"> <span>Name</span> <span>File size</span> <span>Type</span> </div>
+                     <!-- Items Grid/List -->
+                    <div class="file-grid" id="fileList"> </div>
+                 </div>
+             </main>
 
-            <!-- Content Header -->
-            <div class="content-header">
-                 <div class="breadcrumbs" id="breadcrumbs">
-                     <!-- Breadcrumbs added dynamically -->
-                </div>
-                <div class="content-actions">
-                    <button class="action-button active" id="gridViewBtn" title="Grid view">
-                        <i class="fas fa-th-large"></i>
+             <!-- Details Panel (initially hidden) -->
+            <aside class="details-panel" id="detailsPanel">
+                 <div class="details-header">
+                    <span class="details-title">Details</span>
+                     <button class="action-button" id="detailsCloseBtn" title="Close details" style="width: 32px; height: 32px;"> <i class="fas fa-times"></i> </button>
+                 </div>
+                <div class="details-preview" id="detailsPreview"> <!-- Placeholder for image/icon --> </div>
+                 <div class="details-section">
+                     <h3>Properties</h3>
+                    <dl class="details-info-grid" id="detailsProperties">
+                         <!-- dt/dd pairs added dynamically -->
+                     </dl>
+                 </div>
+                 <div class="details-actions">
+                    <button class="details-action-button" id="detailsCopyUrlBtn">
+                        <i class="fas fa-link"></i> Copy link
                     </button>
-                    <button class="action-button" id="listViewBtn" title="List view">
-                        <i class="fas fa-list"></i>
-                    </button>
-                     <button class="action-button" id="refreshBtn" title="Refresh">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <!-- Other actions like Sort could go here -->
-                </div>
-            </div>
-
-            <!-- File List Container -->
-            <div class="file-list-container" id="fileListContainer">
-                <!-- Status Indicators -->
-                 <div class="status-indicator" id="loadingIndicator" style="display: none;">
-                     <div class="spinner"></div>
-                     <span id="loadingMessage">Loading...</span>
+                     <!-- More actions could go here -->
                  </div>
-                 <div class="status-indicator" id="errorIndicator" style="display: none;">
-                      <i class="fas fa-exclamation-circle error-icon"></i>
-                     <p style="margin-bottom: 5px; font-weight: 500;">Couldn't load items</p>
-                     <span id="errorMessage" style="font-size: 0.9rem;"></span>
-                 </div>
-                <div class="status-indicator" id="emptyFolderIndicator" style="display: none;">
-                     <i class="fas fa-folder-open"></i>
-                     <p>Folder is empty</p>
-                     <span id="emptyFolderMessage" style="font-size: 0.9rem;"></span>
-                 </div>
-
-                 <!-- Header for List View -->
-                 <div class="file-list list-header" id="listHeader" style="display: none;">
-                    <span>Name</span>
-                    <span>File size</span>
-                     <span>Type</span>
-                 </div>
-
-                <!-- Items Grid/List -->
-                 <div class="file-grid" id="fileList">
-                    <!-- File/Folder items added here -->
-                 </div>
-            </div>
-        </main>
-         <!-- Details Panel could go here -->
+             </aside>
+        </div>
     </div>
 
     <!-- Image Modal -->
     <div class="modal-overlay" id="imageModal">
-        <div class="modal-content">
-             <div class="modal-header">
+         <div class="modal-content">
+            <div class="modal-header">
                  <span class="modal-title" id="modalTitle">Image Name</span>
-                <div class="modal-actions">
-                    <button class="modal-action-btn favorite-btn" id="modalFavoriteBtn" title="Star this image">
-                        <i class="fa-regular fa-star"></i> <!-- Toggles to fas -->
-                    </button>
-                     <button class="modal-action-btn" id="modalDownloadBtn" title="Download">
-                         <i class="fas fa-download"></i>
-                    </button>
-                    <button class="modal-action-btn" id="closeModalBtn" title="Close (Esc)">
-                        <i class="fas fa-times"></i>
-                    </button>
+                 <div class="modal-actions">
+                     <button class="modal-action-btn favorite-btn" id="modalFavoriteBtn" title="Star this image"> <i class="fa-regular fa-star"></i> </button>
+                     <button class="modal-action-btn" id="modalDownloadBtn" title="Download"> <i class="fas fa-download"></i> </button>
+                     <button class="modal-action-btn" id="closeModalBtn" title="Close (Esc)"> <i class="fas fa-times"></i> </button>
                  </div>
             </div>
             <div class="modal-body">
                  <img id="modalImage" src="" alt="Preview">
                 <div class="modal-nav">
-                     <button class="nav-button" id="prevImageBtn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="nav-button" id="nextImageBtn"><i class="fas fa-chevron-right"></i></button>
+                    <button class="nav-button" id="prevImageBtn"><i class="fas fa-chevron-left"></i></button>
+                     <button class="nav-button" id="nextImageBtn"><i class="fas fa-chevron-right"></i></button>
                  </div>
             </div>
         </div>
@@ -389,28 +345,39 @@
     <div id="toast" class="toast">Toast message</div>
 
     <script>
-        // --- Configuration ---
+        // --- Configuration & Constants ---
         const GITHUB_USERNAME = 'GuptaAman777';
         const GITHUB_REPO = 'guptaaman777-imagehosting';
         const BRANCH = 'main';
         const API_URL = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/git/trees/${BRANCH}?recursive=1`;
         const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'ico'];
-        const ROOT_NAME = 'My Images'; // Name for the root level
+        const ROOT_NAME = 'My Images';
+        const LOGIN_ID = 'GuptaAman777'; // <<< HARDCODED - INSECURE
+        const LOGIN_PASS = 'Amanktr@7765'; // <<< HARDCODED - INSECURE
+        const LOGGED_IN_KEY = 'driveAppLoggedIn';
 
         // --- State ---
-        let allItems = [];           // Raw data including folders derived from paths
-        let currentDisplayItems = [];// Items to be displayed in the current view (filtered/sorted)
-        let currentFolderPath = null;// null represents the root
-        let currentViewMode = 'grid'; // 'grid' or 'list'
+        let allItems = [];
+        let currentDisplayItems = [];
+        let currentFolderPath = null;
+        let currentViewMode = 'grid';
         let currentSearchTerm = '';
         let currentModalIndex = -1;
         let selectedItemPath = null;
-         let favorites = JSON.parse(localStorage.getItem('driveImageFavorites_v1')) || []; // Store paths
+        let favorites = JSON.parse(localStorage.getItem('driveImageFavorites_v1')) || [];
         let toastTimeout = null;
+        let isDetailsPanelOpen = false;
 
         // --- DOM Elements ---
         const $ = (selector) => document.querySelector(selector);
         const $$ = (selector) => document.querySelectorAll(selector);
+
+        const loginOverlay = $('#loginOverlay');
+        const loginUsernameInput = $('#username');
+        const loginPasswordInput = $('#password');
+        const loginButton = $('#loginButton');
+        const loginError = $('#loginError');
+        const driveApp = $('#driveApp');
 
         const sidebarNav = $('.sidebar-nav');
         const folderListContainer = $('#folder-list');
@@ -419,9 +386,10 @@
         const breadcrumbsContainer = $('#breadcrumbs');
         const gridViewBtn = $('#gridViewBtn');
         const listViewBtn = $('#listViewBtn');
+        const infoBtn = $('#infoBtn'); // Details button
         const fileListContainer = $('#fileListContainer');
         const fileList = $('#fileList');
-        const listHeader = $('#listHeader'); // Header for list view
+        const listHeader = $('#listHeader');
 
         const loadingIndicator = $('#loadingIndicator');
         const errorIndicator = $('#errorIndicator');
@@ -439,521 +407,347 @@
         const modalFavoriteBtn = $('#modalFavoriteBtn');
         const modalDownloadBtn = $('#modalDownloadBtn');
 
+        const detailsPanel = $('#detailsPanel');
+        const detailsCloseBtn = $('#detailsCloseBtn');
+        const detailsPreview = $('#detailsPreview');
+        const detailsProperties = $('#detailsProperties');
+        const detailsCopyUrlBtn = $('#detailsCopyUrlBtn');
+        const mainArea = $('#mainArea'); // To adjust margin
+
         const toast = $('#toast');
 
 
-        // --- Helper Functions ---
-        function formatFileSize(bytes) {
-             if (!bytes || bytes < 10) return '--'; // Drive often uses '--' for small/unknown
-             const k = 1024;
-             const sizes = ['B', 'KB', 'MB', 'GB']; // Reduced scale for typical images
-             const i = Math.floor(Math.log(bytes) / Math.log(k));
-             // Avoid showing .0 for KB/MB etc if whole number
-            const size = parseFloat((bytes / Math.pow(k, i)).toFixed(1));
-            return size + ' ' + sizes[i];
-         }
+        // --- Helper Functions --- (formatFileSize, createRawUrl, debounce - unchanged)
+        function formatFileSize(bytes) { if (!bytes || bytes < 10) return '--'; const k=1024, sizes=['B','KB','MB','GB'], i=Math.floor(Math.log(bytes)/Math.log(k)), size=parseFloat((bytes/Math.pow(k,i)).toFixed(1)); return size+' '+sizes[i]; }
+        function createRawUrl(path) { const encodedPath=path.split('/').map(segment=>encodeURIComponent(decodeURIComponent(segment))).join('/'); return `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${BRANCH}/${encodedPath}`; }
+        function debounce(func,wait) { let timeout; return function(...args) { const later=()=> {clearTimeout(timeout);func.apply(this,args);}; clearTimeout(timeout); timeout=setTimeout(later,wait);}; }
 
-        function createRawUrl(path) {
-            const encodedPath = path.split('/').map(segment => encodeURIComponent(decodeURIComponent(segment))).join('/');
-            return `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${BRANCH}/${encodedPath}`;
-         }
-
-         function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => { clearTimeout(timeout); func(...args); };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-             };
-        }
-
-        // --- API & Data Processing ---
-        async function fetchAndProcessData() {
-             showLoading('Loading images...');
-             allItems = []; // Clear previous data
-             let uniqueFolders = new Map(); // path -> { name, path, parentPath }
-
-             try {
-                 const response = await fetch(API_URL);
-                 if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                 const data = await response.json();
-                 if (!data.tree) throw new Error("Invalid API response structure.");
-
-                // Process files first
-                data.tree.filter(item => item.type === 'blob').forEach(item => {
-                     const pathParts = item.path.split('/');
-                     const name = pathParts.pop();
-                     const parentPath = pathParts.length > 0 ? pathParts.join('/') : null;
-                     const isImage = IMAGE_EXTENSIONS.includes(name.split('.').pop()?.toLowerCase());
-
-                     if (isImage) {
-                         allItems.push({
-                             type: 'file', // Differentiate items
-                            path: item.path,
-                            name: name,
-                             parentPath: parentPath,
-                             rawUrl: createRawUrl(item.path),
-                             size: item.size || 0,
-                             extension: name.split('.').pop()?.toLowerCase() || '',
-                             isFavorite: favorites.includes(item.path) // Check initial fav status
-                        });
-
-                         // Ensure parent folders exist in our map
-                         let currentPath = '';
-                         for (const part of pathParts) {
-                             const fullPath = currentPath ? `${currentPath}/${part}` : part;
-                             const parent = currentPath || null;
-                            if (!uniqueFolders.has(fullPath)) {
-                                uniqueFolders.set(fullPath, { name: part, path: fullPath, parentPath: parent });
-                             }
-                             currentPath = fullPath;
-                        }
-                     }
-                });
-
-                 // Add folder items from the map
-                uniqueFolders.forEach((folderData, folderPath) => {
-                    allItems.push({
-                        type: 'folder',
-                         path: folderData.path,
-                        name: folderData.name,
-                         parentPath: folderData.parentPath
-                    });
-                 });
-
-                 console.log(`Processed ${allItems.length} total items.`);
-                 hideStatusIndicators();
-                return true;
-
-             } catch (error) {
-                 console.error("Fetch/Process Error:", error);
-                 showError(error.message);
-                 return false;
-             }
-        }
-
-
-        // --- UI Rendering ---
-        function buildSidebarFolders() {
-             folderListContainer.innerHTML = `<span style="padding: 0 24px; font-size: 0.8em; color: var(--drive-text-tertiary); text-transform: uppercase;">Folders</span>`; // Title
-             const rootFolders = allItems.filter(item => item.type === 'folder' && item.parentPath === null);
-            rootFolders.sort((a, b) => a.name.localeCompare(b.name));
-
-            rootFolders.forEach(folder => {
-                 const div = document.createElement('div');
-                 div.className = 'nav-item';
-                 div.dataset.path = folder.path;
-                 div.innerHTML = `
-                    <i class="fa-regular fa-folder"></i>
-                     <span class="nav-text">${folder.name}</span>
-                `;
-                div.addEventListener('click', () => navigateToFolder(folder.path));
-                 folderListContainer.appendChild(div);
+        // Async function to get image dimensions
+        function getImageDimensions(url) {
+            return new Promise((resolve) => {
+                 const img = new Image();
+                 img.onload = () => resolve({ width: img.width, height: img.height });
+                 img.onerror = () => resolve(null); // Return null on error
+                 img.src = url;
              });
+        }
+
+        // --- Login ---
+        function checkLogin() {
+             if (sessionStorage.getItem(LOGGED_IN_KEY) === 'true') {
+                 showApp();
+                 return true;
+             }
+             showLogin();
+             return false;
          }
 
-        function updateBreadcrumbs() {
-             breadcrumbsContainer.innerHTML = '';
-             let pathSegments = currentFolderPath ? currentFolderPath.split('/') : [];
-             let builtPath = null; // Use null for root
+        function handleLogin() {
+            loginError.textContent = ''; // Clear previous errors
+             const id = loginUsernameInput.value;
+             const pass = loginPasswordInput.value;
 
-             // Root link
-             const rootSpan = document.createElement('span');
-             rootSpan.textContent = ROOT_NAME;
-             if (currentFolderPath === null) {
-                rootSpan.classList.add('current');
+             if (id === LOGIN_ID && pass === LOGIN_PASS) {
+                sessionStorage.setItem(LOGGED_IN_KEY, 'true');
+                 showApp();
              } else {
-                rootSpan.addEventListener('click', () => navigateToFolder(null));
+                loginError.textContent = 'Invalid username or password.';
              }
-            breadcrumbsContainer.appendChild(rootSpan);
+         }
 
-             // Folder segments
-            pathSegments.forEach((segment, index) => {
-                builtPath = builtPath ? `${builtPath}/${segment}` : segment;
+        function showLogin() {
+             driveApp.style.display = 'none';
+            loginOverlay.style.opacity = '1';
+             loginOverlay.style.display = 'flex'; // Make sure it's flex for centering
+         }
 
-                const separator = document.createElement('span');
-                separator.className = 'separator';
-                separator.innerHTML = '&nbsp;&rsaquo;&nbsp;'; // Drive uses › separator
-                breadcrumbsContainer.appendChild(separator);
-
-                 const segmentSpan = document.createElement('span');
-                 segmentSpan.textContent = segment;
-                 if (index === pathSegments.length - 1) {
-                    segmentSpan.classList.add('current');
-                 } else {
-                    const pathOnClick = builtPath; // Capture path for closure
-                    segmentSpan.addEventListener('click', () => navigateToFolder(pathOnClick));
-                 }
-                 breadcrumbsContainer.appendChild(segmentSpan);
-             });
+        function showApp() {
+             // Fade out login, then show app
+            loginOverlay.style.opacity = '0';
+            setTimeout(() => {
+                loginOverlay.style.display = 'none';
+                driveApp.style.display = 'flex';
+                initializeApp(); // Initialize app content AFTER showing it
+            }, 300); // Match transition duration
         }
 
-        function renderItems() {
+        // --- API & Data Processing --- (fetchAndProcessData - unchanged)
+        async function fetchAndProcessData() { /* ... as before ... */
+            showLoading('Loading images...'); allItems = []; let uniqueFolders = new Map(); try { const response = await fetch(API_URL); if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`); const data = await response.json(); if (!data.tree) throw new Error("Invalid API response structure."); data.tree.filter(item => item.type === 'blob').forEach(item => { const pathParts = item.path.split('/'); const name = pathParts.pop(); const parentPath = pathParts.length > 0 ? pathParts.join('/') : null; const isImage = IMAGE_EXTENSIONS.includes(name.split('.').pop()?.toLowerCase()); if (isImage) { allItems.push({ type: 'file', path: item.path, name: name, parentPath: parentPath, rawUrl: createRawUrl(item.path), size: item.size || 0, extension: name.split('.').pop()?.toLowerCase() || '', isFavorite: favorites.includes(item.path), sha: item.sha /* Add SHA */ }); let currentPath = ''; for (const part of pathParts) { const fullPath = currentPath ? `${currentPath}/${part}` : part; const parent = currentPath || null; if (!uniqueFolders.has(fullPath)) { uniqueFolders.set(fullPath, { name: part, path: fullPath, parentPath: parent }); } currentPath = fullPath; } } }); uniqueFolders.forEach((folderData, folderPath) => { allItems.push({ type: 'folder', path: folderData.path, name: folderData.name, parentPath: folderData.parentPath }); }); console.log(`Processed ${allItems.length} total items.`); hideStatusIndicators(); return true; } catch (error) { console.error("Fetch/Process Error:", error); showError(error.message); return false; }
+        }
+
+
+        // --- UI Rendering --- (buildSidebarFolders, updateBreadcrumbs - unchanged)
+        function buildSidebarFolders() { /* ... as before ... */
+             folderListContainer.innerHTML = `<span style="padding: 0 24px; font-size: 0.8em; color: var(--drive-text-tertiary); text-transform: uppercase;">Folders</span>`; const rootFolders = allItems.filter(item => item.type === 'folder' && item.parentPath === null); rootFolders.sort((a, b) => a.name.localeCompare(b.name)); rootFolders.forEach(folder => { const div = document.createElement('div'); div.className = 'nav-item'; div.dataset.path = folder.path; div.innerHTML = ` <i class="fa-regular fa-folder"></i> <span class="nav-text">${folder.name}</span> `; div.addEventListener('click', () => navigateToFolder(folder.path)); folderListContainer.appendChild(div); });
+        }
+        function updateBreadcrumbs() { /* ... as before ... */
+            breadcrumbsContainer.innerHTML = ''; let pathSegments = currentFolderPath ? currentFolderPath.split('/') : []; let builtPath = null; const rootSpan = document.createElement('span'); rootSpan.textContent = ROOT_NAME; if (currentFolderPath === null) { rootSpan.classList.add('current'); } else { rootSpan.addEventListener('click', () => navigateToFolder(null)); } breadcrumbsContainer.appendChild(rootSpan); pathSegments.forEach((segment, index) => { builtPath = builtPath ? `${builtPath}/${segment}` : segment; const separator = document.createElement('span'); separator.className = 'separator'; separator.innerHTML = '&nbsp;&rsaquo;&nbsp;'; breadcrumbsContainer.appendChild(separator); const segmentSpan = document.createElement('span'); segmentSpan.textContent = segment; if (index === pathSegments.length - 1) { segmentSpan.classList.add('current'); } else { const pathOnClick = builtPath; segmentSpan.addEventListener('click', () => navigateToFolder(pathOnClick)); } breadcrumbsContainer.appendChild(segmentSpan); });
+         }
+
+        function renderItems() { // Slight modification for search scope and reselect
             hideStatusIndicators();
-            fileList.innerHTML = ''; // Clear previous items
-            fileList.className = currentViewMode === 'grid' ? 'file-grid' : 'file-list'; // Set class for view mode
+            fileList.innerHTML = '';
+            fileList.className = currentViewMode === 'grid' ? 'file-grid' : 'file-list';
             listHeader.style.display = currentViewMode === 'list' ? 'grid' : 'none';
 
-             // 1. Filter by current folder path
-            currentDisplayItems = allItems.filter(item => item.parentPath === currentFolderPath);
+             // Filter logic: Starred view overrides everything else
+             const isStarredView = sidebarNav.querySelector('#nav-starred').classList.contains('active');
+             if (isStarredView) {
+                 currentDisplayItems = allItems.filter(item => item.type === 'file' && item.isFavorite);
+                currentFolderPath = null; // Force root context for starred logic
+                 if (breadcrumbsContainer.querySelector('span:not(.separator)')) { // Prevent error if breadcrumbs empty
+                     breadcrumbsContainer.innerHTML = `<span class="current">Starred</span>`;
+                 }
+             } else {
+                 // Filter by current folder path
+                 currentDisplayItems = allItems.filter(item => item.parentPath === currentFolderPath);
 
-             // 2. Apply Search Filter
-             if (currentSearchTerm) {
-                const termLower = currentSearchTerm.toLowerCase();
-                 currentDisplayItems = currentDisplayItems.filter(item => item.name.toLowerCase().includes(termLower));
+                 // Apply Search Filter ONLY within current view
+                 if (currentSearchTerm) {
+                     const termLower = currentSearchTerm.toLowerCase();
+                    currentDisplayItems = currentDisplayItems.filter(item => item.name.toLowerCase().includes(termLower));
+                 }
              }
 
-             // 3. Apply "Starred" Filter if active
-            const isStarredView = sidebarNav.querySelector('#nav-starred').classList.contains('active');
-            if (isStarredView) {
-                 // Note: This simple approach shows ONLY favorited files at the root level of the starred view
-                 // A more complex Drive implementation would search recursively or show folder context.
-                currentDisplayItems = allItems.filter(item => item.type === 'file' && item.isFavorite);
-                currentFolderPath = null; // Force root context for starred view logic
-                updateBreadcrumbs(); // Update breadcrumbs to reflect "Starred"
-                breadcrumbsContainer.innerHTML = `<span class="current">Starred</span>`; // Override
-             }
+            // Sort
+            currentDisplayItems.sort((a, b) => { if (a.type === 'folder' && b.type !== 'folder') return -1; if (a.type !== 'folder' && b.type === 'folder') return 1; return a.name.localeCompare(b.name); });
 
-            // Sort (simple name sort for now)
-            currentDisplayItems.sort((a, b) => {
-                if (a.type === 'folder' && b.type !== 'folder') return -1; // Folders first
-                if (a.type !== 'folder' && b.type === 'folder') return 1;
-                 return a.name.localeCompare(b.name); // Then by name
-            });
-
-             // Render
+            // Render
             if (currentDisplayItems.length === 0) {
-                const message = currentSearchTerm ? `No items match "${currentSearchTerm}"` : `This folder is empty`;
-                 showEmptyFolder(message + (currentFolderPath ? ` in ${currentFolderPath.split('/').pop()}` : ` in ${ROOT_NAME}`));
-                return;
+                const message = isStarredView ? "No starred items" : (currentSearchTerm ? `No items match "${currentSearchTerm}"` : `This folder is empty`);
+                showEmptyFolder(message + (currentFolderPath && !isStarredView ? ` in ${currentFolderPath.split('/').pop()}` : ``));
+                 clearDetailsPanel(); // Clear details if folder is empty
+                 return;
             }
 
-             const fragment = document.createDocumentFragment();
-             currentDisplayItems.forEach((item, index) => {
-                 const itemEl = createItemElement(item, index);
-                 fragment.appendChild(itemEl);
-             });
+            const fragment = document.createDocumentFragment();
+            currentDisplayItems.forEach((item, index) => fragment.appendChild(createItemElement(item, index)));
             fileList.appendChild(fragment);
 
-             // Reselect item if it's still in the view
-             if (selectedItemPath && currentDisplayItems.some(i => i.path === selectedItemPath)) {
-                 selectItem(selectedItemPath, false); // Reselect without showing details again
+            // Reselect if applicable
+            if (selectedItemPath && currentDisplayItems.some(i => i.path === selectedItemPath)) {
+                 selectItem(selectedItemPath, false); // Re-select without toggling panel again
+            } else {
+                clearSelection(); // This will also clear the details panel
+             }
+        }
+        function createItemElement(item, index) { // Unchanged, selection handles info now
+            /* ... as before ... */
+             const el = document.createElement('div'); el.className = 'file-item'; el.dataset.path = item.path; el.dataset.type = item.type; el.dataset.index = index; el.addEventListener('click', (e) => { selectItem(item.path, true); }); el.addEventListener('dblclick', (e) => { if (item.type === 'folder') { navigateToFolder(item.path); } else if (item.type === 'file') { openModal(index); } }); let contentHTML = ''; const iconClass = item.type === 'folder' ? 'fa-folder' : 'fa-file-image'; const iconColorStyle = `color: ${item.isFavorite ? 'var(--drive-accent-blue)' : 'var(--drive-icon-color)'};`; if (currentViewMode === 'grid') { contentHTML = ` <div class="grid-item-preview"> ${item.type === 'file' ? `<img src="${item.rawUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'far fa-image item-icon\\' style=\\'${iconColorStyle}\\'></i>';">` : `<i class="fa-solid ${iconClass} item-icon" style="${iconColorStyle}"></i>` } </div> <div class="grid-item-info"> <i class="fa-solid ${iconClass} item-icon" style="font-size: 1em; ${iconColorStyle}"></i> <span class="item-name">${item.name}</span> </div> `; } else { contentHTML = ` <div class="list-item-name"> <i class="fa-solid ${iconClass} item-icon" style="${iconColorStyle}"></i> <span class="item-name">${item.name}</span> </div> <span class="list-item-meta">${item.type === 'file' ? formatFileSize(item.size) : '--'}</span> <span class="list-item-meta">${item.type === 'file' ? item.extension.toUpperCase() : 'Folder'}</span> `; } el.innerHTML = contentHTML; return el;
+        }
+
+
+        // --- Details Panel ---
+         function toggleDetailsPanel() {
+             isDetailsPanelOpen = !isDetailsPanelOpen;
+             detailsPanel.classList.toggle('show', isDetailsPanelOpen);
+             mainArea.classList.toggle('with-details', isDetailsPanelOpen);
+             infoBtn.classList.toggle('active', isDetailsPanelOpen); // Highlight info button
+             if (!isDetailsPanelOpen) {
+                 // If closing, ensure selection highlight matches (if anything is still selected)
+                clearSelection(); // Simpler: always clear selection when closing panel
+             } else if (selectedItemPath) {
+                 populateDetailsPanel(selectedItemPath); // Repopulate if opened while item selected
              } else {
-                clearSelection();
+                 clearDetailsPanel(true); // Show "Select an item" message
              }
-        }
+         }
 
-        function createItemElement(item, index) {
-             const el = document.createElement('div');
-             el.className = 'file-item';
-             el.dataset.path = item.path;
-             el.dataset.type = item.type;
-             el.dataset.index = index; // For modal navigation
+        async function populateDetailsPanel(itemPath) {
+             const item = allItems.find(i => i.path === itemPath);
+             if (!item) { clearDetailsPanel(); return; }
 
-             // Single Click: Select item
-             el.addEventListener('click', (e) => {
-                 selectItem(item.path, true); // Select and potentially show details
-             });
+             detailsPanel.classList.add('show'); // Ensure panel visible
+            isDetailsPanelOpen = true;
+             mainArea.classList.add('with-details');
+             infoBtn.classList.add('active');
 
-             // Double Click: Open folder or image modal
-            el.addEventListener('dblclick', (e) => {
-                if (item.type === 'folder') {
-                    navigateToFolder(item.path);
-                } else if (item.type === 'file') {
-                    openModal(index);
-                }
-             });
 
-            let contentHTML = '';
-             const iconClass = item.type === 'folder' ? 'fa-folder' : 'fa-file-image';
-             const iconColor = item.isFavorite ? 'var(--drive-accent-blue)' : 'var(--drive-icon-color)';
+             // Set preview
+             detailsPreview.innerHTML = item.type === 'folder'
+                ? `<i class="fa-solid fa-folder folder-icon"></i>`
+                 : `<img src="${item.rawUrl}" alt="Preview" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'far fa-image item-icon\\' style=\\'font-size: 4em\\'></i>';">`;
 
-            if (currentViewMode === 'grid') {
-                 contentHTML = `
-                     <div class="grid-item-preview">
-                         ${item.type === 'file' ?
-                            `<img src="${item.rawUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'far fa-image item-icon\\' style=\\'color: ${iconColor}\\'></i>';">` :
-                            `<i class="fa-solid ${iconClass} item-icon" style="color: ${iconColor};"></i>`
-                         }
-                    </div>
-                     <div class="grid-item-info">
-                         <i class="fa-solid ${iconClass} item-icon" style="font-size: 1em; color: ${iconColor};"></i>
-                        <span class="item-name">${item.name}</span>
-                     </div>
-                `;
-             } else { // List view
-                 contentHTML = `
-                     <div class="list-item-name">
-                         <i class="fa-solid ${iconClass} item-icon" style="color: ${iconColor};"></i>
-                         <span class="item-name">${item.name}</span>
-                     </div>
-                    <span class="list-item-meta">${item.type === 'file' ? formatFileSize(item.size) : '--'}</span>
-                     <span class="list-item-meta">${item.type === 'file' ? item.extension.toUpperCase() : 'Folder'}</span>
-                `;
+             // Set properties
+            detailsProperties.innerHTML = ''; // Clear previous
+            const props = [
+                 { dt: 'Name', dd: item.name },
+                 { dt: 'Type', dd: item.type === 'folder' ? 'Folder' : `${item.extension.toUpperCase()} Image` }
+            ];
+            if (item.type === 'file') {
+                 props.push({ dt: 'Size', dd: formatFileSize(item.size) });
+                 // Fetch dimensions async
+                 props.push({ dt: 'Dimensions', dd: '<span class="dim-loading">Loading...</span>' });
+                 getImageDimensions(item.rawUrl).then(dims => {
+                     const ddElement = detailsProperties.querySelector('.dim-loading');
+                     if (ddElement) {
+                        ddElement.parentElement.textContent = dims ? `${dims.width} × ${dims.height} px` : 'N/A';
+                     }
+                 });
+                 props.push({ dt: 'SHA', dd: item.sha?.substring(0, 10) + '...' || 'N/A'}); // Display first 10 chars of SHA
+            }
+             props.push({ dt: 'Path', dd: item.path });
+             if (item.type === 'file') {
+                 props.push({ dt: 'Link', dd: `<a href="${item.rawUrl}" target="_blank" title="Open raw image">View Raw</a>` });
              }
 
-            el.innerHTML = contentHTML;
-            return el;
+             props.forEach(p => {
+                 const dtEl = document.createElement('dt'); dtEl.textContent = p.dt + ':';
+                 const ddEl = document.createElement('dd'); ddEl.innerHTML = p.dd; // Use innerHTML for link
+                 detailsProperties.appendChild(dtEl);
+                 detailsProperties.appendChild(ddEl);
+             });
+
+             // Setup Copy URL button for files
+             detailsCopyUrlBtn.style.display = item.type === 'file' ? 'inline-flex' : 'none';
+            if (item.type === 'file') {
+                detailsCopyUrlBtn.onclick = () => copyUrl(item.rawUrl, 'Details panel link');
+            }
+         }
+
+        function clearDetailsPanel(showDefaultMsg = false) {
+            detailsPreview.innerHTML = '';
+             detailsProperties.innerHTML = showDefaultMsg
+                 ? '<dt style="grid-column: 1 / -1; text-align: center; color: var(--drive-text-tertiary);">Select an item to see details</dt>'
+                 : '';
+            detailsCopyUrlBtn.style.display = 'none';
+             detailsCopyUrlBtn.onclick = null; // Remove listener
+            // Do not hide the panel itself here, only clear content
+             // Hiding is handled by toggleDetailsPanel or clearSelection
         }
 
-
-         // --- Selection Handling ---
-         function selectItem(path, showDetails = true) {
-             clearSelection(); // Clear previous selection first
-            selectedItemPath = path;
+        // --- Selection Handling ---
+         function selectItem(path, userInitiated = true) {
+             clearSelection(); // Clear previous selection
+             selectedItemPath = path;
              const itemElement = fileList.querySelector(`.file-item[data-path="${CSS.escape(path)}"]`);
              if (itemElement) {
                  itemElement.classList.add('selected');
-                 // if (showDetails) showDetailsPanel(path); // Activate Details Panel if needed
              }
+             // Only populate details if the panel is open OR if user explicitly clicked item
+            if (userInitiated && itemElement) {
+                populateDetailsPanel(path);
+            }
          }
 
         function clearSelection() {
-            selectedItemPath = null;
-             $$('#fileList .file-item.selected').forEach(el => el.classList.remove('selected'));
-            // hideDetailsPanel(); // Hide Details Panel
-         }
+             if (selectedItemPath && detailsPanel.classList.contains('show')) {
+                 // If clearing selection while details panel is open, clear the panel content
+                 clearDetailsPanel(true); // Show "select an item" message
+             }
+             selectedItemPath = null;
+            $$('#fileList .file-item.selected').forEach(el => el.classList.remove('selected'));
+            // Note: This function DOES NOT hide the details panel itself. That's handled by the 'X' button or the info button toggle.
+        }
 
-        // --- Navigation ---
+        // --- Navigation --- (navigateToFolder - updated to potentially clear details)
          function navigateToFolder(folderPath) {
-             console.log("Navigating to:", folderPath);
-             clearSelection();
-            currentFolderPath = folderPath;
-            currentSearchTerm = ''; // Clear search on navigation
-            searchInput.value = '';
+            clearSelection(); // Clear selection and potentially details panel content
+             currentFolderPath = folderPath;
+            currentSearchTerm = ''; searchInput.value = '';
+            // Update sidebar active state ... (as before)
+            $$('.sidebar .nav-item').forEach(item => item.classList.remove('active')); if (folderPath === null) { sidebarNav.querySelector('#nav-my-images').classList.add('active'); } else { const sidebarItem = folderListContainer.querySelector(`.nav-item[data-path="${folderPath}"]`); if (sidebarItem) { sidebarItem.classList.add('active'); } else { sidebarNav.querySelector('#nav-my-images').classList.add('active'); } }
 
-             // Update sidebar state ONLY if navigating via folder click, not sidebar click
-            $$('.sidebar .nav-item').forEach(item => item.classList.remove('active'));
-             if (folderPath === null) {
-                sidebarNav.querySelector('#nav-my-images').classList.add('active');
-            } else {
-                const sidebarItem = folderListContainer.querySelector(`.nav-item[data-path="${folderPath}"]`);
-                 if (sidebarItem) {
-                     sidebarItem.classList.add('active');
-                 } else {
-                    // If navigating deep, still mark "My Images" as active root context
-                     sidebarNav.querySelector('#nav-my-images').classList.add('active');
-                }
-             }
-
-             updateBreadcrumbs();
-             renderItems();
-            fileListContainer.scrollTop = 0;
-        }
-
-
-        // --- Modal ---
-        function openModal(index) {
-            if (index < 0 || index >= currentDisplayItems.length) return;
-             // Filter out folders for modal navigation
-             const imagesInView = currentDisplayItems.filter(item => item.type === 'file');
-             const image = currentDisplayItems[index]; // The actually clicked item
-
-             // Find the index within the *filtered* image list
-             currentModalIndex = imagesInView.findIndex(img => img.path === image.path);
-             if (currentModalIndex === -1) return; // Should not happen if called correctly
-
-            modalImage.src = image.rawUrl;
-            modalImage.alt = image.name;
-            modalTitle.textContent = image.name;
-
-            // Update Favorite button status
-             updateModalFavoriteButton(image.isFavorite);
-
-             // Update nav button state
-            prevImageBtn.disabled = currentModalIndex === 0;
-             nextImageBtn.disabled = currentModalIndex === imagesInView.length - 1;
-
-            // Set actions
-            modalFavoriteBtn.onclick = () => toggleFavorite(image.path);
-            modalDownloadBtn.onclick = () => downloadImage(image.rawUrl, image.name);
-
-             imageModal.classList.add('show');
-             document.body.style.overflow = 'hidden';
-        }
-
-         function updateModalFavoriteButton(isFav) {
-             modalFavoriteBtn.classList.toggle('is-favorite', isFav);
-             modalFavoriteBtn.querySelector('i').className = isFav ? 'fa-solid fa-star' : 'fa-regular fa-star';
-         }
-
-        function closeModal() {
-            imageModal.classList.remove('show');
-            document.body.style.overflow = '';
-            setTimeout(() => { modalImage.src = ''; }, 200); // Clear src after fade
-         }
-
-        function navigateModal(direction) {
-            const imagesInView = currentDisplayItems.filter(item => item.type === 'file');
-             const newIndex = currentModalIndex + direction;
-             if (newIndex >= 0 && newIndex < imagesInView.length) {
-                // Find the index of the *next image* in the original `currentDisplayItems` array
-                const nextImagePath = imagesInView[newIndex].path;
-                const originalIndex = currentDisplayItems.findIndex(item => item.path === nextImagePath);
-                 if (originalIndex !== -1) {
-                    openModal(originalIndex); // Open modal using the original index
-                }
-            }
-         }
-
-        // --- Actions ---
-        function downloadImage(url, filename) {
-            try {
-                 const a = document.createElement('a'); a.href = url; a.download = filename; a.target = '_blank';
-                document.body.appendChild(a); a.click(); document.body.removeChild(a);
-                 showToast(`${filename} download started...`);
-            } catch (e) { console.error(e); showToast("Download failed", true); }
-        }
-
-        function toggleFavorite(path) {
-             const itemIndex = allItems.findIndex(i => i.path === path);
-             if (itemIndex === -1) return;
-
-            const item = allItems[itemIndex];
-            const isCurrentlyFavorite = favorites.includes(path);
-             let nowFavorite;
-
-            if (isCurrentlyFavorite) {
-                favorites = favorites.filter(p => p !== path);
-                 showToast('Removed from Starred');
-                 nowFavorite = false;
-            } else {
-                favorites.push(path);
-                 showToast('Added to Starred');
-                 nowFavorite = true;
-            }
-
-             // Update the main item data
-            item.isFavorite = nowFavorite;
-            localStorage.setItem('driveImageFavorites_v1', JSON.stringify(favorites));
-
-             // Update UI potentially in multiple places
-             // 1. Update the item in the grid/list if visible
-            const listItem = fileList.querySelector(`.file-item[data-path="${CSS.escape(path)}"]`);
-            if (listItem) {
-                 const icon = listItem.querySelector('.item-icon');
-                 if (icon) icon.style.color = nowFavorite ? 'var(--drive-accent-blue)' : 'var(--drive-icon-color)';
-                // Could update a favorite icon overlay if implemented
-            }
-             // 2. Update the modal button if the modal is showing this item
-            if (imageModal.classList.contains('show') && currentDisplayItems[currentDisplayItems.findIndex(i => i.path === path)]?.path === path) {
-                 updateModalFavoriteButton(nowFavorite);
-             }
-             // 3. Re-render if in starred view
-            if (sidebarNav.querySelector('#nav-starred').classList.contains('active')) {
-                 renderItems();
-             }
-        }
-
-        // --- View Mode Toggle ---
-         function setViewMode(mode) {
-             if (mode === currentViewMode) return;
-             currentViewMode = mode;
-             gridViewBtn.classList.toggle('active', mode === 'grid');
-             listViewBtn.classList.toggle('active', mode === 'list');
-            renderItems(); // Re-render the items in the new layout
-         }
-
-        // --- Status Indicators ---
-        function showLoading(msg) { hideStatusIndicators(); loadingMessage.textContent = msg; loadingIndicator.style.display = 'flex'; }
-        function showError(msg) { hideStatusIndicators(); errorMessage.textContent = msg; errorIndicator.style.display = 'flex'; }
-        function showEmptyFolder(msg) { hideStatusIndicators(); emptyFolderMessage.textContent = msg; emptyFolderIndicator.style.display = 'flex'; }
-        function hideStatusIndicators() {
-            loadingIndicator.style.display = 'none';
-            errorIndicator.style.display = 'none';
-            emptyFolderIndicator.style.display = 'none';
-         }
-
-        // --- Toast ---
-        function showToast(message, isError = false) {
-             if (toastTimeout) clearTimeout(toastTimeout);
-             toast.textContent = message;
-             toast.className = `toast ${isError ? 'error' : ''} show`;
-             toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
-
-        // --- Search ---
-        const handleSearchInput = debounce(() => {
-             currentSearchTerm = searchInput.value.trim();
-             // Decide search scope: Only current folder? Or globally? Drive searches globally usually.
-             // Let's implement search within the *current folder view* for simplicity here.
-            // To search globally, remove the initial filter in renderItems().
+            updateBreadcrumbs();
             renderItems();
-         }, 400); // Slightly longer debounce for typing
+             fileListContainer.scrollTop = 0;
+        }
 
+        // --- Modal --- (openModal, updateModalFavoriteButton, closeModal, navigateModal - unchanged)
+        function openModal(index) { /* ... as before ... */
+            if(index<0||index>=currentDisplayItems.length)return; const imagesInView=currentDisplayItems.filter(item=>item.type==='file'); const image=currentDisplayItems[index]; currentModalIndex=imagesInView.findIndex(img=>img.path===image.path); if(currentModalIndex===-1)return; modalImage.src=image.rawUrl; modalImage.alt=image.name; modalTitle.textContent=image.name; updateModalFavoriteButton(image.isFavorite); prevImageBtn.disabled=currentModalIndex===0; nextImageBtn.disabled=currentModalIndex===imagesInView.length-1; modalFavoriteBtn.onclick=()=>toggleFavorite(image.path); modalDownloadBtn.onclick=()=>downloadImage(image.rawUrl,image.name); imageModal.classList.add('show'); document.body.style.overflow='hidden';
+         }
+        function updateModalFavoriteButton(isFav) { /* ... as before ... */ modalFavoriteBtn.classList.toggle('is-favorite',isFav); modalFavoriteBtn.querySelector('i').className=isFav?'fa-solid fa-star':'fa-regular fa-star'; }
+        function closeModal() { /* ... as before ... */ imageModal.classList.remove('show'); document.body.style.overflow=''; setTimeout(()=>{modalImage.src='';},200); }
+        function navigateModal(direction) { /* ... as before ... */ const imagesInView=currentDisplayItems.filter(item=>item.type==='file'); const newIndex=currentModalIndex+direction; if(newIndex>=0&&newIndex<imagesInView.length){ const nextImagePath=imagesInView[newIndex].path; const originalIndex=currentDisplayItems.findIndex(item=>item.path===nextImagePath); if(originalIndex!==-1){ openModal(originalIndex); }} }
+
+        // --- Actions --- (downloadImage - unchanged, toggleFavorite - minor update, copyUrl)
+        function downloadImage(url, filename) { /* ... as before ... */ try{const a=document.createElement('a'); a.href=url; a.download=filename; a.target='_blank'; document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast(`${filename} download started...`);}catch(e){console.error(e);showToast("Download failed",true);}}
+        function toggleFavorite(path) { // Update details panel if open & showing this item
+             const itemIndex = allItems.findIndex(i => i.path === path); if (itemIndex === -1) return; const item = allItems[itemIndex]; const isCurrentlyFavorite = favorites.includes(path); let nowFavorite; if (isCurrentlyFavorite) { favorites = favorites.filter(p => p !== path); showToast('Removed from Starred'); nowFavorite = false; } else { favorites.push(path); showToast('Added to Starred'); nowFavorite = true; } item.isFavorite = nowFavorite; localStorage.setItem('driveImageFavorites_v1', JSON.stringify(favorites)); const listItem = fileList.querySelector(`.file-item[data-path="${CSS.escape(path)}"]`); if (listItem) { const icon = listItem.querySelector('.item-icon'); if (icon) icon.style.color = nowFavorite ? 'var(--drive-accent-blue)' : 'var(--drive-icon-color)'; } if (imageModal.classList.contains('show') && currentDisplayItems[currentDisplayItems.findIndex(i=>i.path===path)]?.path === path) { updateModalFavoriteButton(nowFavorite); } if (detailsPanel.classList.contains('show') && selectedItemPath === path) { /* Could update icon in details panel if needed */ } if (sidebarNav.querySelector('#nav-starred').classList.contains('active')) { renderItems(); }
+         }
+        function copyUrl(url, context = 'Button') { // Add context for logging/debugging
+             navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard!');
+                console.log(`${context} copied: ${url}`);
+            }).catch(err => {
+                 console.error('Failed to copy URL: ', err);
+                showToast('Failed to copy link.', true);
+            });
+        }
+
+        // --- View Mode Toggle --- (setViewMode - unchanged)
+        function setViewMode(mode) { if(mode===currentViewMode)return; currentViewMode=mode; gridViewBtn.classList.toggle('active',mode==='grid'); listViewBtn.classList.toggle('active',mode==='list'); renderItems(); }
+
+        // --- Status Indicators --- (showLoading, showError, showEmptyFolder, hideStatusIndicators - unchanged)
+        function showLoading(msg){hideStatusIndicators();loadingMessage.textContent=msg;loadingIndicator.style.display='flex';} function showError(msg){hideStatusIndicators();errorMessage.textContent=msg;errorIndicator.style.display='flex';} function showEmptyFolder(msg){hideStatusIndicators();emptyFolderMessage.textContent=msg;emptyFolderIndicator.style.display='flex';} function hideStatusIndicators(){loadingIndicator.style.display='none'; errorIndicator.style.display='none'; emptyFolderIndicator.style.display='none';}
+
+        // --- Toast --- (showToast - unchanged)
+        function showToast(message,isError=false){if(toastTimeout)clearTimeout(toastTimeout); toast.textContent=message; toast.className=`toast ${isError?'error':''} show`; toastTimeout=setTimeout(()=>{toast.classList.remove('show');},3000);}
+
+        // --- Search --- (handleSearchInput - unchanged)
+        const handleSearchInput=debounce(()=>{ currentSearchTerm=searchInput.value.trim(); renderItems(); },400);
 
         // --- Initialization ---
-        async function initializeApp() {
-             // Setup basic event listeners
+        async function initAppContent() { // Renamed from initializeApp
+            // Setup basic event listeners AFTER login
              searchInput.addEventListener('input', handleSearchInput);
-             refreshBtn.addEventListener('click', initializeApp);
+             refreshBtn.addEventListener('click', initAppContent); // Re-fetch data
             gridViewBtn.addEventListener('click', () => setViewMode('grid'));
             listViewBtn.addEventListener('click', () => setViewMode('list'));
+            infoBtn.addEventListener('click', toggleDetailsPanel); // Toggle details panel
+            detailsCloseBtn.addEventListener('click', toggleDetailsPanel); // Close details panel
 
-             // Sidebar Navigation
-             sidebarNav.querySelector('#nav-my-images').addEventListener('click', () => {
-                 // Set My Images as active, clear folder/starred view state
-                 $$('.sidebar .nav-item').forEach(item => item.classList.remove('active'));
-                sidebarNav.querySelector('#nav-my-images').classList.add('active');
-                navigateToFolder(null); // Navigate to root
-             });
-            sidebarNav.querySelector('#nav-starred').addEventListener('click', () => {
-                 $$('.sidebar .nav-item').forEach(item => item.classList.remove('active'));
-                 sidebarNav.querySelector('#nav-starred').classList.add('active');
-                 renderItems(); // Re-render will check active state and filter
-             });
-
+            // Sidebar Navigation
+             sidebarNav.querySelector('#nav-my-images').addEventListener('click', () => { $$('.sidebar .nav-item').forEach(item => item.classList.remove('active')); sidebarNav.querySelector('#nav-my-images').classList.add('active'); navigateToFolder(null); });
+            sidebarNav.querySelector('#nav-starred').addEventListener('click', () => { $$('.sidebar .nav-item').forEach(item => item.classList.remove('active')); sidebarNav.querySelector('#nav-starred').classList.add('active'); renderItems(); }); // Render will filter
 
             // Modal Listeners
             closeModalBtn.addEventListener('click', closeModal);
-            prevImageBtn.addEventListener('click', () => navigateModal(-1));
+             prevImageBtn.addEventListener('click', () => navigateModal(-1));
              nextImageBtn.addEventListener('click', () => navigateModal(1));
-            imageModal.addEventListener('click', (e) => { if (e.target === imageModal) closeModal(); }); // Close on overlay click
+            imageModal.addEventListener('click', (e) => { if (e.target === imageModal) closeModal(); });
 
-             // Keyboard Listeners
+            // Keyboard Listeners (adjusted context)
             document.addEventListener('keydown', (e) => {
-                if (imageModal.classList.contains('show')) { // Modal open
-                    switch (e.key) {
-                         case 'Escape': closeModal(); break;
-                        case 'ArrowLeft': if (!prevImageBtn.disabled) navigateModal(-1); break;
-                         case 'ArrowRight': if (!nextImageBtn.disabled) navigateModal(1); break;
-                     }
-                 } else if (document.activeElement !== searchInput) { // Modal closed, not typing in search
+                 const isModalOpen = imageModal.classList.contains('show');
+                 const isSearchFocused = document.activeElement === searchInput;
+
+                if (isModalOpen) { /* ... modal keybinds as before ... */ switch (e.key) { case 'Escape': closeModal(); break; case 'ArrowLeft': if (!prevImageBtn.disabled) navigateModal(-1); break; case 'ArrowRight': if (!nextImageBtn.disabled) navigateModal(1); break; } }
+                 else if (!isSearchFocused) { // App focus, not modal, not search
                      switch (e.key) {
-                        case 'ArrowDown': // Basic keyboard navigation (select next) - Needs more logic
-                         case 'ArrowUp': // Select previous - Needs more logic
-                            break;
-                         case 'Enter': // Open selected
-                             if (selectedItemPath) {
-                                 const item = allItems.find(i => i.path === selectedItemPath);
-                                 if (item) {
-                                     if (item.type === 'folder') navigateToFolder(item.path);
-                                    else if (item.type === 'file') openModal(currentDisplayItems.findIndex(i => i.path === selectedItemPath));
-                                }
-                            }
-                             break;
-                         // Add more shortcuts as needed (e.g., Backspace to go up a folder)
+                         case 'i': toggleDetailsPanel(); break; // 'i' toggles info
+                         // Add other non-modal shortcuts here...
+                        case 'Enter': if (selectedItemPath) { const item = allItems.find(i => i.path === selectedItemPath); if (item) { if (item.type === 'folder') navigateToFolder(item.path); else if (item.type === 'file') openModal(currentDisplayItems.findIndex(i => i.path === selectedItemPath)); } } break;
                      }
-                }
-             });
+                 }
+            });
 
-             // Add listener to clear selection when clicking container background
-             fileListContainer.addEventListener('click', (e) => {
-                if (e.target === fileListContainer || e.target === fileList) {
-                    clearSelection();
-                }
-             });
+            // Add listener to clear selection when clicking container background
+             fileListContainer.addEventListener('click', (e) => { if (e.target === fileListContainer || e.target === fileList) { clearSelection(); } });
 
-            // --- Load Data and Render ---
-             if (await fetchAndProcessData()) {
-                buildSidebarFolders(); // Populate folder list
-                 navigateToFolder(null); // Start at the root
-             } // Error handled in fetch function
+            // Load Data and Render
+            if (await fetchAndProcessData()) {
+                buildSidebarFolders();
+                navigateToFolder(null); // Start at root
+             }
         }
 
+        // --- Entry Point ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loginButton.addEventListener('click', handleLogin);
+            loginPasswordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+             });
+            loginUsernameInput.addEventListener('keypress', (e) => {
+                 if (e.key === 'Enter') handleLogin();
+             });
 
-        // Start the app
-        window.addEventListener('DOMContentLoaded', initializeApp);
+            if (!checkLogin()) {
+                loginUsernameInput.focus(); // Focus username if login needed
+             }
+         });
 
     </script>
 
