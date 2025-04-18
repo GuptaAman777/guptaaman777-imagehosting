@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImageDrive - GuptaAman777</title>
+    <title>ImageDrive Refined - GuptaAman777</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -16,83 +16,53 @@
             --drive-text-secondary: #5f6368; /* Dark Gray */
             --drive-text-tertiary: #80868b; /* Lighter Gray */
             --drive-accent-blue: #1a73e8;
-            --drive-item-hover-bg: #f1f3f4;
+            --drive-item-hover-bg: rgba(232, 240, 254, 0.3); /* Lighter blueish hover */
             --drive-item-selected-bg: #e8f0fe;
             --drive-item-selected-text: #1967d2;
             --drive-icon-color: #5f6368;
             --drive-error-color: #d93025;
+            --drive-shadow-1: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+            --drive-shadow-2: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
 
             --font-drive: 'Roboto', sans-serif;
             --border-radius-base: 8px;
             --border-radius-item: 4px;
             --spacing-unit: 8px;
             --transition-fast: 0.15s ease-in-out;
+            --transition-base: 0.2s ease-in-out;
             --header-height: 64px;
             --content-header-height: 56px;
-            --details-panel-width: 300px; /* Width of the info panel */
+            --details-panel-width: 300px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { font-size: 14px; }
         body {
             font-family: var(--font-drive);
-            background-color: #eef0f2; /* Slightly off-white for contrast with app */
+            background-color: var(--drive-bg-primary);
             color: var(--drive-text-primary);
-            display: flex;
+            display: flex; /* Changed from flex to block initially, now handled by JS */
             height: 100vh;
             overflow: hidden;
-            align-items: center; /* For login center */
-            justify-content: center; /* For login center */
         }
         ::-webkit-scrollbar { width: 10px; height: 10px; }
         ::-webkit-scrollbar-track { background: var(--drive-bg-tertiary); }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 5px; border: 2px solid var(--drive-bg-tertiary);}
         ::-webkit-scrollbar-thumb:hover { background: #aaa; }
 
-        /* --- Login Screen --- */
-        #loginOverlay {
-            position: fixed; /* Changed to fixed to ensure cover */
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--drive-bg-primary);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 5000;
-             transition: opacity 0.3s ease-out;
-        }
-        .login-box {
-            background-color: white; padding: 40px; border-radius: var(--border-radius-base);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); text-align: center; width: 320px;
-        }
-        .login-box h2 { margin-bottom: 10px; color: var(--drive-text-primary); font-weight: 500;}
-        .login-box p { margin-bottom: 25px; color: var(--drive-text-secondary); font-size: 0.9rem;}
-        .login-input-group { margin-bottom: 20px; text-align: left; }
-        .login-input-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 500; color: var(--drive-text-secondary);}
-        .login-input {
-            width: 100%; padding: 10px 12px; font-size: 1rem;
-            border: 1px solid var(--drive-border-color); border-radius: var(--border-radius-item);
-            outline: none; transition: border-color 0.2s;
-        }
-        .login-input:focus { border-color: var(--drive-accent-blue); }
-        .login-button {
-            width: 100%; padding: 10px; font-size: 1rem; font-weight: 500;
-            background-color: var(--drive-accent-blue); color: white; border: none;
-            border-radius: var(--border-radius-item); cursor: pointer; transition: background-color 0.2s;
-        }
-        .login-button:hover { background-color: #185abc; }
-        #loginError { color: var(--drive-error-color); margin-top: 15px; font-size: 0.85rem; height: 1.2em; }
-
         /* --- App Layout --- */
         .drive-app {
-            display: none; /* Initially hidden */
-            flex: 1; /* Take full space when visible */
+            display: flex; /* Changed from none */
             width: 100%; height: 100%;
-             background-color: var(--drive-bg-primary);
-             box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15); /* Drive card shadow */
+            background-color: var(--drive-bg-primary);
+            /* box-shadow: var(--drive-shadow-1); */
         }
 
-        .app-content-wrapper { /* New wrapper for sidebar + main + details */
+        .app-content-wrapper { /* Wrapper for sidebar + main + details */
              display: flex;
              width: 100%; height: 100%;
-             position: relative; /* For positioning details panel */
+             position: relative;
          }
 
         /* --- Sidebar (Navigation) --- */
@@ -101,170 +71,186 @@
             border-right: 1px solid var(--drive-border-color); padding-top: var(--spacing-unit);
             display: flex; flex-direction: column; flex-shrink: 0;
         }
-        .sidebar-header { /* Style as needed */ }
+        .sidebar-header { padding: calc(var(--spacing-unit)*1.5) calc(var(--spacing-unit)*3) calc(var(--spacing-unit)*2); display: flex; align-items: center; gap: var(--spacing-unit); font-size: 1.5rem; font-weight: 500; color: var(--drive-text-secondary);}
+        .sidebar-header i { color: var(--drive-accent-blue); }
+
         .sidebar-nav { flex-grow: 1; overflow-y: auto; }
-        /* Other sidebar styles from previous version... */
-        .nav-item { display: flex; align-items: center; gap: calc(var(--spacing-unit)*2); padding: var(--spacing-unit) calc(var(--spacing-unit)*3); margin-right: calc(var(--spacing-unit)*2); border-top-right-radius: 20px; border-bottom-right-radius: 20px; cursor: pointer; color: var(--drive-text-secondary); font-weight: 500; transition: background-color var(--transition-fast), color var(--transition-fast); font-size: 0.95rem; }
+        .nav-group { margin-bottom: var(--spacing-unit); }
+        .nav-item { display: flex; align-items: center; gap: calc(var(--spacing-unit)*2); padding: calc(var(--spacing-unit)*0.75) calc(var(--spacing-unit)*3); margin-right: calc(var(--spacing-unit)*2); border-top-right-radius: 20px; border-bottom-right-radius: 20px; cursor: pointer; color: var(--drive-text-secondary); font-weight: 500; transition: background-color var(--transition-fast), color var(--transition-fast); font-size: 0.95rem; }
         .nav-item i { width: 20px; text-align: center; color: var(--drive-icon-color); font-size: 1.1em; }
         .nav-item:hover { background-color: var(--drive-bg-tertiary); }
         .nav-item.active { background-color: var(--drive-item-selected-bg); color: var(--drive-item-selected-text); font-weight: 700; }
         .nav-item.active i { color: var(--drive-item-selected-text); }
-        .nav-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .nav-item .nav-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
         .nav-separator { height: 1px; background-color: var(--drive-border-color); margin: var(--spacing-unit) calc(var(--spacing-unit)*2); }
-        .folder-nav-list .nav-item { font-weight: 400; padding-left: calc(var(--spacing-unit)*5); }
+        .folder-nav-title { padding: calc(var(--spacing-unit)*2) calc(var(--spacing-unit)*3) var(--spacing-unit); font-size: 0.8em; color: var(--drive-text-tertiary); text-transform: uppercase; font-weight: 500;}
+        .folder-nav-list .nav-item { font-weight: 400; padding-left: calc(var(--spacing-unit)*5); gap: calc(var(--spacing-unit)*1.5); }
         .folder-nav-list .nav-item i { font-size: 1em; }
 
-        /* --- Main Content Area (adjust for details panel) --- */
+
+        /* --- Main Content Area --- */
         .main-area {
             flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;
-            transition: margin-right var(--transition-base); /* Animate when details panel opens */
-             position: relative;
+            transition: margin-right var(--transition-base) ease-in-out; /* Animate margin */
+            position: relative; background-color: var(--drive-bg-primary);
          }
          .main-area.with-details { margin-right: var(--details-panel-width); }
 
-        /* Top Bar (Search) - Unchanged */
-         .top-bar { height: var(--header-height); display: flex; align-items: center; padding: 0 calc(var(--spacing-unit)*3); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
-         .search-container { flex-grow: 1; max-width: 720px; position: relative; margin: 0 auto; background-color: var(--drive-bg-tertiary); border-radius: var(--border-radius-base); }
-         .search-icon { position: absolute; left: calc(var(--spacing-unit)*2); top: 50%; transform: translateY(-50%); color: var(--drive-icon-color); font-size: 1.2em; }
-         .search-input { width: 100%; height: 48px; background: transparent; border: none; outline: none; padding: 0 calc(var(--spacing-unit)*6) 0 calc(var(--spacing-unit)*6); font-size: 1rem; color: var(--drive-text-primary); }
-         .search-input::placeholder { color: var(--drive-text-secondary); }
+        /* Top Bar */
+        .top-bar { height: var(--header-height); display: flex; align-items: center; padding: 0 calc(var(--spacing-unit)*1.5) 0 calc(var(--spacing-unit)*3); /* Reduced padding */ border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
+        .search-container { flex-grow: 1; max-width: 720px; position: relative; margin: 0 auto; }
+        .search-box { display: flex; align-items: center; background-color: var(--drive-bg-tertiary); border-radius: var(--border-radius-base); height: 48px; padding: 0 var(--spacing-unit);}
+        .search-icon { color: var(--drive-icon-color); font-size: 1.2em; margin: 0 var(--spacing-unit); pointer-events: none; }
+        .search-input { flex-grow: 1; height: 100%; background: transparent; border: none; outline: none; font-size: 1rem; color: var(--drive-text-primary); padding: 0 var(--spacing-unit);}
+        .search-input::placeholder { color: var(--drive-text-secondary); }
 
-        /* Content Header (Breadcrumbs, Actions) - Add Info button */
-        .content-header { height: var(--content-header-height); display: flex; align-items: center; justify-content: space-between; padding: 0 calc(var(--spacing-unit)*3); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
-        .breadcrumbs { /* Unchanged */ }
-        .content-actions { display: flex; align-items: center; }
-        .action-button { background: none; border: none; color: var(--drive-icon-color); font-size: 1.3rem; cursor: pointer; padding: var(--spacing-unit); border-radius: 50%; transition: background-color var(--transition-fast); width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+        /* Content Header */
+        .content-header { height: var(--content-header-height); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--spacing-unit) 0 calc(var(--spacing-unit)*3); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
+        .breadcrumbs { display: flex; align-items: center; gap: var(--spacing-unit)*0.5; color: var(--drive-text-primary); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .breadcrumbs span { cursor: pointer; padding: var(--spacing-unit)*0.5; border-radius: var(--border-radius-item); transition: background-color var(--transition-fast);}
+        .breadcrumbs span:hover { background-color: var(--drive-bg-tertiary); }
+        .breadcrumbs span.current { font-weight: 700; color: var(--drive-text-primary); cursor: default; background-color: transparent;}
+        .breadcrumbs .separator { color: var(--drive-icon-color); cursor: default; background-color: transparent !important;}
+        .content-actions { display: flex; align-items: center; gap: calc(var(--spacing-unit)*0.5); }
+        .action-button { background: none; border: none; color: var(--drive-icon-color); font-size: 1.3rem; cursor: pointer; padding: var(--spacing-unit); border-radius: 50%; transition: background-color var(--transition-fast), color var(--transition-fast); width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; }
         .action-button:hover { background-color: var(--drive-item-hover-bg); }
-        .action-button.active { color: var(--drive-accent-blue); background-color: var(--drive-item-selected-bg);}
+        .action-button.active { color: var(--drive-accent-blue); background-color: var(--drive-item-selected-bg); }
 
 
-        /* File List Container - Unchanged */
-        .file-list-container { flex-grow: 1; overflow-y: auto; padding: calc(var(--spacing-unit)*2); position: relative; background-color: var(--drive-bg-primary); }
-        /* Status Indicators - Unchanged */
-        .status-indicator { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; color: var(--drive-text-secondary); text-align: center; padding: var(--spacing-unit) * 4; z-index: 1; }
+        /* --- File List Container --- */
+        .file-list-container { flex-grow: 1; overflow-y: auto; padding: calc(var(--spacing-unit)*2); position: relative; }
+        /* Status Indicators */
+        .status-indicator { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none; flex-direction: column; align-items: center; color: var(--drive-text-secondary); text-align: center; padding: var(--spacing-unit) * 4; z-index: 1; }
+        .status-indicator.show { display: flex;}
         .status-indicator i { font-size: 3rem; margin-bottom: var(--spacing-unit)*2; color: var(--drive-icon-color); }
         .status-indicator .error-icon { color: var(--drive-error-color); }
         .spinner { width: 32px; height: 32px; border: 3px solid var(--drive-item-selected-bg); border-radius: 50%; border-top-color: var(--drive-accent-blue); animation: spin 1s linear infinite; margin-bottom: var(--spacing-unit)*2; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        /* Item Styling (Grid/List) - Unchanged */
-        .file-item { position: relative; border: 1px solid transparent; border-radius: var(--border-radius-item); transition: background-color var(--transition-fast), border-color var(--transition-fast); cursor: pointer; -webkit-user-select: none; user-select: none; }
-        .file-item:hover { background-color: var(--drive-item-hover-bg); }
-        .file-item.selected { background-color: var(--drive-item-selected-bg); border-color: var(--drive-accent-blue); color: var(--drive-item-selected-text); }
+
+        /* Item Styling Common */
+        .file-item { position: relative; border: 1px solid transparent; border-radius: var(--border-radius-item); transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast); cursor: pointer; -webkit-user-select: none; user-select: none; }
+        .file-item:hover { background-color: var(--drive-item-hover-bg); border-color: #eee; /* Subtle border on hover */}
+        .file-item.selected { background-color: var(--drive-item-selected-bg); border-color: var(--drive-accent-blue); color: var(--drive-item-selected-text); box-shadow: var(--drive-shadow-1); }
         .file-item.selected .item-icon, .file-item.selected .item-name { color: var(--drive-item-selected-text); }
-        .item-icon { font-size: 1.2rem; color: var(--drive-icon-color); flex-shrink: 0; }
+
+        .item-icon { font-size: 1.2rem; color: var(--drive-icon-color); flex-shrink: 0; margin-right: var(--spacing-unit);}
         .item-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.9rem; }
+
         /* Grid View */
         .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: calc(var(--spacing-unit)*2); }
         .file-grid .file-item { display: flex; flex-direction: column; padding: var(--spacing-unit); }
         .grid-item-preview { height: 120px; background-color: var(--drive-bg-secondary); border-radius: var(--border-radius-item); display: flex; align-items: center; justify-content: center; margin-bottom: var(--spacing-unit); overflow: hidden; border: 1px solid var(--drive-border-color); }
-        .grid-item-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .grid-item-preview img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.2s ease; }
+        .file-item:hover .grid-item-preview img { transform: scale(1.03); }
         .grid-item-preview .item-icon { font-size: 2.5rem; }
-        .grid-item-info { display: flex; align-items: center; gap: var(--spacing-unit); }
+        .grid-item-info { display: flex; align-items: center; gap: var(--spacing-unit)*0.5; padding: var(--spacing-unit)*0.5 0; }
         .grid-item-info .item-icon { font-size: 1rem; }
+
         /* List View */
-        .file-list { display: flex; flex-direction: column; gap: 2px; }
-        .file-list .list-header { display: grid; grid-template-columns: minmax(250px, 3fr) 1fr 1fr; align-items: center; gap: var(--spacing-unit)*2; padding: var(--spacing-unit) calc(var(--spacing-unit)*2); font-size: 0.85rem; color: var(--drive-text-secondary); font-weight: 500; border-bottom: 1px solid var(--drive-border-color); margin-bottom: 4px; user-select: none; }
-        .file-list .file-item { display: grid; grid-template-columns: minmax(250px, 3fr) 1fr 1fr; align-items: center; gap: calc(var(--spacing-unit)*2); padding: var(--spacing-unit) calc(var(--spacing-unit)*2); border-radius: 0; border: none; }
+        .file-list { display: flex; flex-direction: column; } /* No gap needed, handled by hover/selection bg */
+        .file-list .list-header { display: grid; grid-template-columns: minmax(250px, 3fr) 1fr 1fr; align-items: center; gap: var(--spacing-unit)*2; padding: calc(var(--spacing-unit)*0.75) calc(var(--spacing-unit)*2); font-size: 0.8rem; color: var(--drive-text-secondary); font-weight: 500; border-bottom: 1px solid var(--drive-border-color); margin-bottom: 4px; user-select: none; background-color: var(--drive-bg-primary);}
+        .file-list .file-item { display: grid; grid-template-columns: minmax(250px, 3fr) 1fr 1fr; align-items: center; gap: calc(var(--spacing-unit)*2); padding: calc(var(--spacing-unit)*0.75) calc(var(--spacing-unit)*2); border-radius: var(--border-radius-item); border: none; } /* Apply radius */
+        .file-list .file-item:hover { background-color: var(--drive-item-hover-bg); border-color: transparent;} /* No border needed in list */
         .list-item-name { display: flex; align-items: center; gap: var(--spacing-unit)*1.5; }
         .list-item-meta { font-size: 0.85rem; color: var(--drive-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-list .file-item.selected .list-item-meta { color: var(--drive-item-selected-text); }
 
 
         /* --- Details Panel --- */
         .details-panel {
              position: absolute; top: 0; right: 0; bottom: 0;
-            width: var(--details-panel-width);
-            background-color: var(--drive-bg-secondary);
+             width: var(--details-panel-width);
+             background-color: var(--drive-bg-primary); /* Match primary background */
              border-left: 1px solid var(--drive-border-color);
-             padding: calc(var(--spacing-unit) * 2);
-             overflow-y: auto;
-             display: none; /* Hidden by default */
-             flex-direction: column; /* To stack elements */
-             z-index: 5; /* Below modal but above content overlay */
+             transform: translateX(100%); /* Start off-screen */
+             transition: transform var(--transition-base) ease-in-out;
+             overflow-y: auto; display: flex; flex-direction: column; z-index: 5;
+             box-shadow: -2px 0 5px rgba(0,0,0,0.05); /* Subtle shadow separating panel */
          }
-         .details-panel.show { display: flex; }
-         .details-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: calc(var(--spacing-unit)*2); }
+         .details-panel.show { transform: translateX(0%); }
+         .details-header { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-unit) var(--spacing-unit) var(--spacing-unit) calc(var(--spacing-unit)*2); margin-bottom: var(--spacing-unit); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0;}
          .details-title { font-size: 1rem; font-weight: 500; color: var(--drive-text-primary);}
-         .details-close-btn { /* Style the close button for details */ }
-         .details-preview { text-align: center; margin-bottom: calc(var(--spacing-unit)*2); background-color: white; padding: var(--spacing-unit); border-radius: var(--border-radius-item); border: 1px solid var(--drive-border-color); }
+         .details-content { padding: calc(var(--spacing-unit) * 2); flex-grow: 1;}
+         .details-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; color: var(--drive-text-tertiary); font-size: 0.9rem;}
+         .details-placeholder i { font-size: 2.5em; margin-bottom: var(--spacing-unit)*1.5;}
+         .details-preview { text-align: center; margin-bottom: calc(var(--spacing-unit)*2); background-color: var(--drive-bg-secondary); padding: var(--spacing-unit); border-radius: var(--border-radius-item); border: 1px solid var(--drive-border-color); }
          .details-preview img { max-width: 100%; max-height: 150px; object-fit: contain; }
          .details-preview .folder-icon { font-size: 4em; color: var(--drive-icon-color); }
          .details-section { margin-bottom: calc(var(--spacing-unit)*2); }
-         .details-section h3 { font-size: 0.9rem; font-weight: 500; color: var(--drive-text-primary); margin-bottom: var(--spacing-unit); border-bottom: 1px solid var(--drive-border-color); padding-bottom: calc(var(--spacing-unit)/2);}
-         .details-info-grid { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-unit) calc(var(--spacing-unit)*2); align-items: center; font-size: 0.85rem;}
+         .details-section h3 { font-size: 0.85rem; font-weight: 700; color: var(--drive-text-secondary); margin-bottom: calc(var(--spacing-unit)*1.5); border-bottom: 1px solid var(--drive-border-color); padding-bottom: calc(var(--spacing-unit)*0.75);}
+         .details-info-grid { display: grid; grid-template-columns: auto 1fr; gap: calc(var(--spacing-unit)*0.75) var(--spacing-unit); align-items: center; font-size: 0.85rem;}
          .details-info-grid dt { font-weight: 500; color: var(--drive-text-secondary); white-space: nowrap; }
-         .details-info-grid dd { color: var(--drive-text-primary); word-break: break-word; /* Wrap long paths/SHAs */ }
+         .details-info-grid dd { color: var(--drive-text-primary); word-break: break-word; }
          .details-info-grid dd a { color: var(--drive-accent-blue); text-decoration: none; }
          .details-info-grid dd a:hover { text-decoration: underline; }
-        .details-actions { margin-top: auto; /* Push actions to bottom */ padding-top: var(--spacing-unit)*2; border-top: 1px solid var(--drive-border-color); display: flex; justify-content: center; gap: var(--spacing-unit)*2; }
+         .details-info-grid .sha-value { font-family: monospace; font-size: 0.9em;} /* Monospace for SHA */
+        .details-actions { margin-top: auto; /* Push actions to bottom if needed, or keep at end of content */ padding-top: var(--spacing-unit)*2; border-top: 1px solid var(--drive-border-color); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--spacing-unit)*2; }
         .details-action-button {
-            display: inline-flex; align-items: center; gap: var(--spacing-unit); padding: calc(var(--spacing-unit)*0.75) var(--spacing-unit);
-            border: 1px solid var(--drive-border-color); border-radius: var(--border-radius-item);
-            background-color: white; cursor: pointer; color: var(--drive-text-secondary); font-size: 0.85rem; transition: background-color 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: calc(var(--spacing-unit)*0.75); padding: var(--spacing-unit) calc(var(--spacing-unit)*1.5);
+            border: 1px solid transparent; border-radius: var(--border-radius-item); background-color: transparent;
+            cursor: pointer; color: var(--drive-text-secondary); font-size: 0.85rem; font-weight: 500; transition: background-color 0.2s, color 0.2s, border-color 0.2s;
         }
-        .details-action-button:hover { background-color: var(--drive-item-hover-bg); }
         .details-action-button i { font-size: 1rem; }
+         /* Highlighted Copy Link Button */
+        .details-action-button#detailsCopyUrlBtn {
+            background-color: var(--drive-item-selected-bg);
+            color: var(--drive-accent-blue);
+            border-color: transparent;
+        }
+        .details-action-button#detailsCopyUrlBtn:hover {
+            background-color: #d2e3fc; /* Slightly darker blue bg on hover */
+        }
+         .details-action-button:hover:not(#detailsCopyUrlBtn) { background-color: var(--drive-item-hover-bg); }
 
+        /* --- Modal --- */
+        /* (Styles largely unchanged, minor tweaks possible) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; opacity: 0; transition: opacity var(--transition-base); align-items: center; justify-content: center; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { background-color: var(--drive-bg-primary); color: var(--drive-text-primary); border-radius: var(--border-radius-base); box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; max-width: 90vw; max-height: 90vh; width: 80vw; height: 85vh; overflow: hidden; transform: scale(0.95); transition: transform var(--transition-base); }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-unit) calc(var(--spacing-unit)*2); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
+        .modal-title { font-weight: 500; font-size: 1rem; color: var(--drive-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .modal-actions { display: flex; align-items: center; gap: var(--spacing-unit); }
+        .modal-actions .modal-action-btn { background: none; border: none; color: var(--drive-icon-color); font-size: 1.2rem; cursor: pointer; padding: var(--spacing-unit); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; transition: background-color var(--transition-fast); }
+        .modal-actions .modal-action-btn:hover { background-color: var(--drive-item-hover-bg); }
+        .modal-actions .modal-action-btn.favorite-btn.is-favorite { color: var(--drive-accent-blue); }
+        .modal-body { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: var(--spacing-unit); background-color: var(--drive-bg-secondary); }
+        .modal-body img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; }
+        .modal-nav { position: absolute; top: 50%; transform: translateY(-50%); left: var(--spacing-unit); right: var(--spacing-unit); display: flex; justify-content: space-between; pointer-events: none; }
+        .nav-button { background-color: rgba(32,33,36,0.6); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; opacity: 0.8; transition: opacity 0.2s, background-color 0.2s; }
+        .nav-button:hover { opacity: 1; background-color: rgba(32,33,36,0.8);}
+        .nav-button:disabled { opacity: 0.3; cursor: default; background-color: rgba(32,33,36,0.4) !important; }
 
-        /* --- Modal - Unchanged --- */
-         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; opacity: 0; transition: opacity var(--transition-base); align-items: center; justify-content: center; }
-         .modal-overlay.show { display: flex; opacity: 1; }
-         .modal-content { background-color: var(--drive-bg-primary); color: var(--drive-text-primary); border-radius: var(--border-radius-base); box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; max-width: 90vw; max-height: 90vh; width: 80vw; height: 85vh; overflow: hidden; transform: scale(0.95); transition: transform var(--transition-base); }
-         .modal-overlay.show .modal-content { transform: scale(1); }
-         .modal-header { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-unit) calc(var(--spacing-unit)*2); border-bottom: 1px solid var(--drive-border-color); flex-shrink: 0; }
-         .modal-title { font-weight: 500; font-size: 1rem; color: var(--drive-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-         .modal-actions .modal-action-btn { background: none; border: none; color: var(--drive-icon-color); font-size: 1.2rem; cursor: pointer; padding: var(--spacing-unit); border-radius: 50%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; transition: background-color var(--transition-fast); }
-         .modal-actions .modal-action-btn:hover { background-color: var(--drive-item-hover-bg); }
-         .modal-actions .modal-action-btn.favorite-btn.is-favorite { color: var(--drive-accent-blue); }
-         .modal-body { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: var(--spacing-unit); background-color: var(--drive-bg-secondary); }
-         .modal-body img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; }
-         .modal-nav { position: absolute; top: 50%; transform: translateY(-50%); left: var(--spacing-unit); right: var(--spacing-unit); display: flex; justify-content: space-between; pointer-events: none; }
-         .nav-button { background-color: rgba(32,33,36,0.6); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; opacity: 0.8; transition: opacity 0.2s; }
-         .nav-button:hover { opacity: 1; }
-         .nav-button:disabled { opacity: 0.3; cursor: default; }
-
-        /* --- Toast - Unchanged --- */
-        .toast { position: fixed; bottom: calc(var(--spacing-unit)*3); left: calc(var(--spacing-unit)*3); background-color: #323232; color: white; padding: calc(var(--spacing-unit)*1.5) calc(var(--spacing-unit)*2); border-radius: var(--border-radius-item); font-size: 0.9rem; z-index: 2000; opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; pointer-events: none; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        /* --- Toast --- */
+        .toast { position: fixed; bottom: calc(var(--spacing-unit)*3); left: calc(var(--spacing-unit)*3); background-color: #323232; color: white; padding: calc(var(--spacing-unit)*1.5) calc(var(--spacing-unit)*2); border-radius: var(--border-radius-item); font-size: 0.9rem; z-index: 2000; opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; pointer-events: none; box-shadow: var(--drive-shadow-2); }
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast.error { background-color: var(--drive-error-color); }
+
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginOverlay">
-        <div class="login-box">
-            <h2>Sign in</h2>
-            <p>to continue to ImageDrive</p>
-            <div class="login-input-group">
-                 <label for="username">Username</label>
-                 <input type="text" id="username" class="login-input" placeholder="Enter username">
-             </div>
-             <div class="login-input-group">
-                <label for="password">Password</label>
-                 <input type="password" id="password" class="login-input" placeholder="Enter password">
-             </div>
-             <button id="loginButton" class="login-button">Sign In</button>
-             <div id="loginError"></div> <!-- For error messages -->
-        </div>
-    </div>
-
-    <!-- Main Application Structure (initially hidden) -->
+    <!-- App loads directly -->
     <div class="drive-app" id="driveApp">
          <div class="app-content-wrapper">
              <!-- Sidebar -->
             <aside class="sidebar">
-                 <div class="sidebar-header">
-                    <i class="fa-solid fa-images" style="color: var(--drive-accent-blue); font-size: 1.8em;"></i>
-                     <span>ImageDrive</span>
+                <div class="sidebar-header">
+                    <i class="fa-solid fa-images"></i>
+                    <span>ImageDrive</span>
                 </div>
                  <nav class="sidebar-nav">
                      <div class="nav-group">
-                        <div class="nav-item active" id="nav-my-images"> <i class="fa-solid fa-photo-film"></i> <span class="nav-text">My Images</span> </div>
-                        <div class="nav-item" id="nav-starred"> <i class="fa-regular fa-star"></i> <span class="nav-text">Starred</span> </div>
+                        <div class="nav-item active" id="nav-my-images" aria-label="My Images"> <i class="fa-solid fa-photo-film" aria-hidden="true"></i> <span class="nav-text">My Images</span> </div>
+                        <div class="nav-item" id="nav-starred" aria-label="Starred Items"> <i class="fa-regular fa-star" aria-hidden="true"></i> <span class="nav-text">Starred</span> </div>
                     </div>
                      <div class="nav-separator"></div>
-                     <div class="nav-group folder-nav-list" id="folder-list">
-                         <span style="padding: 0 24px; font-size: 0.8em; color: var(--drive-text-tertiary); text-transform: uppercase;">Folders</span>
+                     <div class="nav-group" id="folder-list-container">
+                         <div class="folder-nav-title">Folders</div>
+                        <div class="folder-nav-list" id="folder-list">
+                            <!-- Dynamic Content -->
                         </div>
+                    </div>
                  </nav>
             </aside>
 
@@ -272,28 +258,33 @@
              <main class="main-area" id="mainArea">
                 <!-- Top Bar -->
                  <header class="top-bar">
-                    <div class="search-container"> <i class="fas fa-search search-icon"></i> <input type="text" class="search-input" id="searchInput" placeholder="Search in Images"> </div>
+                    <div class="search-container">
+                        <div class="search-box">
+                            <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                             <input type="text" class="search-input" id="searchInput" placeholder="Search in Images" aria-label="Search Images">
+                        </div>
+                    </div>
                  </header>
                 <!-- Content Header -->
                  <div class="content-header">
                      <div class="breadcrumbs" id="breadcrumbs"></div>
                      <div class="content-actions">
-                         <button class="action-button" id="infoBtn" title="Show details (i)"> <i class="fas fa-info-circle"></i> </button>
-                        <button class="action-button active" id="gridViewBtn" title="Grid view"> <i class="fas fa-th-large"></i> </button>
-                        <button class="action-button" id="listViewBtn" title="List view"> <i class="fas fa-list"></i> </button>
-                        <button class="action-button" id="refreshBtn" title="Refresh"> <i class="fas fa-sync-alt"></i> </button>
+                         <button class="action-button" id="infoBtn" title="Show details (i)" aria-label="Toggle Details Panel"> <i class="fas fa-info-circle" aria-hidden="true"></i> </button>
+                        <button class="action-button active" id="gridViewBtn" title="Grid view" aria-label="Switch to Grid View"> <i class="fas fa-th-large" aria-hidden="true"></i> </button>
+                        <button class="action-button" id="listViewBtn" title="List view" aria-label="Switch to List View"> <i class="fas fa-list" aria-hidden="true"></i> </button>
+                        <button class="action-button" id="refreshBtn" title="Refresh" aria-label="Refresh Content"> <i class="fas fa-sync-alt" aria-hidden="true"></i> </button>
                      </div>
                 </div>
                 <!-- File List Container -->
-                 <div class="file-list-container" id="fileListContainer">
+                 <div class="file-list-container" id="fileListContainer" tabindex="-1"> <!-- Allow focus for keyboard nav -->
                      <!-- Status Indicators -->
-                     <div class="status-indicator" id="loadingIndicator" style="display: none;"> <div class="spinner"></div> <span id="loadingMessage">Loading...</span> </div>
-                     <div class="status-indicator" id="errorIndicator" style="display: none;"> <i class="fas fa-exclamation-circle error-icon"></i> <p style="margin-bottom: 5px; font-weight: 500;">Couldn't load items</p> <span id="errorMessage" style="font-size: 0.9rem;"></span> </div>
-                     <div class="status-indicator" id="emptyFolderIndicator" style="display: none;"> <i class="fas fa-folder-open"></i> <p>Folder is empty</p> <span id="emptyFolderMessage" style="font-size: 0.9rem;"></span> </div>
+                     <div class="status-indicator" id="loadingIndicator"> <div class="spinner"></div> <span id="loadingMessage">Loading...</span> </div>
+                     <div class="status-indicator" id="errorIndicator"> <i class="fas fa-exclamation-circle error-icon" aria-hidden="true"></i> <p style="margin-bottom: 5px; font-weight: 500;">Couldn't load items</p> <span id="errorMessage"></span> </div>
+                     <div class="status-indicator" id="emptyFolderIndicator"> <i class="fas fa-folder-open" aria-hidden="true"></i> <p>Folder is empty</p> <span id="emptyFolderMessage"></span> </div>
                      <!-- Header for List View -->
                     <div class="file-list list-header" id="listHeader" style="display: none;"> <span>Name</span> <span>File size</span> <span>Type</span> </div>
                      <!-- Items Grid/List -->
-                    <div class="file-grid" id="fileList"> </div>
+                    <div class="file-grid" id="fileList"> <!-- Content Populated by JS --> </div>
                  </div>
              </main>
 
@@ -301,20 +292,24 @@
             <aside class="details-panel" id="detailsPanel">
                  <div class="details-header">
                     <span class="details-title">Details</span>
-                     <button class="action-button" id="detailsCloseBtn" title="Close details" style="width: 32px; height: 32px;"> <i class="fas fa-times"></i> </button>
+                     <button class="action-button" id="detailsCloseBtn" title="Close details (Esc)" aria-label="Close Details Panel"> <i class="fas fa-times" aria-hidden="true"></i> </button>
                  </div>
-                <div class="details-preview" id="detailsPreview"> <!-- Placeholder for image/icon --> </div>
-                 <div class="details-section">
-                     <h3>Properties</h3>
-                    <dl class="details-info-grid" id="detailsProperties">
-                         <!-- dt/dd pairs added dynamically -->
-                     </dl>
-                 </div>
-                 <div class="details-actions">
-                    <button class="details-action-button" id="detailsCopyUrlBtn">
-                        <i class="fas fa-link"></i> Copy link
-                    </button>
-                     <!-- More actions could go here -->
+                 <div class="details-content">
+                     <div id="detailsPlaceholder" class="details-placeholder">
+                         <i class="fas fa-arrow-left" aria-hidden="true"></i> Select an item to see details
+                    </div>
+                    <div id="detailsInfoContainer" style="display: none;">
+                        <div class="details-preview" id="detailsPreview"></div>
+                        <div class="details-section">
+                            <h3>Properties</h3>
+                             <dl class="details-info-grid" id="detailsProperties"></dl>
+                        </div>
+                        <div class="details-actions">
+                             <button class="details-action-button" id="detailsCopyUrlBtn">
+                                <i class="fas fa-link" aria-hidden="true"></i> Copy link
+                            </button>
+                         </div>
+                    </div>
                  </div>
              </aside>
         </div>
@@ -324,25 +319,25 @@
     <div class="modal-overlay" id="imageModal">
          <div class="modal-content">
             <div class="modal-header">
-                 <span class="modal-title" id="modalTitle">Image Name</span>
+                 <span class="modal-title" id="modalTitle"></span>
                  <div class="modal-actions">
-                     <button class="modal-action-btn favorite-btn" id="modalFavoriteBtn" title="Star this image"> <i class="fa-regular fa-star"></i> </button>
-                     <button class="modal-action-btn" id="modalDownloadBtn" title="Download"> <i class="fas fa-download"></i> </button>
-                     <button class="modal-action-btn" id="closeModalBtn" title="Close (Esc)"> <i class="fas fa-times"></i> </button>
+                     <button class="modal-action-btn favorite-btn" id="modalFavoriteBtn" title="Star this image" aria-label="Star Image"> <i class="fa-regular fa-star" aria-hidden="true"></i> </button>
+                     <button class="modal-action-btn" id="modalDownloadBtn" title="Download" aria-label="Download Image"> <i class="fas fa-download" aria-hidden="true"></i> </button>
+                     <button class="modal-action-btn" id="closeModalBtn" title="Close (Esc)" aria-label="Close Image Preview"> <i class="fas fa-times" aria-hidden="true"></i> </button>
                  </div>
             </div>
             <div class="modal-body">
                  <img id="modalImage" src="" alt="Preview">
                 <div class="modal-nav">
-                    <button class="nav-button" id="prevImageBtn"><i class="fas fa-chevron-left"></i></button>
-                     <button class="nav-button" id="nextImageBtn"><i class="fas fa-chevron-right"></i></button>
+                    <button class="nav-button" id="prevImageBtn" aria-label="Previous Image"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                     <button class="nav-button" id="nextImageBtn" aria-label="Next Image"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
                  </div>
             </div>
         </div>
     </div>
 
      <!-- Toast Notification -->
-    <div id="toast" class="toast">Toast message</div>
+    <div id="toast" class="toast"></div>
 
     <script>
         // --- Configuration & Constants ---
@@ -352,9 +347,6 @@
         const API_URL = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/git/trees/${BRANCH}?recursive=1`;
         const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'ico'];
         const ROOT_NAME = 'My Images';
-        const LOGIN_ID = 'GuptaAman777'; // <<< HARDCODED - INSECURE
-        const LOGIN_PASS = 'Amanktr@7765'; // <<< HARDCODED - INSECURE
-        const LOGGED_IN_KEY = 'driveAppLoggedIn';
 
         // --- State ---
         let allItems = [];
@@ -367,157 +359,102 @@
         let favorites = JSON.parse(localStorage.getItem('driveImageFavorites_v1')) || [];
         let toastTimeout = null;
         let isDetailsPanelOpen = false;
+        let isFetching = false; // Prevent multiple simultaneous fetches
 
         // --- DOM Elements ---
         const $ = (selector) => document.querySelector(selector);
         const $$ = (selector) => document.querySelectorAll(selector);
+        // (DOM element variables declared previously remain largely the same)
+        // ... Add any new ones if necessary
+        const driveApp = $('#driveApp'); // To show the app
+        const detailsInfoContainer = $('#detailsInfoContainer');
+        const detailsPlaceholder = $('#detailsPlaceholder');
+        // ... (other DOM elements)
 
-        const loginOverlay = $('#loginOverlay');
-        const loginUsernameInput = $('#username');
-        const loginPasswordInput = $('#password');
-        const loginButton = $('#loginButton');
-        const loginError = $('#loginError');
-        const driveApp = $('#driveApp');
-
-        const sidebarNav = $('.sidebar-nav');
-        const folderListContainer = $('#folder-list');
-        const searchInput = $('#searchInput');
-        const refreshBtn = $('#refreshBtn');
-        const breadcrumbsContainer = $('#breadcrumbs');
-        const gridViewBtn = $('#gridViewBtn');
-        const listViewBtn = $('#listViewBtn');
-        const infoBtn = $('#infoBtn'); // Details button
-        const fileListContainer = $('#fileListContainer');
-        const fileList = $('#fileList');
-        const listHeader = $('#listHeader');
-
-        const loadingIndicator = $('#loadingIndicator');
-        const errorIndicator = $('#errorIndicator');
-        const emptyFolderIndicator = $('#emptyFolderIndicator');
-        const loadingMessage = $('#loadingMessage');
-        const errorMessage = $('#errorMessage');
-        const emptyFolderMessage = $('#emptyFolderMessage');
-
-        const imageModal = $('#imageModal');
-        const modalTitle = $('#modalTitle');
-        const modalImage = $('#modalImage');
-        const prevImageBtn = $('#prevImageBtn');
-        const nextImageBtn = $('#nextImageBtn');
-        const closeModalBtn = $('#closeModalBtn');
-        const modalFavoriteBtn = $('#modalFavoriteBtn');
-        const modalDownloadBtn = $('#modalDownloadBtn');
-
-        const detailsPanel = $('#detailsPanel');
-        const detailsCloseBtn = $('#detailsCloseBtn');
-        const detailsPreview = $('#detailsPreview');
-        const detailsProperties = $('#detailsProperties');
-        const detailsCopyUrlBtn = $('#detailsCopyUrlBtn');
-        const mainArea = $('#mainArea'); // To adjust margin
-
-        const toast = $('#toast');
+        // --- Helper Functions --- (formatFileSize, createRawUrl, debounce, getImageDimensions) - Unchanged
+        function formatFileSize(bytes){if(!bytes||bytes<10)return '--';const k=1024,sizes=['B','KB','MB','GB'],i=Math.floor(Math.log(bytes)/Math.log(k)),size=parseFloat((bytes/Math.pow(k,i)).toFixed(1));return size+' '+sizes[i];}
+        function createRawUrl(path){const encodedPath=path.split('/').map(segment=>encodeURIComponent(decodeURIComponent(segment))).join('/');return `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${BRANCH}/${encodedPath}`;}
+        function debounce(func,wait){let timeout;return function(...args){const later=()=>{clearTimeout(timeout);func.apply(this,args);};clearTimeout(timeout);timeout=setTimeout(later,wait);};}
+        function getImageDimensions(url){return new Promise((resolve)=>{const img=new Image();img.onload=()=>resolve({width:img.width,height:img.height});img.onerror=()=>resolve(null);img.src=url;});}
 
 
-        // --- Helper Functions --- (formatFileSize, createRawUrl, debounce - unchanged)
-        function formatFileSize(bytes) { if (!bytes || bytes < 10) return '--'; const k=1024, sizes=['B','KB','MB','GB'], i=Math.floor(Math.log(bytes)/Math.log(k)), size=parseFloat((bytes/Math.pow(k,i)).toFixed(1)); return size+' '+sizes[i]; }
-        function createRawUrl(path) { const encodedPath=path.split('/').map(segment=>encodeURIComponent(decodeURIComponent(segment))).join('/'); return `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${BRANCH}/${encodedPath}`; }
-        function debounce(func,wait) { let timeout; return function(...args) { const later=()=> {clearTimeout(timeout);func.apply(this,args);}; clearTimeout(timeout); timeout=setTimeout(later,wait);}; }
+        // --- API & Data Processing ---
+        async function fetchAndProcessData() {
+             if (isFetching) return false; // Don't fetch if already fetching
+             isFetching = true;
+             showLoading('Loading images...');
+             allItems = [];
+             let uniqueFolders = new Map();
+             try {
+                 const response = await fetch(API_URL);
+                 if (!response.ok) throw new Error(`GitHub API Error: ${response.status} ${response.statusText}. Check repo name/permissions or API rate limits.`);
+                 const data = await response.json();
+                 if (!data.tree) throw new Error("Invalid API response structure.");
 
-        // Async function to get image dimensions
-        function getImageDimensions(url) {
-            return new Promise((resolve) => {
-                 const img = new Image();
-                 img.onload = () => resolve({ width: img.width, height: img.height });
-                 img.onerror = () => resolve(null); // Return null on error
-                 img.src = url;
-             });
-        }
+                 data.tree.filter(item => item.type === 'blob').forEach(item => { /* ... Processing as before ... */
+                    const pathParts=item.path.split('/'); const name=pathParts.pop(); const parentPath=pathParts.length>0?pathParts.join('/'):null; const isImage=IMAGE_EXTENSIONS.includes(name.split('.').pop()?.toLowerCase()); if(isImage){allItems.push({type:'file',path:item.path,name:name,parentPath:parentPath,rawUrl:createRawUrl(item.path),size:item.size||0,extension:name.split('.').pop()?.toLowerCase()||'',isFavorite:favorites.includes(item.path),sha:item.sha});let currentPath='';for(const part of pathParts){const fullPath=currentPath?`${currentPath}/${part}`:part;const parent=currentPath||null;if(!uniqueFolders.has(fullPath)){uniqueFolders.set(fullPath,{name:part,path:fullPath,parentPath:parent});}currentPath=fullPath;}}
+                 });
+                 uniqueFolders.forEach((folderData, folderPath) => { /* ... Processing as before ... */
+                    allItems.push({type:'folder',path:folderData.path,name:folderData.name,parentPath:folderData.parentPath});
+                 });
 
-        // --- Login ---
-        function checkLogin() {
-             if (sessionStorage.getItem(LOGGED_IN_KEY) === 'true') {
-                 showApp();
+                 console.log(`Processed ${allItems.length} total items.`);
+                 hideStatusIndicators();
                  return true;
+
+             } catch (error) {
+                 console.error("Fetch/Process Error:", error);
+                 showError(error.message); // Show more informative error
+                 return false;
+             } finally {
+                 isFetching = false; // Allow fetching again
              }
-             showLogin();
-             return false;
-         }
-
-        function handleLogin() {
-            loginError.textContent = ''; // Clear previous errors
-             const id = loginUsernameInput.value;
-             const pass = loginPasswordInput.value;
-
-             if (id === LOGIN_ID && pass === LOGIN_PASS) {
-                sessionStorage.setItem(LOGGED_IN_KEY, 'true');
-                 showApp();
-             } else {
-                loginError.textContent = 'Invalid username or password.';
-             }
-         }
-
-        function showLogin() {
-             driveApp.style.display = 'none';
-            loginOverlay.style.opacity = '1';
-             loginOverlay.style.display = 'flex'; // Make sure it's flex for centering
-         }
-
-        function showApp() {
-             // Fade out login, then show app
-            loginOverlay.style.opacity = '0';
-            setTimeout(() => {
-                loginOverlay.style.display = 'none';
-                driveApp.style.display = 'flex';
-                initializeApp(); // Initialize app content AFTER showing it
-            }, 300); // Match transition duration
-        }
-
-        // --- API & Data Processing --- (fetchAndProcessData - unchanged)
-        async function fetchAndProcessData() { /* ... as before ... */
-            showLoading('Loading images...'); allItems = []; let uniqueFolders = new Map(); try { const response = await fetch(API_URL); if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`); const data = await response.json(); if (!data.tree) throw new Error("Invalid API response structure."); data.tree.filter(item => item.type === 'blob').forEach(item => { const pathParts = item.path.split('/'); const name = pathParts.pop(); const parentPath = pathParts.length > 0 ? pathParts.join('/') : null; const isImage = IMAGE_EXTENSIONS.includes(name.split('.').pop()?.toLowerCase()); if (isImage) { allItems.push({ type: 'file', path: item.path, name: name, parentPath: parentPath, rawUrl: createRawUrl(item.path), size: item.size || 0, extension: name.split('.').pop()?.toLowerCase() || '', isFavorite: favorites.includes(item.path), sha: item.sha /* Add SHA */ }); let currentPath = ''; for (const part of pathParts) { const fullPath = currentPath ? `${currentPath}/${part}` : part; const parent = currentPath || null; if (!uniqueFolders.has(fullPath)) { uniqueFolders.set(fullPath, { name: part, path: fullPath, parentPath: parent }); } currentPath = fullPath; } } }); uniqueFolders.forEach((folderData, folderPath) => { allItems.push({ type: 'folder', path: folderData.path, name: folderData.name, parentPath: folderData.parentPath }); }); console.log(`Processed ${allItems.length} total items.`); hideStatusIndicators(); return true; } catch (error) { console.error("Fetch/Process Error:", error); showError(error.message); return false; }
         }
 
 
-        // --- UI Rendering --- (buildSidebarFolders, updateBreadcrumbs - unchanged)
-        function buildSidebarFolders() { /* ... as before ... */
-             folderListContainer.innerHTML = `<span style="padding: 0 24px; font-size: 0.8em; color: var(--drive-text-tertiary); text-transform: uppercase;">Folders</span>`; const rootFolders = allItems.filter(item => item.type === 'folder' && item.parentPath === null); rootFolders.sort((a, b) => a.name.localeCompare(b.name)); rootFolders.forEach(folder => { const div = document.createElement('div'); div.className = 'nav-item'; div.dataset.path = folder.path; div.innerHTML = ` <i class="fa-regular fa-folder"></i> <span class="nav-text">${folder.name}</span> `; div.addEventListener('click', () => navigateToFolder(folder.path)); folderListContainer.appendChild(div); });
+        // --- UI Rendering ---
+        function buildSidebarFolders() { // Unchanged
+            /* ... as before ... */
+            folderListContainer.innerHTML = ''; const rootFolders = allItems.filter(item => item.type === 'folder' && item.parentPath === null); rootFolders.sort((a, b) => a.name.localeCompare(b.name)); rootFolders.forEach(folder => { const div = document.createElement('div'); div.className = 'nav-item'; div.dataset.path = folder.path; div.innerHTML = ` <i class="fa-regular fa-folder" aria-hidden="true"></i> <span class="nav-text">${folder.name}</span> `; div.setAttribute('role', 'button'); div.tabIndex = 0; div.addEventListener('click', () => navigateToFolder(folder.path)); div.addEventListener('keydown', (e) => {if(e.key==='Enter'||e.key===' ') navigateToFolder(folder.path);}); folderListContainer.appendChild(div); });
         }
-        function updateBreadcrumbs() { /* ... as before ... */
-            breadcrumbsContainer.innerHTML = ''; let pathSegments = currentFolderPath ? currentFolderPath.split('/') : []; let builtPath = null; const rootSpan = document.createElement('span'); rootSpan.textContent = ROOT_NAME; if (currentFolderPath === null) { rootSpan.classList.add('current'); } else { rootSpan.addEventListener('click', () => navigateToFolder(null)); } breadcrumbsContainer.appendChild(rootSpan); pathSegments.forEach((segment, index) => { builtPath = builtPath ? `${builtPath}/${segment}` : segment; const separator = document.createElement('span'); separator.className = 'separator'; separator.innerHTML = '&nbsp;&rsaquo;&nbsp;'; breadcrumbsContainer.appendChild(separator); const segmentSpan = document.createElement('span'); segmentSpan.textContent = segment; if (index === pathSegments.length - 1) { segmentSpan.classList.add('current'); } else { const pathOnClick = builtPath; segmentSpan.addEventListener('click', () => navigateToFolder(pathOnClick)); } breadcrumbsContainer.appendChild(segmentSpan); });
+        function updateBreadcrumbs() { // Unchanged
+            /* ... as before ... */
+             breadcrumbsContainer.innerHTML='';let pathSegments=currentFolderPath?currentFolderPath.split('/'):[];let builtPath=null;const rootSpan=document.createElement('span');rootSpan.textContent=ROOT_NAME;if(currentFolderPath===null){rootSpan.classList.add('current');}else{rootSpan.tabIndex=0; rootSpan.addEventListener('click',()=>navigateToFolder(null));rootSpan.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' ')navigateToFolder(null);});}breadcrumbsContainer.appendChild(rootSpan);pathSegments.forEach((segment,index)=>{builtPath=builtPath?`${builtPath}/${segment}`:segment;const separator=document.createElement('span');separator.className='separator';separator.innerHTML='&nbsp;&rsaquo;&nbsp;';separator.setAttribute('aria-hidden','true');breadcrumbsContainer.appendChild(separator);const segmentSpan=document.createElement('span');segmentSpan.textContent=segment;if(index===pathSegments.length-1){segmentSpan.classList.add('current');}else{const pathOnClick=builtPath;segmentSpan.tabIndex=0; segmentSpan.addEventListener('click',()=>navigateToFolder(pathOnClick)); segmentSpan.addEventListener('keydown', (e)=>{if(e.key==='Enter'||e.key===' ') navigateToFolder(pathOnClick);});}breadcrumbsContainer.appendChild(segmentSpan);});
          }
 
-        function renderItems() { // Slight modification for search scope and reselect
+        function renderItems() { // Refined logic
             hideStatusIndicators();
             fileList.innerHTML = '';
             fileList.className = currentViewMode === 'grid' ? 'file-grid' : 'file-list';
             listHeader.style.display = currentViewMode === 'list' ? 'grid' : 'none';
 
-             // Filter logic: Starred view overrides everything else
+             let itemsToRender;
              const isStarredView = sidebarNav.querySelector('#nav-starred').classList.contains('active');
-             if (isStarredView) {
-                 currentDisplayItems = allItems.filter(item => item.type === 'file' && item.isFavorite);
-                currentFolderPath = null; // Force root context for starred logic
-                 if (breadcrumbsContainer.querySelector('span:not(.separator)')) { // Prevent error if breadcrumbs empty
-                     breadcrumbsContainer.innerHTML = `<span class="current">Starred</span>`;
-                 }
-             } else {
-                 // Filter by current folder path
-                 currentDisplayItems = allItems.filter(item => item.parentPath === currentFolderPath);
 
-                 // Apply Search Filter ONLY within current view
-                 if (currentSearchTerm) {
+            if (isStarredView) {
+                itemsToRender = allItems.filter(item => item.type === 'file' && item.isFavorite);
+                // Adjust breadcrumbs specifically for starred view (no folders)
+                breadcrumbsContainer.innerHTML = `<span class="current">Starred</span>`;
+            } else {
+                // Filter by folder THEN by search
+                itemsToRender = allItems.filter(item => item.parentPath === currentFolderPath);
+                if (currentSearchTerm) {
                      const termLower = currentSearchTerm.toLowerCase();
-                    currentDisplayItems = currentDisplayItems.filter(item => item.name.toLowerCase().includes(termLower));
-                 }
-             }
+                    itemsToRender = itemsToRender.filter(item => item.name.toLowerCase().includes(termLower));
+                }
+                // Only update normal breadcrumbs if not in starred view
+                 updateBreadcrumbs();
+            }
 
             // Sort
-            currentDisplayItems.sort((a, b) => { if (a.type === 'folder' && b.type !== 'folder') return -1; if (a.type !== 'folder' && b.type === 'folder') return 1; return a.name.localeCompare(b.name); });
+            itemsToRender.sort((a, b) => { if (a.type === 'folder' && b.type !== 'folder') return -1; if (a.type !== 'folder' && b.type === 'folder') return 1; return a.name.localeCompare(b.name); });
+            currentDisplayItems = itemsToRender; // Update the state for modal/selection
 
             // Render
             if (currentDisplayItems.length === 0) {
-                const message = isStarredView ? "No starred items" : (currentSearchTerm ? `No items match "${currentSearchTerm}"` : `This folder is empty`);
-                showEmptyFolder(message + (currentFolderPath && !isStarredView ? ` in ${currentFolderPath.split('/').pop()}` : ``));
-                 clearDetailsPanel(); // Clear details if folder is empty
+                 const message = isStarredView ? "No starred items" : (currentSearchTerm ? `No items match "${currentSearchTerm}"` : (currentFolderPath ? `Folder "${currentFolderPath.split('/').pop()}" is empty` : `No images found at root`));
+                showEmptyFolder(message);
+                clearDetailsPanel();
                  return;
             }
 
@@ -525,229 +462,257 @@
             currentDisplayItems.forEach((item, index) => fragment.appendChild(createItemElement(item, index)));
             fileList.appendChild(fragment);
 
-            // Reselect if applicable
+            // Re-select if needed
             if (selectedItemPath && currentDisplayItems.some(i => i.path === selectedItemPath)) {
-                 selectItem(selectedItemPath, false); // Re-select without toggling panel again
+                 selectItem(selectedItemPath, false); // Keep selection without opening panel
             } else {
-                clearSelection(); // This will also clear the details panel
-             }
+                clearSelection(); // Will clear details panel if it was open
+            }
         }
-        function createItemElement(item, index) { // Unchanged, selection handles info now
-            /* ... as before ... */
-             const el = document.createElement('div'); el.className = 'file-item'; el.dataset.path = item.path; el.dataset.type = item.type; el.dataset.index = index; el.addEventListener('click', (e) => { selectItem(item.path, true); }); el.addEventListener('dblclick', (e) => { if (item.type === 'folder') { navigateToFolder(item.path); } else if (item.type === 'file') { openModal(index); } }); let contentHTML = ''; const iconClass = item.type === 'folder' ? 'fa-folder' : 'fa-file-image'; const iconColorStyle = `color: ${item.isFavorite ? 'var(--drive-accent-blue)' : 'var(--drive-icon-color)'};`; if (currentViewMode === 'grid') { contentHTML = ` <div class="grid-item-preview"> ${item.type === 'file' ? `<img src="${item.rawUrl}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'far fa-image item-icon\\' style=\\'${iconColorStyle}\\'></i>';">` : `<i class="fa-solid ${iconClass} item-icon" style="${iconColorStyle}"></i>` } </div> <div class="grid-item-info"> <i class="fa-solid ${iconClass} item-icon" style="font-size: 1em; ${iconColorStyle}"></i> <span class="item-name">${item.name}</span> </div> `; } else { contentHTML = ` <div class="list-item-name"> <i class="fa-solid ${iconClass} item-icon" style="${iconColorStyle}"></i> <span class="item-name">${item.name}</span> </div> <span class="list-item-meta">${item.type === 'file' ? formatFileSize(item.size) : '--'}</span> <span class="list-item-meta">${item.type === 'file' ? item.extension.toUpperCase() : 'Folder'}</span> `; } el.innerHTML = contentHTML; return el;
+
+        function createItemElement(item, index) { // Add tabIndex and refine events
+            const el = document.createElement('div');
+            el.className = 'file-item';
+            el.dataset.path = item.path;
+            el.dataset.type = item.type;
+            el.dataset.index = index;
+            el.tabIndex = 0; // Make item focusable for keyboard nav
+             el.setAttribute('role', 'button');
+            el.setAttribute('aria-label', item.name);
+
+            el.addEventListener('click', (e) => selectItem(item.path, true));
+            el.addEventListener('dblclick', (e) => { /* Open item */ if(item.type==='folder')navigateToFolder(item.path); else if(item.type==='file')openModal(index); });
+             el.addEventListener('keydown', (e) => { /* Handle Enter/Space */ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); if(item.type==='folder')navigateToFolder(item.path); else if(item.type==='file')openModal(index); } });
+
+            // (HTML generation logic as before)
+             let contentHTML = ''; const iconClass = item.type === 'folder' ? 'fa-folder' : 'fa-file-image'; const iconColorStyle = `color: ${item.isFavorite ? 'var(--drive-accent-blue)' : 'var(--drive-icon-color)'};`; if (currentViewMode === 'grid') { contentHTML = ` <div class="grid-item-preview"> ${item.type === 'file' ? `<img src="${item.rawUrl}" alt="" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'far fa-image item-icon\\' style=\\'${iconColorStyle}\\' aria-hidden=\\'true\\'></i>';">` : `<i class="fa-solid ${iconClass} item-icon" style="${iconColorStyle}" aria-hidden="true"></i>` } </div> <div class="grid-item-info"> <i class="fa-solid ${iconClass} item-icon" style="font-size: 1em; ${iconColorStyle}" aria-hidden="true"></i> <span class="item-name">${item.name}</span> </div> `; } else { contentHTML = ` <div class="list-item-name"> <i class="fa-solid ${iconClass} item-icon" style="${iconColorStyle}" aria-hidden="true"></i> <span class="item-name">${item.name}</span> </div> <span class="list-item-meta">${item.type === 'file' ? formatFileSize(item.size) : '--'}</span> <span class="list-item-meta">${item.type === 'file' ? item.extension.toUpperCase() : 'Folder'}</span> `; } el.innerHTML = contentHTML; return el;
         }
 
 
         // --- Details Panel ---
          function toggleDetailsPanel() {
-             isDetailsPanelOpen = !isDetailsPanelOpen;
-             detailsPanel.classList.toggle('show', isDetailsPanelOpen);
-             mainArea.classList.toggle('with-details', isDetailsPanelOpen);
-             infoBtn.classList.toggle('active', isDetailsPanelOpen); // Highlight info button
-             if (!isDetailsPanelOpen) {
-                 // If closing, ensure selection highlight matches (if anything is still selected)
-                clearSelection(); // Simpler: always clear selection when closing panel
-             } else if (selectedItemPath) {
-                 populateDetailsPanel(selectedItemPath); // Repopulate if opened while item selected
-             } else {
-                 clearDetailsPanel(true); // Show "Select an item" message
-             }
-         }
+            isDetailsPanelOpen = !isDetailsPanelOpen;
+            detailsPanel.classList.toggle('show', isDetailsPanelOpen);
+            mainArea.classList.toggle('with-details', isDetailsPanelOpen);
+            infoBtn.classList.toggle('active', isDetailsPanelOpen);
+            infoBtn.setAttribute('aria-expanded', isDetailsPanelOpen);
 
-        async function populateDetailsPanel(itemPath) {
-             const item = allItems.find(i => i.path === itemPath);
-             if (!item) { clearDetailsPanel(); return; }
-
-             detailsPanel.classList.add('show'); // Ensure panel visible
-            isDetailsPanelOpen = true;
-             mainArea.classList.add('with-details');
-             infoBtn.classList.add('active');
-
-
-             // Set preview
-             detailsPreview.innerHTML = item.type === 'folder'
-                ? `<i class="fa-solid fa-folder folder-icon"></i>`
-                 : `<img src="${item.rawUrl}" alt="Preview" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'far fa-image item-icon\\' style=\\'font-size: 4em\\'></i>';">`;
-
-             // Set properties
-            detailsProperties.innerHTML = ''; // Clear previous
-            const props = [
-                 { dt: 'Name', dd: item.name },
-                 { dt: 'Type', dd: item.type === 'folder' ? 'Folder' : `${item.extension.toUpperCase()} Image` }
-            ];
-            if (item.type === 'file') {
-                 props.push({ dt: 'Size', dd: formatFileSize(item.size) });
-                 // Fetch dimensions async
-                 props.push({ dt: 'Dimensions', dd: '<span class="dim-loading">Loading...</span>' });
-                 getImageDimensions(item.rawUrl).then(dims => {
-                     const ddElement = detailsProperties.querySelector('.dim-loading');
-                     if (ddElement) {
-                        ddElement.parentElement.textContent = dims ? `${dims.width} × ${dims.height} px` : 'N/A';
-                     }
-                 });
-                 props.push({ dt: 'SHA', dd: item.sha?.substring(0, 10) + '...' || 'N/A'}); // Display first 10 chars of SHA
-            }
-             props.push({ dt: 'Path', dd: item.path });
-             if (item.type === 'file') {
-                 props.push({ dt: 'Link', dd: `<a href="${item.rawUrl}" target="_blank" title="Open raw image">View Raw</a>` });
-             }
-
-             props.forEach(p => {
-                 const dtEl = document.createElement('dt'); dtEl.textContent = p.dt + ':';
-                 const ddEl = document.createElement('dd'); ddEl.innerHTML = p.dd; // Use innerHTML for link
-                 detailsProperties.appendChild(dtEl);
-                 detailsProperties.appendChild(ddEl);
-             });
-
-             // Setup Copy URL button for files
-             detailsCopyUrlBtn.style.display = item.type === 'file' ? 'inline-flex' : 'none';
-            if (item.type === 'file') {
-                detailsCopyUrlBtn.onclick = () => copyUrl(item.rawUrl, 'Details panel link');
+            if (isDetailsPanelOpen && selectedItemPath) {
+                populateDetailsPanel(selectedItemPath);
+            } else if (isDetailsPanelOpen) {
+                 clearDetailsPanel(true); // Show default message if opened with nothing selected
             }
          }
 
-        function clearDetailsPanel(showDefaultMsg = false) {
-            detailsPreview.innerHTML = '';
-             detailsProperties.innerHTML = showDefaultMsg
-                 ? '<dt style="grid-column: 1 / -1; text-align: center; color: var(--drive-text-tertiary);">Select an item to see details</dt>'
-                 : '';
-            detailsCopyUrlBtn.style.display = 'none';
-             detailsCopyUrlBtn.onclick = null; // Remove listener
-            // Do not hide the panel itself here, only clear content
-             // Hiding is handled by toggleDetailsPanel or clearSelection
+         async function populateDetailsPanel(itemPath) {
+            const item = allItems.find(i => i.path === itemPath);
+            if (!item) { clearDetailsPanel(true); return; } // Show default msg if item not found
+
+            detailsPlaceholder.style.display = 'none';
+            detailsInfoContainer.style.display = 'block';
+
+            // Preview
+             detailsPreview.innerHTML=item.type==='folder'?`<i class="fa-solid fa-folder folder-icon" aria-hidden="true"></i>`:`<img src="${item.rawUrl}" alt="Preview of ${item.name}" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'far fa-image item-icon\\' style=\\'font-size: 4em\\' aria-hidden=\\'true\\'></i>';">`;
+
+            // Properties
+             detailsProperties.innerHTML = '';
+            const props = [ { dt: 'Name', dd: item.name }, { dt: 'Type', dd: item.type === 'folder' ? 'Folder' : `${item.extension.toUpperCase()} Image` } ];
+             if (item.type === 'file') { props.push({ dt: 'Size', dd: formatFileSize(item.size) }); props.push({ dt: 'Dimensions', dd: '<span class="dim-loading">(loading...)</span>' }); props.push({ dt: 'Starred', dd: item.isFavorite ? 'Yes' : 'No' }); props.push({ dt: 'Path', dd: item.path }); props.push({ dt: 'Link', dd: `<a href="${item.rawUrl}" target="_blank" title="Open raw image">View Raw</a>` }); props.push({ dt: 'SHA', dd: item.sha ? `<span class="sha-value">${item.sha.substring(0,7)}...</span>` : 'N/A' }); }
+             else { /* Folder specific details could go here */ props.push({ dt: 'Path', dd: item.path }); }
+            props.forEach(p=>{const dtEl=document.createElement('dt');dtEl.textContent=p.dt;const ddEl=document.createElement('dd');ddEl.innerHTML=p.dd;detailsProperties.appendChild(dtEl);detailsProperties.appendChild(ddEl);});
+
+            // Fetch dimensions only for files and update asynchronously
+            if (item.type === 'file') {
+                getImageDimensions(item.rawUrl).then(dims=>{const ddElement=detailsProperties.querySelector('.dim-loading');if(ddElement){ddElement.parentElement.textContent=dims?`${dims.width} × ${dims.height} px`:'N/A';}});
+            }
+
+             // Copy URL button state
+             detailsCopyUrlBtn.style.display=item.type==='file'?'inline-flex':'none';
+            if(item.type==='file')detailsCopyUrlBtn.onclick=()=>copyUrl(item.rawUrl,'Details Panel Copy');
         }
+
+        function clearDetailsPanel(showPlaceholder = false) {
+             detailsInfoContainer.style.display = 'none';
+            detailsPlaceholder.style.display = showPlaceholder ? 'flex' : 'none';
+            // Hiding is done via toggleDetailsPanel or clearSelection->toggle
+        }
+
 
         // --- Selection Handling ---
-         function selectItem(path, userInitiated = true) {
-             clearSelection(); // Clear previous selection
-             selectedItemPath = path;
-             const itemElement = fileList.querySelector(`.file-item[data-path="${CSS.escape(path)}"]`);
-             if (itemElement) {
-                 itemElement.classList.add('selected');
-             }
-             // Only populate details if the panel is open OR if user explicitly clicked item
-            if (userInitiated && itemElement) {
+        function selectItem(path, userInitiated = true) {
+             if (selectedItemPath === path) { // If clicking the already selected item
+                 if(userInitiated) toggleDetailsPanel(); // Toggle details panel on re-click
+                 return;
+            }
+            clearSelection(); // Clear previous visually
+            selectedItemPath = path;
+            const itemElement = fileList.querySelector(`.file-item[data-path="${CSS.escape(path)}"]`);
+            if (itemElement) {
+                itemElement.classList.add('selected');
+                 itemElement.focus(); // Focus the selected item for keyboard nav
+            }
+             // Only populate details if the panel is open OR if this click should open it
+            if (isDetailsPanelOpen || userInitiated) {
                 populateDetailsPanel(path);
             }
-         }
+        }
 
         function clearSelection() {
-             if (selectedItemPath && detailsPanel.classList.contains('show')) {
-                 // If clearing selection while details panel is open, clear the panel content
-                 clearDetailsPanel(true); // Show "select an item" message
-             }
+             if (selectedItemPath && isDetailsPanelOpen) {
+                 clearDetailsPanel(true); // Clear content if panel is open
+            }
              selectedItemPath = null;
-            $$('#fileList .file-item.selected').forEach(el => el.classList.remove('selected'));
-            // Note: This function DOES NOT hide the details panel itself. That's handled by the 'X' button or the info button toggle.
-        }
+             $$('#fileList .file-item.selected').forEach(el => el.classList.remove('selected'));
+         }
 
-        // --- Navigation --- (navigateToFolder - updated to potentially clear details)
-         function navigateToFolder(folderPath) {
-            clearSelection(); // Clear selection and potentially details panel content
-             currentFolderPath = folderPath;
+        // --- Navigation ---
+        function navigateToFolder(folderPath) { // Adjusted to work with refined select/details logic
+            if(isFetching) return; // Prevent navigation during fetch
+            currentFolderPath = folderPath;
             currentSearchTerm = ''; searchInput.value = '';
-            // Update sidebar active state ... (as before)
-            $$('.sidebar .nav-item').forEach(item => item.classList.remove('active')); if (folderPath === null) { sidebarNav.querySelector('#nav-my-images').classList.add('active'); } else { const sidebarItem = folderListContainer.querySelector(`.nav-item[data-path="${folderPath}"]`); if (sidebarItem) { sidebarItem.classList.add('active'); } else { sidebarNav.querySelector('#nav-my-images').classList.add('active'); } }
 
-            updateBreadcrumbs();
-            renderItems();
-             fileListContainer.scrollTop = 0;
+            $$('.sidebar .nav-item').forEach(item => item.classList.remove('active'));
+             const targetNavItem = folderPath === null
+                ? sidebarNav.querySelector('#nav-my-images')
+                : folderListContainer.querySelector(`.nav-item[data-path="${CSS.escape(folderPath)}"]`) || sidebarNav.querySelector('#nav-my-images'); // Fallback to root
+             if(targetNavItem) targetNavItem.classList.add('active');
+
+            // Don't call clearSelection() directly here as renderItems will handle reselection/clearing
+             renderItems(); // Render items first
+            fileListContainer.scrollTop = 0; // Scroll list to top AFTER rendering
+             updateBreadcrumbs(); // Update breadcrumbs AFTER folder path is set
+
+             // Close details panel when navigating folders
+             if (isDetailsPanelOpen) {
+                toggleDetailsPanel();
+            } else {
+                 clearDetailsPanel(true); // Clear content even if closed
+             }
         }
 
-        // --- Modal --- (openModal, updateModalFavoriteButton, closeModal, navigateModal - unchanged)
-        function openModal(index) { /* ... as before ... */
-            if(index<0||index>=currentDisplayItems.length)return; const imagesInView=currentDisplayItems.filter(item=>item.type==='file'); const image=currentDisplayItems[index]; currentModalIndex=imagesInView.findIndex(img=>img.path===image.path); if(currentModalIndex===-1)return; modalImage.src=image.rawUrl; modalImage.alt=image.name; modalTitle.textContent=image.name; updateModalFavoriteButton(image.isFavorite); prevImageBtn.disabled=currentModalIndex===0; nextImageBtn.disabled=currentModalIndex===imagesInView.length-1; modalFavoriteBtn.onclick=()=>toggleFavorite(image.path); modalDownloadBtn.onclick=()=>downloadImage(image.rawUrl,image.name); imageModal.classList.add('show'); document.body.style.overflow='hidden';
-         }
-        function updateModalFavoriteButton(isFav) { /* ... as before ... */ modalFavoriteBtn.classList.toggle('is-favorite',isFav); modalFavoriteBtn.querySelector('i').className=isFav?'fa-solid fa-star':'fa-regular fa-star'; }
-        function closeModal() { /* ... as before ... */ imageModal.classList.remove('show'); document.body.style.overflow=''; setTimeout(()=>{modalImage.src='';},200); }
-        function navigateModal(direction) { /* ... as before ... */ const imagesInView=currentDisplayItems.filter(item=>item.type==='file'); const newIndex=currentModalIndex+direction; if(newIndex>=0&&newIndex<imagesInView.length){ const nextImagePath=imagesInView[newIndex].path; const originalIndex=currentDisplayItems.findIndex(item=>item.path===nextImagePath); if(originalIndex!==-1){ openModal(originalIndex); }} }
 
-        // --- Actions --- (downloadImage - unchanged, toggleFavorite - minor update, copyUrl)
-        function downloadImage(url, filename) { /* ... as before ... */ try{const a=document.createElement('a'); a.href=url; a.download=filename; a.target='_blank'; document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast(`${filename} download started...`);}catch(e){console.error(e);showToast("Download failed",true);}}
-        function toggleFavorite(path) { // Update details panel if open & showing this item
-             const itemIndex = allItems.findIndex(i => i.path === path); if (itemIndex === -1) return; const item = allItems[itemIndex]; const isCurrentlyFavorite = favorites.includes(path); let nowFavorite; if (isCurrentlyFavorite) { favorites = favorites.filter(p => p !== path); showToast('Removed from Starred'); nowFavorite = false; } else { favorites.push(path); showToast('Added to Starred'); nowFavorite = true; } item.isFavorite = nowFavorite; localStorage.setItem('driveImageFavorites_v1', JSON.stringify(favorites)); const listItem = fileList.querySelector(`.file-item[data-path="${CSS.escape(path)}"]`); if (listItem) { const icon = listItem.querySelector('.item-icon'); if (icon) icon.style.color = nowFavorite ? 'var(--drive-accent-blue)' : 'var(--drive-icon-color)'; } if (imageModal.classList.contains('show') && currentDisplayItems[currentDisplayItems.findIndex(i=>i.path===path)]?.path === path) { updateModalFavoriteButton(nowFavorite); } if (detailsPanel.classList.contains('show') && selectedItemPath === path) { /* Could update icon in details panel if needed */ } if (sidebarNav.querySelector('#nav-starred').classList.contains('active')) { renderItems(); }
-         }
-        function copyUrl(url, context = 'Button') { // Add context for logging/debugging
-             navigator.clipboard.writeText(url).then(() => {
-                showToast('Link copied to clipboard!');
-                console.log(`${context} copied: ${url}`);
-            }).catch(err => {
-                 console.error('Failed to copy URL: ', err);
-                showToast('Failed to copy link.', true);
-            });
-        }
+        // --- Modal --- (openModal, updateModalFavoriteButton, closeModal, navigateModal) - Unchanged
+        function openModal(index){if(index<0||index>=currentDisplayItems.length)return; const imagesInView=currentDisplayItems.filter(item=>item.type==='file'); const image=currentDisplayItems[index]; currentModalIndex=imagesInView.findIndex(img=>img.path===image.path); if(currentModalIndex===-1)return; modalImage.src=image.rawUrl; modalImage.alt=image.name; modalTitle.textContent=image.name; updateModalFavoriteButton(image.isFavorite); prevImageBtn.disabled=currentModalIndex===0; nextImageBtn.disabled=currentModalIndex===imagesInView.length-1; modalFavoriteBtn.onclick=()=>toggleFavorite(image.path); modalDownloadBtn.onclick=()=>downloadImage(image.rawUrl,image.name); imageModal.classList.add('show'); document.body.style.overflow='hidden';}
+        function updateModalFavoriteButton(isFav){modalFavoriteBtn.classList.toggle('is-favorite',isFav);modalFavoriteBtn.querySelector('i').className=isFav?'fa-solid fa-star':'fa-regular fa-star';}
+        function closeModal(){imageModal.classList.remove('show');document.body.style.overflow='';setTimeout(()=>{modalImage.src='';},200);}
+        function navigateModal(direction){const imagesInView=currentDisplayItems.filter(item=>item.type==='file');const newIndex=currentModalIndex+direction;if(newIndex>=0&&newIndex<imagesInView.length){const nextImagePath=imagesInView[newIndex].path;const originalIndex=currentDisplayItems.findIndex(item=>item.path===nextImagePath);if(originalIndex!==-1){openModal(originalIndex);}}}
+
+        // --- Actions --- (downloadImage, toggleFavorite, copyUrl) - toggleFavorite updated for panel check
+        function downloadImage(url,filename){try{const a=document.createElement('a');a.href=url;a.download=filename;a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);showToast(`${filename} download started...`);}catch(e){console.error(e);showToast("Download failed",true);}}
+        function toggleFavorite(path) { const itemIndex=allItems.findIndex(i=>i.path===path); if(itemIndex===-1)return; const item=allItems[itemIndex]; const isCurrentlyFavorite=favorites.includes(path); let nowFavorite; if(isCurrentlyFavorite){favorites=favorites.filter(p=>p!==path);showToast('Removed from Starred');nowFavorite=false;}else{favorites.push(path);showToast('Added to Starred');nowFavorite=true;} item.isFavorite=nowFavorite; localStorage.setItem('driveImageFavorites_v1',JSON.stringify(favorites)); const listItem=fileList.querySelector(`.file-item[data-path="${CSS.escape(path)}"]`); if(listItem){const icon=listItem.querySelector('.item-icon');if(icon)icon.style.color=nowFavorite?'var(--drive-accent-blue)':'var(--drive-icon-color)';} if(imageModal.classList.contains('show')&&currentDisplayItems.find(i=>i.path===path && i.type==='file')&&currentDisplayItems[currentDisplayItems.findIndex(i=>i.path===path)].path === path){updateModalFavoriteButton(nowFavorite);} if(isDetailsPanelOpen&&selectedItemPath===path){populateDetailsPanel(path);} if(sidebarNav.querySelector('#nav-starred').classList.contains('active')){renderItems();}}
+        function copyUrl(url,context='Button'){navigator.clipboard.writeText(url).then(()=>{showToast('Link copied to clipboard!');console.log(`${context} copied: ${url}`);}).catch(err=>{console.error('Failed to copy URL: ',err);showToast('Failed to copy link.',true);});}
 
         // --- View Mode Toggle --- (setViewMode - unchanged)
-        function setViewMode(mode) { if(mode===currentViewMode)return; currentViewMode=mode; gridViewBtn.classList.toggle('active',mode==='grid'); listViewBtn.classList.toggle('active',mode==='list'); renderItems(); }
+        function setViewMode(mode){if(mode===currentViewMode)return;currentViewMode=mode;gridViewBtn.classList.toggle('active',mode==='grid');listViewBtn.classList.toggle('active',mode==='list');renderItems();}
 
-        // --- Status Indicators --- (showLoading, showError, showEmptyFolder, hideStatusIndicators - unchanged)
-        function showLoading(msg){hideStatusIndicators();loadingMessage.textContent=msg;loadingIndicator.style.display='flex';} function showError(msg){hideStatusIndicators();errorMessage.textContent=msg;errorIndicator.style.display='flex';} function showEmptyFolder(msg){hideStatusIndicators();emptyFolderMessage.textContent=msg;emptyFolderIndicator.style.display='flex';} function hideStatusIndicators(){loadingIndicator.style.display='none'; errorIndicator.style.display='none'; emptyFolderIndicator.style.display='none';}
+        // --- Status Indicators --- (showLoading, showError, showEmptyFolder, hideStatusIndicators - added .show class toggle)
+        function showLoading(msg){hideStatusIndicators();loadingMessage.textContent=msg;loadingIndicator.classList.add('show');} function showError(msg){hideStatusIndicators();errorMessage.textContent=msg;errorIndicator.classList.add('show');} function showEmptyFolder(msg){hideStatusIndicators();emptyFolderMessage.textContent=msg;emptyFolderIndicator.classList.add('show');} function hideStatusIndicators(){loadingIndicator.classList.remove('show');errorIndicator.classList.remove('show');emptyFolderIndicator.classList.remove('show');}
 
         // --- Toast --- (showToast - unchanged)
         function showToast(message,isError=false){if(toastTimeout)clearTimeout(toastTimeout); toast.textContent=message; toast.className=`toast ${isError?'error':''} show`; toastTimeout=setTimeout(()=>{toast.classList.remove('show');},3000);}
 
         // --- Search --- (handleSearchInput - unchanged)
-        const handleSearchInput=debounce(()=>{ currentSearchTerm=searchInput.value.trim(); renderItems(); },400);
+        const handleSearchInput = debounce(()=>{ currentSearchTerm = searchInput.value.trim(); renderItems(); }, 400);
+
+        // --- Keyboard Navigation ---
+         function handleListKeyDown(event) {
+             if (!selectedItemPath || currentDisplayItems.length === 0) return; // No selection or no items
+
+             const currentIndex = currentDisplayItems.findIndex(item => item.path === selectedItemPath);
+             if (currentIndex === -1) return; // Selected item not found in current view?
+
+             let nextIndex = -1;
+             const itemsPerRow = currentViewMode === 'grid'
+                 ? Math.floor(fileList.offsetWidth / (fileList.querySelector('.file-item')?.offsetWidth + parseInt(getComputedStyle(fileList).gap) || 1)) // Calculate items per row in grid
+                 : 1; // List view has 1 item per "row"
+
+             switch (event.key) {
+                 case 'ArrowUp':
+                     nextIndex = currentIndex - itemsPerRow;
+                     break;
+                 case 'ArrowDown':
+                    nextIndex = currentIndex + itemsPerRow;
+                    break;
+                 case 'ArrowLeft':
+                     nextIndex = (currentViewMode === 'grid' || currentIndex > 0) ? currentIndex - 1 : -1; // Allow left/right in list view too
+                     break;
+                 case 'ArrowRight':
+                     nextIndex = (currentViewMode === 'grid' || currentIndex < currentDisplayItems.length - 1) ? currentIndex + 1 : -1;
+                     break;
+                 default: return; // Ignore other keys
+             }
+
+             if (nextIndex >= 0 && nextIndex < currentDisplayItems.length) {
+                 event.preventDefault(); // Prevent page scrolling
+                 selectItem(currentDisplayItems[nextIndex].path, true);
+                 // Scroll into view if needed
+                 const nextElement = fileList.querySelector(`.file-item[data-path="${CSS.escape(currentDisplayItems[nextIndex].path)}"]`);
+                if (nextElement) nextElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+             }
+         }
+
 
         // --- Initialization ---
-        async function initAppContent() { // Renamed from initializeApp
-            // Setup basic event listeners AFTER login
+        async function initializeApp() {
+             console.log("Initializing App Content...");
+             // Event listeners
              searchInput.addEventListener('input', handleSearchInput);
-             refreshBtn.addEventListener('click', initAppContent); // Re-fetch data
-            gridViewBtn.addEventListener('click', () => setViewMode('grid'));
-            listViewBtn.addEventListener('click', () => setViewMode('list'));
-            infoBtn.addEventListener('click', toggleDetailsPanel); // Toggle details panel
-            detailsCloseBtn.addEventListener('click', toggleDetailsPanel); // Close details panel
+             refreshBtn.addEventListener('click', initializeApp); // Re-fetch/render
+             gridViewBtn.addEventListener('click', () => setViewMode('grid'));
+             listViewBtn.addEventListener('click', () => setViewMode('list'));
+             infoBtn.addEventListener('click', toggleDetailsPanel);
+             detailsCloseBtn.addEventListener('click', toggleDetailsPanel);
 
-            // Sidebar Navigation
-             sidebarNav.querySelector('#nav-my-images').addEventListener('click', () => { $$('.sidebar .nav-item').forEach(item => item.classList.remove('active')); sidebarNav.querySelector('#nav-my-images').classList.add('active'); navigateToFolder(null); });
-            sidebarNav.querySelector('#nav-starred').addEventListener('click', () => { $$('.sidebar .nav-item').forEach(item => item.classList.remove('active')); sidebarNav.querySelector('#nav-starred').classList.add('active'); renderItems(); }); // Render will filter
+             // Sidebar Nav
+             sidebarNav.querySelector('#nav-my-images').addEventListener('click', () => { if(!sidebarNav.querySelector('#nav-my-images').classList.contains('active')) navigateToFolder(null); });
+             sidebarNav.querySelector('#nav-starred').addEventListener('click', () => { if(!sidebarNav.querySelector('#nav-starred').classList.contains('active')) { $$('.sidebar .nav-item').forEach(item => item.classList.remove('active')); sidebarNav.querySelector('#nav-starred').classList.add('active'); renderItems(); }});
 
-            // Modal Listeners
-            closeModalBtn.addEventListener('click', closeModal);
+             // Modal Listeners
+             closeModalBtn.addEventListener('click', closeModal);
              prevImageBtn.addEventListener('click', () => navigateModal(-1));
              nextImageBtn.addEventListener('click', () => navigateModal(1));
-            imageModal.addEventListener('click', (e) => { if (e.target === imageModal) closeModal(); });
+             imageModal.addEventListener('click', (e) => { if (e.target === imageModal) closeModal(); });
 
-            // Keyboard Listeners (adjusted context)
+            // General Keyboard Listeners
             document.addEventListener('keydown', (e) => {
                  const isModalOpen = imageModal.classList.contains('show');
                  const isSearchFocused = document.activeElement === searchInput;
+                 const isDetailsFocused = detailsPanel.contains(document.activeElement); // Check if focus is within details
 
-                if (isModalOpen) { /* ... modal keybinds as before ... */ switch (e.key) { case 'Escape': closeModal(); break; case 'ArrowLeft': if (!prevImageBtn.disabled) navigateModal(-1); break; case 'ArrowRight': if (!nextImageBtn.disabled) navigateModal(1); break; } }
-                 else if (!isSearchFocused) { // App focus, not modal, not search
+                if (isModalOpen) { /* Modal keys */ switch (e.key) { case 'Escape': closeModal(); break; case 'ArrowLeft': if (!prevImageBtn.disabled) navigateModal(-1); break; case 'ArrowRight': if (!nextImageBtn.disabled) navigateModal(1); break; } }
+                 else if (!isSearchFocused && !isDetailsFocused) { // Focus is likely in main list area
                      switch (e.key) {
-                         case 'i': toggleDetailsPanel(); break; // 'i' toggles info
-                         // Add other non-modal shortcuts here...
-                        case 'Enter': if (selectedItemPath) { const item = allItems.find(i => i.path === selectedItemPath); if (item) { if (item.type === 'folder') navigateToFolder(item.path); else if (item.type === 'file') openModal(currentDisplayItems.findIndex(i => i.path === selectedItemPath)); } } break;
+                         case 'i': e.preventDefault(); toggleDetailsPanel(); break;
+                        case 'Enter': case ' ': // Allow Space to also trigger open like Enter
+                             if (selectedItemPath) {
+                                 e.preventDefault();
+                                const item = allItems.find(i => i.path === selectedItemPath); if (item) { if (item.type === 'folder') navigateToFolder(item.path); else if (item.type === 'file') openModal(currentDisplayItems.findIndex(i => i.path === selectedItemPath)); }
+                            }
+                            break;
+                         case 'ArrowUp': case 'ArrowDown': case 'ArrowLeft': case 'ArrowRight':
+                             handleListKeyDown(e); // Handle navigation within the list/grid
+                             break;
+                         case 'Escape':
+                             if (isDetailsPanelOpen) { toggleDetailsPanel(); } else { clearSelection(); }
+                            break;
                      }
+                 } else if (isDetailsFocused) {
+                    if (e.key === 'Escape') toggleDetailsPanel();
                  }
             });
 
-            // Add listener to clear selection when clicking container background
+             // Container background click clears selection
              fileListContainer.addEventListener('click', (e) => { if (e.target === fileListContainer || e.target === fileList) { clearSelection(); } });
 
-            // Load Data and Render
-            if (await fetchAndProcessData()) {
-                buildSidebarFolders();
-                navigateToFolder(null); // Start at root
+             // Fetch Data
+             if (await fetchAndProcessData()) {
+                 buildSidebarFolders();
+                 navigateToFolder(null); // Start at root
              }
         }
 
-        // --- Entry Point ---
-        document.addEventListener('DOMContentLoaded', () => {
-            loginButton.addEventListener('click', handleLogin);
-            loginPasswordInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleLogin();
-             });
-            loginUsernameInput.addEventListener('keypress', (e) => {
-                 if (e.key === 'Enter') handleLogin();
-             });
-
-            if (!checkLogin()) {
-                loginUsernameInput.focus(); // Focus username if login needed
-             }
-         });
+        // --- Start App ---
+        document.addEventListener('DOMContentLoaded', initializeApp);
 
     </script>
 
